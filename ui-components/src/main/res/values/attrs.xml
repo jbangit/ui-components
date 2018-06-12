@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Cell">
+        <attr name="cellTitle" format="string" />
+        <attr name="cellSubject" format="string" />
+    </declare-styleable>
+    <declare-styleable name="CellGroup">
+        <attr name="cellGroupTitle" format="string" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.jbangit.sample.cell.CellViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.jbangit.uicomponents.cell.CellGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel.onClick}"
+                app:cellSubject="玫瑰丛林处"
+                app:cellTitle="昵称" />
+
+        </com.jbangit.uicomponents.cell.CellGroup>
+
+        <com.jbangit.uicomponents.cell.CellGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel.onClick}"
+                app:cellSubject="女"
+                app:cellTitle="性别" />
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel.onClick}"
+                app:cellSubject="1990-5-22"
+                app:cellTitle="生日" />
+
+        </com.jbangit.uicomponents.cell.CellGroup>
+
+        <com.jbangit.uicomponents.cell.CellGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellSubject="广州微匠互联网科技有限公司"
+                app:cellTitle="公司" />
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel.onClick}"
+                app:cellSubject="送人玫瑰，手有余香"
+                app:cellTitle="个性签名" />
+
+        </com.jbangit.uicomponents.cell.CellGroup>
+
+        <com.jbangit.uicomponents.cell.CellGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cellGroupTitle="单选">
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellTitle="单选一" />
+
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellTitle="单选二" />
+
+        </com.jbangit.uicomponents.cell.CellGroup>
+
+    </LinearLayout>
+</layout>
