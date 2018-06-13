@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.view.View
 import com.jbangit.uicomponents.cell.Cell
+import com.jbangit.uicomponents.cell.CheckedCell
 
 class CellViewModel(context: Application) : AndroidViewModel(context) {
 
@@ -14,5 +15,13 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
         if (view is Cell) {
             toast.value = view.title.toString()
         }
+    }
+
+    fun onCheckedChange(checkedCell: CheckedCell, checked: Boolean) {
+        toast.value = when {
+            checked -> "${checkedCell.title} is checked"
+            else -> "${checkedCell.title} is not checked"
+        }
+
     }
 }

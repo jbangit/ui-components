@@ -11,4 +11,8 @@
     <color name="colorBackground">#f0f2f5</color>
     <color name="colorBackgroundLight">#f5f7fa</color>
     <color name="colorForeground">#FFF</color>
+
+    <!--default global color-->
+    <color name="jColorPrimary">#04BE02</color>
+
 </resources>

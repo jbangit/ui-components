@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="jColorPrimary" />
+
     <declare-styleable name="Cell">
         <attr name="cellTitle" format="string" />
         <attr name="cellSubject" format="string" />
     </declare-styleable>
     <declare-styleable name="CellGroup">
         <attr name="cellGroupTitle" format="string" />
+    </declare-styleable>
+    <declare-styleable name="CheckedCell">
+        <attr name="checkedCellTitle" format="string" />
+        <attr name="checkedCellChecked" format="boolean" />
+        <attr name="checkedCellCheckedColor" format="color" />
     </declare-styleable>
 </resources>
