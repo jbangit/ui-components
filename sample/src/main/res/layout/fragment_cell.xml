@@ -73,22 +73,21 @@
             <com.jbangit.uicomponents.cell.CellGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cellGroupTitle="单选">
+                app:cellGroupTitle="单选"
+                app:onCheckedChanged="@{viewModel.onGroupCheckedChanged}">
 
                 <com.jbangit.uicomponents.cell.CheckedCell
                     android:id="@+id/check_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:checkedCellChecked="true"
-                    app:checkedCellTitle="单选一"
-                    app:onCheckedChanged="@{viewModel.onCheckedChange}" />
+                    app:checkedCellTitle="单选一" />
 
                 <com.jbangit.uicomponents.cell.CheckedCell
                     android:id="@+id/check_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:checkedCellTitle="单选二"
-                    app:onCheckedChanged="@{viewModel.onCheckedChange}" />
+                    app:checkedCellTitle="单选二" />
 
             </com.jbangit.uicomponents.cell.CellGroup>
 

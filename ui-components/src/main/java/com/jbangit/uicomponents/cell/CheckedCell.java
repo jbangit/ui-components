@@ -110,13 +110,35 @@ public class CheckedCell extends FrameLayout implements Checkable {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggle();
-
-                        if (mOnCheckedChangeListener != null) {
-                            mOnCheckedChangeListener.onCheckedChange(CheckedCell.this, mChecked);
-                        }
+                        performCheck();
                     }
                 });
+    }
+
+    @Override
+    public void setChecked(boolean checked) {
+        if (checked == mChecked) {
+            return;
+        }
+
+        mChecked = checked;
+        showChecked();
+    }
+
+    private void performCheck() {
+        if (getParent() instanceof CellGroup) {
+            doCheckByGroup();
+        } else {
+            doCheckBySelf();
+        }
+    }
+
+    private void doCheckByGroup() {
+        CellGroup cellGroup = (CellGroup) getParent();
+        boolean isCheckedChange = cellGroup.check(this);
+        if (isCheckedChange && mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChange(this, true);
+        }
     }
 
     /**
@@ -153,10 +175,11 @@ public class CheckedCell extends FrameLayout implements Checkable {
         mTitle.setText(charSequence);
     }
 
-    @Override
-    public void setChecked(boolean checked) {
-        mChecked = checked;
-        showChecked();
+    private void doCheckBySelf() {
+        toggle();
+        if (mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChange(this, mChecked);
+        }
     }
 
     public OnCheckedChangeListener getOnCheckedChangeListener() {

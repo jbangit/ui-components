@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.view.View
 import com.jbangit.uicomponents.cell.Cell
+import com.jbangit.uicomponents.cell.CellGroup
 import com.jbangit.uicomponents.cell.CheckedCell
 
 class CellViewModel(context: Application) : AndroidViewModel(context) {
@@ -17,11 +18,17 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
         }
     }
 
-    fun onCheckedChange(checkedCell: CheckedCell, checked: Boolean) {
-        toast.value = when {
-            checked -> "${checkedCell.title} is checked"
-            else -> "${checkedCell.title} is not checked"
-        }
-
+    fun onGroupCheckedChanged(
+        cellGroup: CellGroup,
+        checkedCell: CheckedCell,
+        checkedId: Int,
+        uncheckedCell: CheckedCell,
+        uncheckedId: Int
+    ) {
+        toast.value = """
+            |${cellGroup.title}:
+            |the ${checkedId}, id ${checkedCell.title}, checked
+            |the ${uncheckedId}, id ${uncheckedCell.title} unchecked
+            """.trimMargin()
     }
 }

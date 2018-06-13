@@ -2,6 +2,8 @@ package com.jbangit.uicomponents.cell;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -20,6 +22,10 @@ public class CellGroup extends LinearLayout {
     private String mAttrTitle;
 
     private TextView mTitle;
+
+    private ArrayList<CheckedCell> mCheckedCells;
+
+    private OnCheckedChangeListener mOnCheckedChangeListener;
 
     public CellGroup(Context context) {
         super(context);
@@ -48,9 +54,16 @@ public class CellGroup extends LinearLayout {
         initAttrs(context, attrs);
     }
 
+    @BindingAdapter("onCheckedChanged")
+    public static void setCheckedChangeListener(
+            CellGroup cellGroup, OnCheckedChangeListener listener) {
+        cellGroup.setOnCheckedChangeListener(listener);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        findAllCheckedCell();
         addHeaderAndDivider(getContext());
         initViews();
     }
@@ -103,5 +116,103 @@ public class CellGroup extends LinearLayout {
             return;
         }
         mTitle.setText(title);
+    }
+
+    private void findAllCheckedCell() {
+        int childCount = getChildCount();
+        mCheckedCells = new ArrayList<>(childCount);
+
+        for (int i = 0; i < childCount; i++) {
+            View cell = getChildAt(i);
+            if (cell instanceof CheckedCell) {
+                mCheckedCells.add((CheckedCell) cell);
+            }
+        }
+    }
+
+    public OnCheckedChangeListener getOnCheckedChangeListener() {
+        return mOnCheckedChangeListener;
+    }
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener onCheckedChangeListener) {
+        mOnCheckedChangeListener = onCheckedChangeListener;
+    }
+
+    /**
+     * @return is the Checked Cell checked status changed
+     */
+    boolean check(CheckedCell checkedCell) {
+        if (checkedCell.isChecked()) {
+            // this cell has been checked
+            return false;
+        } else {
+            performCheck(checkedCell);
+            return true;
+        }
+    }
+
+    private void performCheck(CheckedCell checkedCell) {
+        int checkedId = 0;
+        CheckedCell uncheckedCell = null;
+        int uncheckedId = -1;
+
+        for (int i = 0; i < mCheckedCells.size(); i++) {
+            CheckedCell thatCheckedCell = mCheckedCells.get(i);
+
+            if (thatCheckedCell.isChecked()) {
+                uncheckedCell = thatCheckedCell;
+                uncheckedId = i;
+            }
+
+            if (thatCheckedCell.getId() == checkedCell.getId()) {
+                thatCheckedCell.setChecked(true);
+                checkedId = i;
+            } else {
+                thatCheckedCell.setChecked(false);
+            }
+        }
+
+        if (mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChange(
+                    this, checkedCell, checkedId, uncheckedCell, uncheckedId);
+        }
+    }
+
+    /**
+     * @return The id of checked cell. -1 if no checked
+     */
+    @IdRes
+    public int getCheckedId() {
+        for (CheckedCell checkedCell : mCheckedCells) {
+            if (checkedCell.isChecked()) {
+                return checkedCell.getId();
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * The first or second or third ... CheckedCell checked, exclude other cell. Start with 0. -1 if
+     * no checked
+     */
+    public int getCheckedIndex() {
+        int checkedCellCount = mCheckedCells.size();
+
+        for (int i = 0; i < checkedCellCount; i++) {
+            if (mCheckedCells.get(i).isChecked()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public interface OnCheckedChangeListener {
+
+        void onCheckedChange(
+                CellGroup cellGroup,
+                CheckedCell checkedCell,
+                int checkedIndex,
+                CheckedCell uncheckedCell,
+                int uncheckedIndex);
     }
 }
