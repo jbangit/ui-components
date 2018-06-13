@@ -87,12 +87,13 @@ public class CellGroup extends LinearLayout {
         }
     }
 
-    private void initViews() {
-        setTitle(mAttrTitle);
-    }
-
     private void addViewInLayout(View view) {
         addViewInLayout(view, -1, view.getLayoutParams());
+    }
+
+    private void initViews() {
+        setTitle(mAttrTitle);
+        initCheckedCell();
     }
 
     private View createHeaderView(Context context) {
@@ -103,6 +104,30 @@ public class CellGroup extends LinearLayout {
 
     private View createDividerView(Context context) {
         return LayoutInflater.from(context).inflate(R.layout.view_divider_cell_group, this, false);
+    }
+
+    private void initCheckedCell() {
+        if (mCheckedCells.isEmpty()) {
+            return;
+        }
+
+        boolean hasChecked = false;
+        for (CheckedCell checkedCell : mCheckedCells) {
+            if (!hasChecked) {
+                //find the first checked
+                if (checkedCell.isChecked()) {
+                    hasChecked = true;
+                }
+            } else {
+                //then uncheck the remain
+                checkedCell.setChecked(false);
+            }
+        }
+
+        if (!hasChecked) {
+            // can't find the checked
+            mCheckedCells.get(0).setChecked(true);
+        }
     }
 
     @Nullable
@@ -139,19 +164,19 @@ public class CellGroup extends LinearLayout {
     }
 
     /**
-     * @return is the Checked Cell checked status changed
+     * @return is the CheckedCell checked status changed
      */
-    boolean check(CheckedCell checkedCell) {
+    boolean check(CheckedCell checkedCell, boolean byUser) {
         if (checkedCell.isChecked()) {
             // this cell has been checked
             return false;
         } else {
-            performCheck(checkedCell);
+            performCheck(checkedCell, byUser);
             return true;
         }
     }
 
-    private void performCheck(CheckedCell checkedCell) {
+    private void performCheck(CheckedCell checkedCell, boolean byUser) {
         int checkedId = 0;
         CheckedCell uncheckedCell = null;
         int uncheckedId = -1;
@@ -172,7 +197,7 @@ public class CellGroup extends LinearLayout {
             }
         }
 
-        if (mOnCheckedChangeListener != null) {
+        if (byUser && mOnCheckedChangeListener != null) {
             mOnCheckedChangeListener.onCheckedChange(
                     this, checkedCell, checkedId, uncheckedCell, uncheckedId);
         }
@@ -191,6 +216,15 @@ public class CellGroup extends LinearLayout {
         return -1;
     }
 
+    public void setCheckedId(@IdRes int id) {
+        for (CheckedCell checkedCell : mCheckedCells) {
+            if (checkedCell.getId() == id) {
+                check(checkedCell, false);
+                return;
+            }
+        }
+    }
+
     /**
      * The first or second or third ... CheckedCell checked, exclude other cell. Start with 0. -1 if
      * no checked
@@ -206,8 +240,18 @@ public class CellGroup extends LinearLayout {
         return -1;
     }
 
+    public void setCheckedIndex(int id) {
+        if (id < mCheckedCells.size()) {
+            check(mCheckedCells.get(id), false);
+        }
+    }
+
     public interface OnCheckedChangeListener {
 
+        /**
+         * Callback only when the cell checked with user.
+         * {@link #setCheckedId(int)}, {@link #setCheckedIndex(int)} will NOT let it called
+         */
         void onCheckedChange(
                 CellGroup cellGroup,
                 CheckedCell checkedCell,

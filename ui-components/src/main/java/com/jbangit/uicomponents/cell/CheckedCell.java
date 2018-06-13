@@ -110,7 +110,7 @@ public class CheckedCell extends FrameLayout implements Checkable {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        performCheck();
+                        performCheckWithUser();
                     }
                 });
     }
@@ -125,7 +125,7 @@ public class CheckedCell extends FrameLayout implements Checkable {
         showChecked();
     }
 
-    private void performCheck() {
+    private void performCheckWithUser() {
         if (getParent() instanceof CellGroup) {
             doCheckByGroup();
         } else {
@@ -135,7 +135,7 @@ public class CheckedCell extends FrameLayout implements Checkable {
 
     private void doCheckByGroup() {
         CellGroup cellGroup = (CellGroup) getParent();
-        boolean isCheckedChange = cellGroup.check(this);
+        boolean isCheckedChange = cellGroup.check(this, true);
         if (isCheckedChange && mOnCheckedChangeListener != null) {
             mOnCheckedChangeListener.onCheckedChange(this, true);
         }
@@ -193,6 +193,10 @@ public class CheckedCell extends FrameLayout implements Checkable {
     public interface OnCheckedChangeListener {
 
         /**
+         * Callback only when the cell checked with user.
+         * <p>
+         * {@link #setChecked(boolean)}, {@link #toggle()} will NOT let it called
+         *
          * @param checkedCell the checked cell view
          * @param checked     is checked now
          */
