@@ -12,6 +12,8 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
 
     val toast: MutableLiveData<String> = MutableLiveData()
 
+    val checkIndex: MutableLiveData<Int> = MutableLiveData()
+
     fun onClick(view: View) {
         if (view is Cell) {
             toast.value = view.title.toString()
@@ -27,8 +29,18 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
     ) {
         toast.value = """
             |${cellGroup.title}:
-            |the ${checkedId}, id ${checkedCell.title}, checked
-            |the ${uncheckedId}, id ${uncheckedCell.title} unchecked
+            |the $checkedId, id ${checkedCell.title}, checked
+            |the $uncheckedId, id ${uncheckedCell.title} unchecked
             """.trimMargin()
+    }
+
+    fun onCLickCheckGroupTitle(view: View) {
+        if (view is CellGroup) {
+            if (view.checkedIndex == 0) {
+                view.checkedIndex = 1
+            } else {
+                view.checkedIndex = 0
+            }
+        }
     }
 }

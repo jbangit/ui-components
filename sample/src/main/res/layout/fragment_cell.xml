@@ -74,13 +74,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cellGroupTitle="单选"
+                android:onClick="@{viewModel.onCLickCheckGroupTitle}"
                 app:onCheckedChanged="@{viewModel.onGroupCheckedChanged}">
 
                 <com.jbangit.uicomponents.cell.CheckedCell
                     android:id="@+id/check_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:checkedCellChecked="true"
                     app:checkedCellTitle="单选一" />
 
                 <com.jbangit.uicomponents.cell.CheckedCell
