@@ -91,6 +91,29 @@
 
             </com.jbangit.uicomponents.cell.CellGroup>
 
+            <com.jbangit.uicomponents.cell.CellGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellGroupTitle="复选框"
+                app:onCheckedChanged="@{viewModel.onGroupCheckedChanged}">
+
+                <com.jbangit.uicomponents.cell.RadioCell
+                    android:id="@+id/radio_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:onRadioChanged="@{viewModel.onRadioChanged}"
+                    app:radioCellOn="true"
+                    app:radioCellTitle="默认状态" />
+
+                <com.jbangit.uicomponents.cell.RadioCell
+                    android:id="@+id/radio_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:onRadioChanged="@{viewModel.onRadioChanged}"
+                    app:radioCellTitle="匿名状态" />
+
+            </com.jbangit.uicomponents.cell.CellGroup>
+
         </LinearLayout>
     </ScrollView>
 </layout>

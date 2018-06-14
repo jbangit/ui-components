@@ -14,4 +14,9 @@
         <attr name="checkedCellChecked" format="boolean" />
         <attr name="checkedCellCheckedColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="RadioCell">
+        <attr name="radioCellTitle" format="string" />
+        <attr name="radioCellOn" format="boolean" />
+        <attr name="radioCellOnColor" format="color" />
+    </declare-styleable>
 </resources>

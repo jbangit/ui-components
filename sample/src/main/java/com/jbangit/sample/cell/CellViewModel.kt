@@ -7,6 +7,7 @@ import android.view.View
 import com.jbangit.uicomponents.cell.Cell
 import com.jbangit.uicomponents.cell.CellGroup
 import com.jbangit.uicomponents.cell.CheckedCell
+import com.jbangit.uicomponents.cell.RadioCell
 
 class CellViewModel(context: Application) : AndroidViewModel(context) {
 
@@ -42,5 +43,11 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
                 1 -> view.checkedIndex = -1
             }
         }
+    }
+
+    fun onRadioChanged(radioCell: RadioCell, radio: Boolean) {
+        toast.value = """
+            |${radioCell.title} : is ${if (radio) "check" else "uncheck"}
+            """.trimMargin()
     }
 }
