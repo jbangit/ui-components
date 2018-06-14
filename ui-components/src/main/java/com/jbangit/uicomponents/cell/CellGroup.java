@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -18,6 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CellGroup extends LinearLayout {
+
+    public static int ID_NULL_CHECK = -1;
+
+    public static int INDEX_NULL_CHECK = -1;
 
     private String mAttrTitle;
 
@@ -123,11 +128,6 @@ public class CellGroup extends LinearLayout {
                 checkedCell.setChecked(false);
             }
         }
-
-        if (!hasChecked) {
-            // can't find the checked
-            mCheckedCells.get(0).setChecked(true);
-        }
     }
 
     @Nullable
@@ -164,47 +164,7 @@ public class CellGroup extends LinearLayout {
     }
 
     /**
-     * @return is the CheckedCell checked status changed
-     */
-    boolean check(CheckedCell checkedCell, boolean byUser) {
-        if (checkedCell.isChecked()) {
-            // this cell has been checked
-            return false;
-        } else {
-            performCheck(checkedCell, byUser);
-            return true;
-        }
-    }
-
-    private void performCheck(CheckedCell checkedCell, boolean byUser) {
-        int checkedId = 0;
-        CheckedCell uncheckedCell = null;
-        int uncheckedId = -1;
-
-        for (int i = 0; i < mCheckedCells.size(); i++) {
-            CheckedCell thatCheckedCell = mCheckedCells.get(i);
-
-            if (thatCheckedCell.isChecked()) {
-                uncheckedCell = thatCheckedCell;
-                uncheckedId = i;
-            }
-
-            if (thatCheckedCell.getId() == checkedCell.getId()) {
-                thatCheckedCell.setChecked(true);
-                checkedId = i;
-            } else {
-                thatCheckedCell.setChecked(false);
-            }
-        }
-
-        if (byUser && mOnCheckedChangeListener != null) {
-            mOnCheckedChangeListener.onCheckedChange(
-                    this, checkedCell, checkedId, uncheckedCell, uncheckedId);
-        }
-    }
-
-    /**
-     * @return The id of checked cell. -1 if no checked
+     * @return The id of checked cell. {@link #ID_NULL_CHECK} if no checked
      */
     @IdRes
     public int getCheckedId() {
@@ -213,10 +173,18 @@ public class CellGroup extends LinearLayout {
                 return checkedCell.getId();
             }
         }
-        return -1;
+        return ID_NULL_CHECK;
     }
 
+    /**
+     * @param id set to {@link #ID_NULL_CHECK} to clear check
+     */
     public void setCheckedId(@IdRes int id) {
+        if (id == ID_NULL_CHECK) {
+            clearCheck();
+            return;
+        }
+
         for (CheckedCell checkedCell : mCheckedCells) {
             if (checkedCell.getId() == id) {
                 check(checkedCell, false);
@@ -225,9 +193,26 @@ public class CellGroup extends LinearLayout {
         }
     }
 
+    private void clearCheck() {
+        mCheckedCells.get(getCheckedIndex()).setChecked(false);
+    }
+
     /**
-     * The first or second or third ... CheckedCell checked, exclude other cell. Start with 0. -1 if
-     * no checked
+     * @return is the CheckedCell checked status changed
+     */
+    boolean check(CheckedCell checkedCell, boolean byUser) {
+        if (checkedCell.isChecked()) {
+            // this cell has been checked
+            return false;
+        }
+
+        performCheck(checkedCell, byUser);
+        return true;
+    }
+
+    /**
+     * The first or second or third ... CheckedCell checked, exclude other cell. Start with 0.
+     * {@link #INDEX_NULL_CHECK} if no checked
      */
     public int getCheckedIndex() {
         int checkedCellCount = mCheckedCells.size();
@@ -240,7 +225,42 @@ public class CellGroup extends LinearLayout {
         return -1;
     }
 
+    private void performCheck(CheckedCell checkedCell, boolean byUser) {
+        int checkedIndex = INDEX_NULL_CHECK;
+        CheckedCell uncheckedCell = null;
+        int uncheckedIndex = INDEX_NULL_CHECK;
+
+        for (int i = 0; i < mCheckedCells.size(); i++) {
+            CheckedCell thatCheckedCell = mCheckedCells.get(i);
+
+            if (thatCheckedCell.isChecked()) {
+                uncheckedCell = thatCheckedCell;
+                uncheckedIndex = i;
+            }
+
+            if (thatCheckedCell.getId() == checkedCell.getId()) {
+                thatCheckedCell.setChecked(true);
+                checkedIndex = i;
+            } else {
+                thatCheckedCell.setChecked(false);
+            }
+        }
+
+        if (byUser && mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChange(
+                    this, checkedCell, checkedIndex, uncheckedCell, uncheckedIndex);
+        }
+    }
+
+    /**
+     * @param id set to {@link #INDEX_NULL_CHECK} to clear check
+     */
     public void setCheckedIndex(int id) {
+        if (id == -1) {
+            clearCheck();
+            return;
+        }
+
         if (id < mCheckedCells.size()) {
             check(mCheckedCells.get(id), false);
         }
@@ -249,14 +269,19 @@ public class CellGroup extends LinearLayout {
     public interface OnCheckedChangeListener {
 
         /**
-         * Callback only when the cell checked with user.
+         * Callback only when the cell checked status change with user.
          * {@link #setCheckedId(int)}, {@link #setCheckedIndex(int)} will NOT let it called
+         *
+         * @param checkedCell null if there is no cell has been checked
+         * @param checkedIndex {@link #INDEX_NULL_CHECK} if there is no cell has been checked
+         * @param uncheckedCell null if there is no cell has been unchecked
+         * @param uncheckedIndex {@link #INDEX_NULL_CHECK} if there is no cell has been unchecked
          */
         void onCheckedChange(
-                CellGroup cellGroup,
-                CheckedCell checkedCell,
+                @NonNull CellGroup cellGroup,
+                @Nullable CheckedCell checkedCell,
                 int checkedIndex,
-                CheckedCell uncheckedCell,
+                @Nullable CheckedCell uncheckedCell,
                 int uncheckedIndex);
     }
 }
