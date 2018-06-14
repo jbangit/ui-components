@@ -22,24 +22,24 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
 
     fun onGroupCheckedChanged(
         cellGroup: CellGroup,
-        checkedCell: CheckedCell,
+        checkedCell: CheckedCell?,
         checkedId: Int,
-        uncheckedCell: CheckedCell,
+        uncheckedCell: CheckedCell?,
         uncheckedId: Int
     ) {
         toast.value = """
             |${cellGroup.title}:
-            |the $checkedId, id ${checkedCell.title}, checked
-            |the $uncheckedId, id ${uncheckedCell.title} unchecked
+            |the $checkedId, id ${checkedCell?.title}, checked
+            |the $uncheckedId, id ${uncheckedCell?.title} unchecked
             """.trimMargin()
     }
 
     fun onCLickCheckGroupTitle(view: View) {
         if (view is CellGroup) {
-            if (view.checkedIndex == 0) {
-                view.checkedIndex = 1
-            } else {
-                view.checkedIndex = 0
+            when (view.checkedIndex) {
+                -1 -> view.checkedIndex = 0
+                0 -> view.checkedIndex = 1
+                1 -> view.checkedIndex = -1
             }
         }
     }
