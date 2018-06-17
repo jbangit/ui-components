@@ -1,4 +1,4 @@
-package com.jbangit.uicomponents.common;
+package com.jbangit.uicomponents.common.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
