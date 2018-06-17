@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground">
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="@android:string/cancel"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/timepicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@android:string/ok"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/timepicker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/timepicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorForeground"
+        android:orientation="horizontal"
+        android:paddingBottom="36dp"
+        android:paddingTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_height="200dp">
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:wheelview_dividerColor="@color/colorLine"
+            app:wheelview_textColorCenter="@color/colorTextBlack"
+            app:wheelview_textColorOut="@color/colorTextGray"
+            app:wheelview_textSize="17sp" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/year"
+            android:layout_width="72sp"
+            android:layout_height="wrap_content"
+            app:wheelview_dividerColor="@color/colorLine"
+            app:wheelview_textColorCenter="@color/colorTextBlack"
+            app:wheelview_textColorOut="@color/colorTextGray"
+            app:wheelview_textSize="17sp" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/month"
+            android:layout_width="52sp"
+            android:layout_height="wrap_content"
+            app:wheelview_dividerColor="@color/colorLine"
+            app:wheelview_textColorCenter="@color/colorTextBlack"
+            app:wheelview_textColorOut="@color/colorTextGray"
+            app:wheelview_textSize="17sp" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/day"
+            android:layout_width="52sp"
+            android:layout_height="wrap_content"
+            app:wheelview_dividerColor="@color/colorLine"
+            app:wheelview_textColorCenter="@color/colorTextBlack"
+            app:wheelview_textColorOut="@color/colorTextGray"
+            app:wheelview_textSize="17sp" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/hour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:visibility="gone" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/min"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:visibility="gone" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/second"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:visibility="gone" />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:wheelview_dividerColor="@color/colorLine"
+            app:wheelview_textColorCenter="@color/colorTextBlack"
+            app:wheelview_textColorOut="@color/colorTextGray"
+            app:wheelview_textSize="17sp" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
