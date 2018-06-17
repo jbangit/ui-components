@@ -8,12 +8,18 @@ import com.jbangit.uicomponents.cell.Cell
 import com.jbangit.uicomponents.cell.CellGroup
 import com.jbangit.uicomponents.cell.CheckedCell
 import com.jbangit.uicomponents.cell.RadioCell
+import java.util.*
+
 
 class CellViewModel(context: Application) : AndroidViewModel(context) {
 
     val toast: MutableLiveData<String> = MutableLiveData()
 
-    val checkIndex: MutableLiveData<Int> = MutableLiveData()
+    val birthDate: MutableLiveData<Date> = MutableLiveData()
+
+    init {
+        birthDate.value = DATE_FORMAT.parse("1992-5-22")
+    }
 
     fun onClick(view: View) {
         if (view is Cell) {
@@ -49,5 +55,9 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
         toast.value = """
             |${radioCell.title} : is ${if (radio) "check" else "uncheck"}
             """.trimMargin()
+    }
+
+    fun updateBirthDate(date: Date) {
+        birthDate.value = date
     }
 }

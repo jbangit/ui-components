@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.jbangit.sample.cell.CellViewModel" />
+
+        <variable
+            name="view"
+            type="com.jbangit.sample.cell.CellFragment" />
     </data>
 
     <ScrollView
@@ -43,10 +47,10 @@
                     app:cellTitle="性别" />
 
                 <com.jbangit.uicomponents.cell.Cell
+                    android:id="@+id/birth_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{viewModel.onClick}"
-                    app:cellSubject="1990-5-22"
+                    android:onClick="@{view.chooseBirthDate}"
                     app:cellTitle="生日" />
 
             </com.jbangit.uicomponents.cell.CellGroup>
