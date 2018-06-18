@@ -4,3 +4,5 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val DATE_FORMAT = SimpleDateFormat("yyyy-M-d", Locale.getDefault())
+
+val SEXUAL = arrayOf("男", "女")

@@ -14,8 +14,10 @@ import com.jbangit.sample.databinding.FragmentCellBinding
 import com.jbangit.sample.showToast
 import com.jbangit.uicomponents.common.dialog.OnFragmentResultListener
 import com.jbangit.uicomponents.dialog.DatePickerDialog
+import com.jbangit.uicomponents.dialog.OptionDialog
 
 private const val REQUEST_BIRTH_DATE = 1
+private const val REQUEST_SEXUAL = 2
 
 class CellFragment : Fragment(), OnFragmentResultListener {
 
@@ -47,16 +49,26 @@ class CellFragment : Fragment(), OnFragmentResultListener {
         viewModel.birthDate.observe(this, Observer { it ->
             mBinding.birthDate.subject = DATE_FORMAT.format(it)
         })
+        viewModel.sexual.observe(this, Observer {
+            mBinding.sexual.subject = SEXUAL[it!!]
+        })
     }
 
     fun chooseBirthDate(view: View) {
         DatePickerDialog.show(this, REQUEST_BIRTH_DATE, null, null, mViewModel.birthDate.value)
     }
 
+    fun chooseSexual(view: View) {
+        OptionDialog.show(this, REQUEST_SEXUAL, SEXUAL.asList(), mViewModel.sexual.value!!)
+    }
+
     override fun onFragmentResult(fragment: Fragment, requestCode: Int, resultCode: Int) {
         when (requestCode) {
             REQUEST_BIRTH_DATE -> when (resultCode) {
                 Activity.RESULT_OK -> mViewModel.updateBirthDate((fragment as DatePickerDialog).date)
+            }
+            REQUEST_SEXUAL -> when (resultCode) {
+                Activity.RESULT_OK -> mViewModel.updateSexual((fragment as OptionDialog).index)
             }
         }
     }

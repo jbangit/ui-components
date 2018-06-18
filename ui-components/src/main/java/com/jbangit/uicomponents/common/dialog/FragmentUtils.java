@@ -108,22 +108,22 @@ public class FragmentUtils {
         saveState(dialog);
     }
 
-    public static void setResult(DialogFragment dialog, boolean ok) {
-        int requestCode = dialog.getTargetRequestCode();
+    public static void setResult(Fragment fragment, boolean ok) {
+        int requestCode = fragment.getTargetRequestCode();
         int resultCode = ok ? Activity.RESULT_OK : Activity.RESULT_CANCELED;
-        if (dialog.getTargetFragment() == null) {
-            FragmentActivity activity = dialog.getActivity();
+        if (fragment.getTargetFragment() == null) {
+            FragmentActivity activity = fragment.getActivity();
             if (activity instanceof OnFragmentResultListener) {
                 ((OnFragmentResultListener) activity)
                         .onFragmentResult(
-                                dialog, requestCode, resultCode);
+                                fragment, requestCode, resultCode);
             }
         } else {
-            Fragment fragment = dialog.getTargetFragment();
-            if (fragment instanceof OnFragmentResultListener) {
-                ((OnFragmentResultListener) fragment)
+            Fragment targetFragment = fragment.getTargetFragment();
+            if (targetFragment instanceof OnFragmentResultListener) {
+                ((OnFragmentResultListener) targetFragment)
                         .onFragmentResult(
-                                dialog, requestCode, resultCode);
+                                fragment, requestCode, resultCode);
             }
         }
     }

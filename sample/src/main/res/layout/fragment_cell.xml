@@ -40,9 +40,10 @@
                 android:layout_height="wrap_content">
 
                 <com.jbangit.uicomponents.cell.Cell
+                    android:id="@+id/sexual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{viewModel.onClick}"
+                    android:onClick="@{view.chooseSexual}"
                     app:cellSubject="女"
                     app:cellTitle="性别" />
 

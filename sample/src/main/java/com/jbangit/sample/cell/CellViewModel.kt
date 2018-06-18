@@ -17,8 +17,11 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
 
     val birthDate: MutableLiveData<Date> = MutableLiveData()
 
+    val sexual: MutableLiveData<Int> = MutableLiveData()
+
     init {
         birthDate.value = DATE_FORMAT.parse("1992-5-22")
+        sexual.value = 1
     }
 
     fun onClick(view: View) {
@@ -59,5 +62,9 @@ class CellViewModel(context: Application) : AndroidViewModel(context) {
 
     fun updateBirthDate(date: Date) {
         birthDate.value = date
+    }
+
+    fun updateSexual(sexual: Int) {
+        this.sexual.value = sexual
     }
 }
