@@ -19,4 +19,9 @@
         <attr name="radioCellOn" format="boolean" />
         <attr name="radioCellOnColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="NavGridItem">
+        <attr name="navGridItemTitle" format="string" />
+        <attr name="navGridItemIcon" format="reference" />
+    </declare-styleable>
 </resources>
