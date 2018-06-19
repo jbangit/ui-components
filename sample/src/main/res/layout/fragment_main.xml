@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.jbangit.sample.MainFragment" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jbangit.uicomponents.nav.NavGrid
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_dialog"
+                app:navGridItemTitle="Dialog" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/nav_cell"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
+                app:navGridItemIcon="@drawable/ic_cell"
+                app:navGridItemTitle="Cell" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_list"
+                app:navGridItemTitle="List" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_spinner"
+                app:navGridItemTitle="Spinner" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_aside_bar"
+                app:navGridItemTitle="AsideBar" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_tabs"
+                app:navGridItemTitle="Tabs" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_action_sheet"
+                app:navGridItemTitle="ActionSheet" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_slider"
+                app:navGridItemTitle="Slider" />
+
+            <com.jbangit.uicomponents.nav.NavGridItem
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:navGridItemIcon="@drawable/ic_article"
+                app:navGridItemTitle="Article" />
+
+        </com.jbangit.uicomponents.nav.NavGrid>
+    </android.support.constraint.ConstraintLayout>
+</layout>
