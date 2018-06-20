@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:background="@drawable/bg_badge"
+        android:gravity="center"
+        android:minHeight="10sp"
+        android:minWidth="10sp"
+        android:paddingEnd="4sp"
+        android:paddingStart="4sp"
+        android:textColor="@android:color/white"
+        android:textSize="8sp"
+        tools:ignore="SmallSp" />
+
+    <ImageView
+        android:id="@+id/badge_infinite"
+        android:layout_width="7sp"
+        android:layout_height="7sp"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="3sp"
+        android:layout_marginTop="3sp"
+        android:background="@drawable/bg_badge_infinite"
+        tools:ignore="ContentDescription,SmallSp" />
+
+</FrameLayout>
