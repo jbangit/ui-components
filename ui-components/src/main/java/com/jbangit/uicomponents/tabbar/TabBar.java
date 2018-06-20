@@ -60,17 +60,20 @@ public class TabBar extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
 
-        int tabItemInset = (getWidth() - mTotalChildWidth) / (childCount + 1);
+        final float itemInsetMultiple = 2.5f;
+
+        int statEndInset = (int) ((getWidth() - mTotalChildWidth) / ((childCount - 1) * itemInsetMultiple + 2));
+        int itemInset = (int) (itemInsetMultiple * statEndInset);
 
         int left, top, bottom;
-        left = tabItemInset;
+        left = statEndInset;
         top = 0;
         bottom = getHeight();
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
             int childViewWidth = childView.getMeasuredWidth();
             childView.layout(left, top, left + childViewWidth, bottom);
-            left += tabItemInset + childViewWidth;
+            left += itemInset + childViewWidth;
         }
     }
 
