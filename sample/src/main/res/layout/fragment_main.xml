@@ -48,8 +48,10 @@
                 app:navGridItemTitle="Spinner" />
 
             <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/aside_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
                 app:navGridItemIcon="@drawable/ic_aside_bar"
                 app:navGridItemTitle="AsideBar" />
 

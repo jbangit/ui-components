@@ -17,6 +17,7 @@
         </activity>
 
         <activity android:name=".cell.CellActivity" />
+        <activity android:name=".assidebar.AsideBarActivity" />
     </application>
 
 </manifest>

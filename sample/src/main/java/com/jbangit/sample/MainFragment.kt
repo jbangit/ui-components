@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jbangit.sample.assidebar.AsideBarActivity
 import com.jbangit.sample.cell.CellActivity
 import com.jbangit.sample.databinding.FragmentMainBinding
 
@@ -35,6 +36,11 @@ class MainFragment : Fragment() {
             R.id.nav_cell -> {
                 startActivity(
                     Intent(context, CellActivity::class.java)
+                )
+            }
+            R.id.aside_bar -> {
+                startActivity(
+                    Intent(context, AsideBarActivity::class.java)
                 )
             }
         }

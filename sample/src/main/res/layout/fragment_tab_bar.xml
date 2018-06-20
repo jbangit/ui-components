@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jbangit.uicomponents.tabbar.TabBar
+            android:id="@+id/tabBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tabBarItemIcon="@drawable/ic_tab_home"
+                app:tabBarItemTitle="123" />
+
+            <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tabBarItemBadge="3"
+                app:tabBarItemIcon="@drawable/ic_tab_near"
+                app:tabBarItemTitle="456" />
+
+            <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tabBarItemBadge="100"
+                app:tabBarItemIcon="@drawable/ic_tab_sms"
+                app:tabBarItemTitle="123" />
+
+            <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tabBarItemBadge="-1"
+                app:tabBarItemIcon="@drawable/ic_tab_user"
+                app:tabBarItemTitle="123" />
+
+        </com.jbangit.uicomponents.tabbar.TabBar>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/tabBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
