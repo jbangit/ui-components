@@ -29,6 +29,5 @@
         <attr name="tabBarItemTitle" format="string" />
         <attr name="tabBarItemIcon" format="reference" />
         <attr name="tabBarItemSelectedIcon" format="reference" />
-        <attr name="tabBarItemBadge" format="integer" />
     </declare-styleable>
 </resources>

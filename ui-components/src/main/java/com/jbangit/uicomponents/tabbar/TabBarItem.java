@@ -14,13 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jbangit.uicomponents.R;
+import com.jbangit.uicomponents.badge.Badge;
 import com.jbangit.uicomponents.common.Globals;
 
 /**
  * If selected icon is not set, change icon by tint color between checked and unchecked state
  * <p>
  * <p>{@link TabBarItem#setTitle(CharSequence)}
- * <p>{@link TabBarItem#setBadge(int)}
+ * <p>{@link TabBarItem#getBadge()}
  */
 public class TabBarItem extends FrameLayout implements Checkable {
 
@@ -30,15 +31,11 @@ public class TabBarItem extends FrameLayout implements Checkable {
 
     private Drawable mAttrSelectedIcon;
 
-    private int mAttrBadge;
-
     private TextView mTitle;
 
     private ImageView mIcon;
 
-    private TextView mBadge;
-
-    private int mBadgeNumber;
+    private Badge mBadge;
 
     private boolean mChecked = false;
 
@@ -58,7 +55,6 @@ public class TabBarItem extends FrameLayout implements Checkable {
         mAttrTitle = typedArray.getString(R.styleable.TabBarItem_tabBarItemTitle);
         mAttrIcon = typedArray.getDrawable(R.styleable.TabBarItem_tabBarItemIcon);
         mAttrSelectedIcon = typedArray.getDrawable(R.styleable.TabBarItem_tabBarItemSelectedIcon);
-        mAttrBadge = typedArray.getInt(R.styleable.TabBarItem_tabBarItemBadge, 0);
 
         if (mAttrSelectedIcon == null) {
             mAttrIcon.mutate();
@@ -92,7 +88,6 @@ public class TabBarItem extends FrameLayout implements Checkable {
 
     private void initViews() {
         setTitle(mAttrTitle);
-        setBadge(mAttrBadge);
         setChecked(false);
 
         mLayout.setOnClickListener(new OnClickListener() {
@@ -105,25 +100,23 @@ public class TabBarItem extends FrameLayout implements Checkable {
         });
     }
 
-    public void setBadge(int badge) {
-        mBadgeNumber = badge;
-        showBadge();
+    public CharSequence getTitle() {
+        return mTitle.getText();
     }
 
-    private void showBadge() {
-        if (mBadgeNumber < 0) {
-            mBadge.setVisibility(View.VISIBLE);
+    public void setTitle(CharSequence title) {
+        mTitle.setText(title);
+    }
 
-        } else if (mBadgeNumber == 0) {
-            mBadge.setVisibility(View.INVISIBLE);
+    @Override
+    public boolean isChecked() {
+        return mChecked;
+    }
 
-        } else if (mBadgeNumber > 99) {
-            mBadge.setVisibility(View.VISIBLE);
-            mBadge.setText("99+");
-        } else {
-            mBadge.setVisibility(View.VISIBLE);
-            mBadge.setText(String.valueOf(mBadgeNumber));
-        }
+    @Override
+    public void setChecked(boolean checked) {
+        mChecked = checked;
+        showChecked();
     }
 
     private void showChecked() {
@@ -134,32 +127,13 @@ public class TabBarItem extends FrameLayout implements Checkable {
         }
     }
 
-    public int getBadge(int badge) {
-        return mBadgeNumber;
-    }
-
-    public CharSequence getTitle() {
-        return mTitle.getText();
-    }
-
-    public void setTitle(CharSequence title) {
-        mTitle.setText(title);
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-        mChecked = checked;
-        showChecked();
-    }
-
-    @Override
-    public boolean isChecked() {
-        return mChecked;
-    }
-
     @Override
     public void toggle() {
         mChecked = !mChecked;
         showChecked();
+    }
+
+    public Badge getBadge() {
+        return mBadge;
     }
 }

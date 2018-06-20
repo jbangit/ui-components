@@ -13,31 +13,32 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:id="@+id/home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tabBarItemIcon="@drawable/ic_tab_home"
-                app:tabBarItemTitle="123" />
+                app:tabBarItemTitle="主页" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:id="@+id/near"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tabBarItemBadge="3"
                 app:tabBarItemIcon="@drawable/ic_tab_near"
-                app:tabBarItemTitle="456" />
+                app:tabBarItemTitle="附近" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:id="@+id/sms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tabBarItemBadge="100"
                 app:tabBarItemIcon="@drawable/ic_tab_sms"
-                app:tabBarItemTitle="123" />
+                app:tabBarItemTitle="消息" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
+                android:id="@+id/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tabBarItemBadge="-1"
                 app:tabBarItemIcon="@drawable/ic_tab_user"
-                app:tabBarItemTitle="123" />
+                app:tabBarItemTitle="我的" />
 
         </com.jbangit.uicomponents.tabbar.TabBar>
 

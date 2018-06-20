@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import com.jbangit.sample.R
 import com.jbangit.sample.databinding.FragmentTabBarBinding
 import com.jbangit.sample.showToast
+import com.jbangit.uicomponents.badge.Badge
 import com.jbangit.uicomponents.tabbar.TabBar
+import kotlinx.android.synthetic.main.fragment_tab_bar.view.*
 
 class TabBarFragment : Fragment() {
     private lateinit var mBinding: FragmentTabBarBinding
@@ -32,6 +34,7 @@ class TabBarFragment : Fragment() {
 
                     if (oldPosition == 1 && newPosition == 2) {
                         toast += "\nInterrupt!"
+                        mBinding.tabBar.sms.badge.number++
                         showToast(toast)
                         false
                     } else {
@@ -59,6 +62,13 @@ class TabBarFragment : Fragment() {
         }
 
         mBinding.tabBar.setupWithViewPager(mBinding.viewPager)
+
+        with(mBinding) {
+            home.badge.number = 0
+            near.badge.number = 1
+            sms.badge.number = 95
+            user.badge.number = Badge.INFINITE
+        }
 
         return mBinding.root
     }
