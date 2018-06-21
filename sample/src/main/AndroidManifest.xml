@@ -18,6 +18,7 @@
 
         <activity android:name=".cell.CellActivity" />
         <activity android:name=".assidebar.AsideBarActivity" />
+        <activity android:name=".actionsheet.ActionSheetActivity" />
     </application>
 
 </manifest>

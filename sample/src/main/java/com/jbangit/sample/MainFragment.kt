@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jbangit.sample.actionsheet.ActionSheetActivity
 import com.jbangit.sample.assidebar.AsideBarActivity
 import com.jbangit.sample.cell.CellActivity
 import com.jbangit.sample.databinding.FragmentMainBinding
@@ -41,6 +42,11 @@ class MainFragment : Fragment() {
             R.id.aside_bar -> {
                 startActivity(
                     Intent(context, AsideBarActivity::class.java)
+                )
+            }
+            R.id.action_sheet -> {
+                startActivity(
+                    Intent(context, ActionSheetActivity::class.java)
                 )
             }
         }

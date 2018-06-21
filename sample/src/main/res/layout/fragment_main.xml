@@ -62,8 +62,10 @@
                 app:navGridItemTitle="Tabs" />
 
             <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/action_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
                 app:navGridItemIcon="@drawable/ic_action_sheet"
                 app:navGridItemTitle="ActionSheet" />
 
