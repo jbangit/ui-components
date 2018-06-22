@@ -22,5 +22,21 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
 
+        <Button
+            android:id="@+id/multiple_choice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/jColorPrimary"
+            android:text="Multiple Choice"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/action_sheet"
+            tools:ignore="HardcodedText" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

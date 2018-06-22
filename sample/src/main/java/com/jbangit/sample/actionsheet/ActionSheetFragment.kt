@@ -12,9 +12,18 @@ import com.jbangit.sample.databinding.FragmentActionSheetBinding
 import com.jbangit.sample.showToast
 import com.jbangit.uicomponents.common.dialog.OnFragmentResultListener
 import com.jbangit.uicomponents.dialog.ActionSheet
+import com.jbangit.uicomponents.dialog.MultipleChoiceDialog
 
 private const val REQUEST_ACTION_SHEET = 100
+private const val REQUEST_MULTIPLE_CHOICE = 101
+
 private val ACTIONS = arrayListOf("示例菜单1", "示例菜单2", "示例菜单3", "示例菜单4")
+private val CHOICES = arrayListOf(
+    "嘻哈", "流行", "摇滚", "民谣",
+    "电子", "舞曲", "乡村", "金属",
+    "爵士", "轻音乐", "拉丁", "R&B/SOUL",
+    "朋克", "另类/独立", "雷鬼", "后摇"
+)
 
 class ActionSheetFragment : Fragment(), OnFragmentResultListener {
 
@@ -27,14 +36,23 @@ class ActionSheetFragment : Fragment(), OnFragmentResultListener {
     ): View? {
         mBinding =
                 DataBindingUtil.inflate(inflater, R.layout.fragment_action_sheet, container, false)
-        mBinding.actionSheet.setOnClickListener {
-            ActionSheet.show(
-                this@ActionSheetFragment,
-                REQUEST_ACTION_SHEET,
-                ACTIONS
-            )
-        }
+        with(mBinding) {
+            actionSheet.setOnClickListener {
+                ActionSheet.show(
+                    this@ActionSheetFragment,
+                    REQUEST_ACTION_SHEET,
+                    ACTIONS
+                )
+            }
 
+            multipleChoice.setOnClickListener {
+                MultipleChoiceDialog.show(
+                    this@ActionSheetFragment,
+                    REQUEST_MULTIPLE_CHOICE,
+                    CHOICES
+                )
+            }
+        }
         return mBinding.root
     }
 
@@ -44,6 +62,13 @@ class ActionSheetFragment : Fragment(), OnFragmentResultListener {
                 Activity.RESULT_OK -> showToast(
                     """
                     ${(fragment as ActionSheet).actionIndex} : ${fragment.action}
+                """.trimIndent()
+                )
+            }
+            REQUEST_MULTIPLE_CHOICE -> when (resultCode) {
+                Activity.RESULT_OK -> showToast(
+                    """
+                    ${(fragment as MultipleChoiceDialog).choicesIndexes} : ${fragment.chosenItem}
                 """.trimIndent()
                 )
             }
