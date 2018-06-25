@@ -42,8 +42,10 @@
                 app:navGridItemTitle="List" />
 
             <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/nav_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
                 app:navGridItemIcon="@drawable/ic_spinner"
                 app:navGridItemTitle="Spinner" />
 

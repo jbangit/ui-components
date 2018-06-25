@@ -11,6 +11,7 @@ import com.jbangit.sample.actionsheet.ActionSheetActivity
 import com.jbangit.sample.assidebar.AsideBarActivity
 import com.jbangit.sample.cell.CellActivity
 import com.jbangit.sample.databinding.FragmentMainBinding
+import com.jbangit.sample.spinner.SpinnerActivity
 
 class MainFragment : Fragment() {
 
@@ -47,6 +48,11 @@ class MainFragment : Fragment() {
             R.id.action_sheet -> {
                 startActivity(
                     Intent(context, ActionSheetActivity::class.java)
+                )
+            }
+            R.id.nav_spinner -> {
+                startActivity(
+                    Intent(context, SpinnerActivity::class.java)
                 )
             }
         }

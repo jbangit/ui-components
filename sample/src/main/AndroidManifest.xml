@@ -19,6 +19,7 @@
         <activity android:name=".cell.CellActivity" />
         <activity android:name=".assidebar.AsideBarActivity" />
         <activity android:name=".actionsheet.ActionSheetActivity" />
+        <activity android:name=".spinner.SpinnerActivity" />
     </application>
 
 </manifest>
