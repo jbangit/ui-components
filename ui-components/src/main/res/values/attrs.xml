@@ -34,4 +34,10 @@
     <declare-styleable name="GridRadioGroup">
         <attr name="gridRadioGroupCheckedColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="Spinner">
+        <attr name="spinnerNumber" format="integer" />
+        <attr name="spinnerMaxNumber" format="integer" />
+        <attr name="spinnerMiniNumber" format="integer" />
+    </declare-styleable>
 </resources>

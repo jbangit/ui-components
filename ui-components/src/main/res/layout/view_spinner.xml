@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/plus"
+        android:layout_width="40sp"
+        android:layout_height="24sp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="@+id/number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/number"
+        app:srcCompat="@drawable/ic_spinner_plus"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/minus"
+        android:layout_width="40sp"
+        android:layout_height="24sp"
+        android:scaleType="fitEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_spinner_minus"
+        tools:ignore="ContentDescription" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/number"
+        android:layout_width="36sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:lines="1"
+        android:textColor="@color/colorTextDark"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="@+id/minus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/minus"
+        tools:text="1" />
+
+</android.support.constraint.ConstraintLayout>
