@@ -72,8 +72,10 @@
                 app:navGridItemTitle="ActionSheet" />
 
             <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
                 app:navGridItemIcon="@drawable/ic_slider"
                 app:navGridItemTitle="Slider" />
 

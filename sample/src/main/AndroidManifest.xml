@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jbangit.sample">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,6 +22,7 @@
         <activity android:name=".assidebar.AsideBarActivity" />
         <activity android:name=".actionsheet.ActionSheetActivity" />
         <activity android:name=".spinner.SpinnerActivity" />
+        <activity android:name=".slider.SliderActivity" />
     </application>
 
 </manifest>
