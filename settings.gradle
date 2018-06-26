@@ -1,1 +1,1 @@
-include ':sample', ':ui-components'
+include ':sample', ':library'
