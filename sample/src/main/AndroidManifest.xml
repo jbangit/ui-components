@@ -23,6 +23,7 @@
         <activity android:name=".actionsheet.ActionSheetActivity" />
         <activity android:name=".spinner.SpinnerActivity" />
         <activity android:name=".slider.SliderActivity" />
+        <activity android:name=".button.ButtonActivity" />
     </application>
 
 </manifest>

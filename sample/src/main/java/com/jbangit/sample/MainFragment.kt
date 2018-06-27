@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jbangit.sample.actionsheet.ActionSheetActivity
 import com.jbangit.sample.assidebar.AsideBarActivity
+import com.jbangit.sample.button.ButtonActivity
 import com.jbangit.sample.cell.CellActivity
 import com.jbangit.sample.databinding.FragmentMainBinding
 import com.jbangit.sample.slider.SliderActivity
@@ -59,6 +60,11 @@ class MainFragment : Fragment() {
             R.id.slider -> {
                 startActivity(
                     Intent(context, SliderActivity::class.java)
+                )
+            }
+            R.id.button -> {
+                startActivity(
+                    Intent(context, ButtonActivity::class.java)
                 )
             }
         }

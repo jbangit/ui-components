@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.jbangit.sample.button.ButtonFragment" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{view::onClick}"
+            app:jButtonTitle="Button Fill"
+            app:layout_constraintBottom_toTopOf="@+id/stroke"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/stroke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{view::onClick}"
+            app:jButtonStyle="stroke"
+            app:jButtonTitle="Button Stroke"
+            app:layout_constraintBottom_toTopOf="@+id/radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fill" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/colorForeground"
+            android:onClick="@{view::onClick}"
+            app:jButtonRadius="32dp"
+            app:jButtonStyle="fill"
+            app:jButtonTitle="Button Radius"
+            app:layout_constraintBottom_toTopOf="@+id/special"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stroke" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/special"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{view::onClick}"
+            app:jButtonColor="@color/colorTextDark"
+            app:jButtonRadius="8dp"
+            app:jButtonStyle="stroke"
+            app:jButtonTitle="Special"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radius" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
