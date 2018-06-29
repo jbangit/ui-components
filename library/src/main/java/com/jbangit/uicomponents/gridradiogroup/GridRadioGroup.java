@@ -218,8 +218,8 @@ public class GridRadioGroup extends ViewGroup {
         }
 
         int allInsetWith = mGridHorizonInset * (ROW_COUNT - 1);
-        int paddingWidth = getPaddingLeft() + getPaddingRight();
-        mGridWidth = (width - allInsetWith - paddingWidth) / ROW_COUNT;
+        int allPaddingWidth = getPaddingLeft() + getPaddingRight();
+        mGridWidth = (width - allInsetWith - allPaddingWidth) / ROW_COUNT;
 
         measureChildren();
         int lineCount = ((getChildCount() - 1) / ROW_COUNT) + 1;
@@ -273,7 +273,7 @@ public class GridRadioGroup extends ViewGroup {
 
             if ((i + 1) % ROW_COUNT == 0) {
                 // end of the line
-                left = mGridHorizonInset;
+                left = getPaddingLeft();
                 top += mGridHeight + mGridVerticalInset;
             }
         }
