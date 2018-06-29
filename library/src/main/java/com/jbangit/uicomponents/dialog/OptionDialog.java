@@ -14,9 +14,9 @@ import com.contrarywind.listener.OnItemSelectedListener;
 import com.contrarywind.view.WheelView;
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.Globals;
-import com.jbangit.uicomponents.common.dialog.BottomDialogFragment;
-import com.jbangit.uicomponents.common.dialog.FragmentUtils;
-import com.jbangit.uicomponents.common.dialog.State;
+import com.jbangit.uicomponents.common.fragment.BottomDialogFragment;
+import com.jbangit.uicomponents.common.fragment.FragmentUtils;
+import com.jbangit.uicomponents.common.fragment.State;
 
 import java.util.ArrayList;
 import java.util.Collection;

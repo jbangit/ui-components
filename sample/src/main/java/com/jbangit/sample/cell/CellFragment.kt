@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.jbangit.sample.R
 import com.jbangit.sample.databinding.FragmentCellBinding
 import com.jbangit.sample.showToast
-import com.jbangit.uicomponents.common.dialog.OnFragmentResultListener
+import com.jbangit.uicomponents.common.fragment.OnFragmentResultListener
 import com.jbangit.uicomponents.dialog.DatePickerDialog
 import com.jbangit.uicomponents.dialog.OptionDialog
 

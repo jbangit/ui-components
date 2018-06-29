@@ -1,4 +1,4 @@
-package com.jbangit.uicomponents.common.dialog;
+package com.jbangit.uicomponents.common.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.jbangit.uicomponents.common.dialog;
+package com.jbangit.uicomponents.common.fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

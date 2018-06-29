@@ -19,10 +19,10 @@ import com.bigkoo.pickerview.view.WheelTime;
 import com.contrarywind.view.WheelView;
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.Globals;
-import com.jbangit.uicomponents.common.dialog.BottomDialogFragment;
-import com.jbangit.uicomponents.common.dialog.FragmentUtils;
-import com.jbangit.uicomponents.common.dialog.OnFragmentResultListener;
-import com.jbangit.uicomponents.common.dialog.State;
+import com.jbangit.uicomponents.common.fragment.BottomDialogFragment;
+import com.jbangit.uicomponents.common.fragment.FragmentUtils;
+import com.jbangit.uicomponents.common.fragment.OnFragmentResultListener;
+import com.jbangit.uicomponents.common.fragment.State;
 
 import java.text.ParseException;
 import java.util.Calendar;
