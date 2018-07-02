@@ -23,22 +23,24 @@
             app:jButtonTitle="Button Fill"
             app:layout_constraintBottom_toTopOf="@+id/stroke"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="spread" />
 
         <com.jbangit.uicomponents.button.JButton
             android:id="@+id/stroke"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:onClick="@{view::onClick}"
+            app:jButtonIcon="@drawable/ic_spinner_plus"
             app:jButtonStyle="stroke"
             app:jButtonTitle="Button Stroke"
             app:layout_constraintBottom_toTopOf="@+id/radius"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fill" />
 
@@ -47,34 +49,66 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:background="@color/colorForeground"
             android:onClick="@{view::onClick}"
+            app:jButtonIcon="@drawable/ic_spinner_plus"
             app:jButtonRadius="32dp"
             app:jButtonStyle="fill"
             app:jButtonTitle="Button Radius"
-            app:layout_constraintBottom_toTopOf="@+id/special"
+            app:layout_constraintBottom_toTopOf="@+id/little"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stroke" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/little"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{view::onClick}"
+            app:jButtonSize="little"
+            app:jButtonStyle="stroke"
+            app:jButtonTitle="little"
+            app:layout_constraintBottom_toTopOf="@+id/special"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radius" />
 
         <com.jbangit.uicomponents.button.JButton
             android:id="@+id/special"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:onClick="@{view::onClick}"
             app:jButtonColor="@color/colorTextDark"
             app:jButtonRadius="8dp"
             app:jButtonStyle="stroke"
             app:jButtonTitle="Special"
+            app:layout_constraintBottom_toTopOf="@+id/chip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/little" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{view::onClick}"
+            app:jButtonStyle="chip"
+            app:jButtonTitle="This is chip"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radius" />
+            app:layout_constraintTop_toBottomOf="@+id/special" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
