@@ -43,11 +43,20 @@
 
     <declare-styleable name="JButton">
         <attr name="jButtonTitle" format="string" />
-        <attr name="jButtonColor" format="color" />
+        <attr name="jButtonIcon" format="reference" />
         <attr name="jButtonRadius" format="dimension" />
+        <attr name="jButtonTextSize" format="dimension" />
+        <attr name="jButtonColor" format="color" />
+        <attr name="jButtonTextColor" format="color" />
         <attr name="jButtonStyle" format="enum">
             <enum name="fill" value="0" />
             <enum name="stroke" value="1" />
+            <enum name="chip" value="2" />
+        </attr>
+        <attr name="jButtonSize" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="little" value="1" />
+            <enum name="chip" value="2" />
         </attr>
     </declare-styleable>
 </resources>

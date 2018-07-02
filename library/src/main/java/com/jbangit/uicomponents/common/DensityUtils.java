@@ -8,4 +8,9 @@ public class DensityUtils {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
+
+    public static int getPxFromSp(Context context, int sp) {
+        float density = context.getResources().getDisplayMetrics().scaledDensity;
+        return Math.round(sp * density);
+    }
 }
