@@ -176,4 +176,13 @@ public class JButton extends FrameLayout {
                 .cornerPx((int) mAttrRadius)
                 .build();
     }
+
+    public CharSequence getTitle() {
+        return mTitle.getText();
+    }
+
+    public void setTitle(CharSequence title) {
+        mTitle.setText(title);
+    }
+
 }
