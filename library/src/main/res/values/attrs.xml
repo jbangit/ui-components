@@ -5,6 +5,8 @@
     <declare-styleable name="Cell">
         <attr name="cellTitle" format="string" />
         <attr name="cellSubject" format="string" />
+        <attr name="cellIcon" format="reference" />
+        <attr name="cellFitIcon" format="boolean" />
     </declare-styleable>
     <declare-styleable name="CellGroup">
         <attr name="cellGroupTitle" format="string" />
