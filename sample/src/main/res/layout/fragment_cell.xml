@@ -44,6 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="@{view.chooseSexual}"
+                    app:cellIcon="@drawable/ic_sexual"
                     app:cellSubject="女"
                     app:cellTitle="性别" />
 
@@ -52,6 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="@{view.chooseBirthDate}"
+                    app:cellFitIcon="true"
+                    app:cellIcon="@null"
                     app:cellTitle="生日" />
 
             </com.jbangit.uicomponents.cell.CellGroup>
@@ -63,6 +66,7 @@
                 <com.jbangit.uicomponents.cell.Cell
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:cellIcon="@null"
                     app:cellSubject="广州微匠互联网科技有限公司"
                     app:cellTitle="公司" />
 
@@ -70,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="@{viewModel.onClick}"
+                    app:cellIcon="@null"
                     app:cellSubject="送人玫瑰，手有余香"
                     app:cellTitle="个性签名" />
 
@@ -78,8 +83,8 @@
             <com.jbangit.uicomponents.cell.CellGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cellGroupTitle="单选"
                 android:onClick="@{viewModel.onCLickCheckGroupTitle}"
+                app:cellGroupTitle="单选"
                 app:onCheckedChanged="@{viewModel.onGroupCheckedChanged}">
 
                 <com.jbangit.uicomponents.cell.CheckedCell
