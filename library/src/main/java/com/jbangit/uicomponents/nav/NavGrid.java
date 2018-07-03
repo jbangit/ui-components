@@ -3,7 +3,6 @@ package com.jbangit.uicomponents.nav;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -19,8 +18,6 @@ public class NavGrid extends ViewGroup {
     private int mDividerSize;
 
     private Paint mDividerPaint;
-
-    private int mBackgroundColor;
 
     private boolean mAttrIsShowDivider = false;
 
@@ -47,7 +44,6 @@ public class NavGrid extends ViewGroup {
         mAttrRowNumber = typedArray.getInt(R.styleable.NavGrid_navGridRowNumber, 4);
         typedArray.recycle();
 
-        mBackgroundColor = getResources().getColor(R.color.colorForeground);
         mDividerSize = DensityUtils.getPxFromDp(context, 1);
 
         mDividerPaint = new Paint();
@@ -90,12 +86,6 @@ public class NavGrid extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawARGB(
-                Color.alpha(mBackgroundColor),
-                Color.red(mBackgroundColor),
-                Color.green(mBackgroundColor),
-                Color.blue(mBackgroundColor));
-
         int childCount = getChildCount();
 
         drawDivider(canvas, childCount);
@@ -158,7 +148,8 @@ public class NavGrid extends ViewGroup {
 
         measureChildView();
 
-        int expectHeight = (getChildCount() / mAttrRowNumber + 1) * (mGridSize + mDividerSize) + mDividerSize;
+        int lineCount = ((getChildCount() - 1) / mAttrRowNumber) + 1;
+        int expectHeight = (lineCount) * (mGridSize + mDividerSize) + mDividerSize;
         int height = 0;
         switch (heightMode) {
             case MeasureSpec.EXACTLY:
