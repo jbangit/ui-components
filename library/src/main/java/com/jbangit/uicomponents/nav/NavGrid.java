@@ -1,6 +1,7 @@
 package com.jbangit.uicomponents.nav;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +22,10 @@ public class NavGrid extends ViewGroup {
 
     private int mBackgroundColor;
 
+    private boolean mAttrIsShowDivider = false;
+
+    private int mAttrRowNumber = 3;
+
     public NavGrid(Context context) {
         super(context);
         defaultInit();
@@ -37,6 +42,11 @@ public class NavGrid extends ViewGroup {
     }
 
     private void initAttr(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NavGrid);
+        mAttrIsShowDivider = typedArray.getBoolean(R.styleable.NavGrid_navGridShowDivider, false);
+        mAttrRowNumber = typedArray.getInt(R.styleable.NavGrid_navGridRowNumber, 4);
+        typedArray.recycle();
+
         mBackgroundColor = getResources().getColor(R.color.colorForeground);
         mDividerSize = DensityUtils.getPxFromDp(context, 1);
 
@@ -69,7 +79,7 @@ public class NavGrid extends ViewGroup {
 
             left += mGridSize + mDividerSize;
 
-            if ((i + 1) % 4 == 0) {
+            if ((i + 1) % mAttrRowNumber == 0) {
                 // is the end of the row
                 left = mDividerSize;
                 top += mGridSize + mDividerSize;
@@ -88,6 +98,14 @@ public class NavGrid extends ViewGroup {
 
         int childCount = getChildCount();
 
+        drawDivider(canvas, childCount);
+    }
+
+    private void drawDivider(Canvas canvas, int childCount) {
+        if (!mAttrIsShowDivider) {
+            return;
+        }
+
         float left, top;
         left = mDividerSize;
         top = mDividerSize;
@@ -102,7 +120,7 @@ public class NavGrid extends ViewGroup {
 
             left += mGridSize + mDividerSize;
 
-            if ((i + 1) % 4 == 0) {
+            if ((i + 1) % mAttrRowNumber == 0) {
                 // is the end of the row
                 left = mDividerSize;
                 top += mGridSize + mDividerSize;
@@ -135,12 +153,12 @@ public class NavGrid extends ViewGroup {
                 break;
         }
 
-        int dividerNbr = 4 + 1;
-        mGridSize = (width - (dividerNbr * mDividerSize)) / 4;
+        int dividerNbr = mAttrRowNumber + 1;
+        mGridSize = (width - (dividerNbr * mDividerSize)) / mAttrRowNumber;
 
         measureChildView();
 
-        int expectHeight = (getChildCount() / 4 + 1) * (mGridSize + mDividerSize) + mDividerSize;
+        int expectHeight = (getChildCount() / mAttrRowNumber + 1) * (mGridSize + mDividerSize) + mDividerSize;
         int height = 0;
         switch (heightMode) {
             case MeasureSpec.EXACTLY:

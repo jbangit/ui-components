@@ -22,6 +22,10 @@
         <attr name="radioCellOnColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="NavGrid">
+        <attr name="navGridRowNumber" format="integer" />
+        <attr name="navGridShowDivider" format="boolean" />
+    </declare-styleable>
     <declare-styleable name="NavGridItem">
         <attr name="navGridItemTitle" format="string" />
         <attr name="navGridItemIcon" format="reference" />
