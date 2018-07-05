@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -10,17 +11,54 @@
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/customize_spinner"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/spinner_baseline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="align to baseline"
+            app:layout_constraintBaseline_toBaselineOf="@+id/spinner"
+            app:layout_constraintStart_toEndOf="@+id/spinner"
+            tools:ignore="HardcodedText" />
+
+        <com.jbangit.uicomponents.spinner.Spinner
+            android:id="@+id/customize_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner"
+            app:spinnerLayoutId="@layout/customize_view_spinner"
             app:spinnerMaxNumber="50"
             app:spinnerMiniNumber="-1"
             app:spinnerNumber="5" />
 
+        <TextView
+            android:id="@+id/customize_spinner_baseline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="align to baseline"
+            app:layout_constraintBaseline_toBaselineOf="@+id/customize_spinner"
+            app:layout_constraintStart_toEndOf="@+id/customize_spinner"
+            tools:ignore="HardcodedText" />
+
+        <!--<com.jbangit.uicomponents.spinner.Spinner-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:spinnerLayoutId="@layout/customize_view_spinner"-->
+        <!--/>-->
     </android.support.constraint.ConstraintLayout>
 </layout>
