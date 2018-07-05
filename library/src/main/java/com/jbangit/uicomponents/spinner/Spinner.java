@@ -3,9 +3,7 @@ package com.jbangit.uicomponents.spinner;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -26,13 +24,23 @@ public class Spinner extends FrameLayout {
 
     private static final int DURATION = 30;
 
+    public static final int DEFAULT_NUMBER = 1;
+
+    public static final int DEFAULT_MAX_NUMBER = 99;
+
+    public static final int DEFAULT_MINI_NUMBER = 1;
+
     private final ValueAnimator mNumberAnimator = ValueAnimator.ofInt(0, 100);
 
-    private ImageView mPlus;
+    private View mLayout;
 
-    private ImageView mMinus;
+    private View mPlus;
+
+    private View mMinus;
 
     private TextView mNumberView;
+
+    private int mAttrLayoutId;
 
     private int mNumber;
 
@@ -53,9 +61,12 @@ public class Spinner extends FrameLayout {
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Spinner);
-        mNumber = typedArray.getInt(R.styleable.Spinner_spinnerNumber, 1);
-        mMaxNumber = typedArray.getInt(R.styleable.Spinner_spinnerMaxNumber, 99);
-        mMiniNumber = typedArray.getInt(R.styleable.Spinner_spinnerMiniNumber, 1);
+        mAttrLayoutId =
+                typedArray.getResourceId(
+                        R.styleable.Spinner_spinnerLayoutId, R.layout.view_spinner);
+        mNumber = typedArray.getInt(R.styleable.Spinner_spinnerNumber, DEFAULT_NUMBER);
+        mMaxNumber = typedArray.getInt(R.styleable.Spinner_spinnerMaxNumber, DEFAULT_MAX_NUMBER);
+        mMiniNumber = typedArray.getInt(R.styleable.Spinner_spinnerMiniNumber, DEFAULT_MINI_NUMBER);
         typedArray.recycle();
     }
 
@@ -127,30 +138,40 @@ public class Spinner extends FrameLayout {
         initViews();
     }
 
+    @Override
+    public int getBaseline() {
+        // layout to get child view top
+        mLayout.layout(0, 0, mLayout.getMeasuredWidth(), mLayout.getMeasuredHeight());
+        mLayout.requestLayout();
+        return mNumberView.getTop() + mNumberView.getBaseline();
+    }
+
     private void inflate() {
-        View layout = inflate(getContext(), R.layout.view_spinner, this);
-        mPlus = layout.findViewById(R.id.plus);
-        mMinus = layout.findViewById(R.id.minus);
-        mNumberView = layout.findViewById(R.id.number);
+        mLayout = inflate(getContext(), mAttrLayoutId, this);
+        mPlus = mLayout.findViewById(R.id.spinner_plus);
+        mMinus = mLayout.findViewById(R.id.spinner_minus);
+        mNumberView = mLayout.findViewById(R.id.spinner_number);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void initViews() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            int rippleColor = getResources().getColor(R.color.colorTextDark);
-            RippleDrawable plusDrawable =
-                    new RippleDrawable(
-                            ColorStateList.valueOf(rippleColor), mPlus.getDrawable(), null);
-            mPlus.setImageDrawable(plusDrawable);
-            RippleDrawable minusDrawable =
-                    new RippleDrawable(
-                            ColorStateList.valueOf(rippleColor), mMinus.getDrawable(), null);
-            mMinus.setImageDrawable(minusDrawable);
-        }
+        if (isDefaultLayout()) {
+            // add ripple
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ((ImageView) mPlus)
+                        .setImageDrawable(
+                                Globals.addRipple(getContext(), ((ImageView) mPlus).getDrawable()));
+                ((ImageView) mMinus)
+                        .setImageDrawable(
+                                Globals.addRipple(
+                                        getContext(), ((ImageView) mMinus).getDrawable()));
+            }
 
-        int primaryColor = Globals.getPrimaryColor(getContext());
-        DrawableCompat.setTint(mPlus.getDrawable(), primaryColor);
-        DrawableCompat.setTint(mMinus.getDrawable(), primaryColor);
+            // color hint
+            int primaryColor = Globals.getPrimaryColor(getContext());
+            DrawableCompat.setTint(((ImageView) mPlus).getDrawable(), primaryColor);
+            DrawableCompat.setTint(((ImageView) mMinus).getDrawable(), primaryColor);
+        }
 
         showNumber();
         mNumberAnimator.setInterpolator(new LinearInterpolator());
@@ -220,6 +241,10 @@ public class Spinner extends FrameLayout {
                         return false;
                     }
                 });
+    }
+
+    private boolean isDefaultLayout() {
+        return mAttrLayoutId == R.layout.view_spinner;
     }
 
     private void showNumber() {
