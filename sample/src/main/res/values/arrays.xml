@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text_tab_v_tab">
+        <item>short</item>
+        <item>long and long and long</item>
+        <item>more 1</item>
+        <item>more 2</item>
+        <item>more 3</item>
+        <item>more 4</item>
+        <item>more 5</item>
+        <item>more 6</item>
+    </string-array>
+</resources>
