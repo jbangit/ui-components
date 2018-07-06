@@ -86,4 +86,9 @@
     <declare-styleable name="TextTab">
         <attr name="textTabTitles" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="WaveView">
+        <attr name="waveViewHorizon" format="fraction" />
+        <attr name="waveViewTop" format="fraction" />
+    </declare-styleable>
 </resources>
