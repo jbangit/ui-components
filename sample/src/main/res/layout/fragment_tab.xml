@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jbangit.uicomponents.tab.ViewTab
+            android:id="@+id/view_tab"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.jbangit.uicomponents.tab.TextTab
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorForeground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_tab"
+            app:textTabTitles="@array/array"
+            app:viewTabIdcScale="50%"
+            app:viewTabIdcSize="4dp" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

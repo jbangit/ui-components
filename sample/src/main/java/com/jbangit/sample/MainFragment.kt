@@ -8,12 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jbangit.sample.actionsheet.ActionSheetActivity
+import com.jbangit.sample.animate.AnimateActivity
 import com.jbangit.sample.assidebar.AsideBarActivity
-import com.jbangit.sample.button.ButtonActivity
 import com.jbangit.sample.cell.CellActivity
 import com.jbangit.sample.databinding.FragmentMainBinding
 import com.jbangit.sample.slider.SliderActivity
 import com.jbangit.sample.spinner.SpinnerActivity
+import com.jbangit.sample.tab.TabActivity
 
 class MainFragment : Fragment() {
 
@@ -64,7 +65,17 @@ class MainFragment : Fragment() {
             }
             R.id.button -> {
                 startActivity(
-                    Intent(context, ButtonActivity::class.java)
+                    Intent(context, TabActivity::class.java)
+                )
+            }
+            R.id.animate -> {
+                startActivity(
+                    Intent(context, AnimateActivity::class.java)
+                )
+            }
+            R.id.nav_tab -> {
+                startActivity(
+                    Intent(context, TabActivity::class.java)
                 )
             }
         }

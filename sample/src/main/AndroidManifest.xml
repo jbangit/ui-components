@@ -24,6 +24,8 @@
         <activity android:name=".spinner.SpinnerActivity" />
         <activity android:name=".slider.SliderActivity" />
         <activity android:name=".button.ButtonActivity" />
+        <activity android:name=".animate.AnimateActivity" />
+        <activity android:name=".tab.TabActivity" />
     </application>
 
 </manifest>
