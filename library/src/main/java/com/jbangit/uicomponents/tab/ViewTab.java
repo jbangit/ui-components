@@ -21,6 +21,10 @@ import java.util.List;
 
 public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateListener {
 
+    public static final int ORIENTATION_HORIZON = 0;
+
+    public static final int ORIENTATION_VERTICAL = 1;
+
     public static final int INDICATOR_GRAVITY_TOP = 0;
 
     public static final int INDICATOR_GRAVITY_BOTTOM = 1;
@@ -31,7 +35,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private int mOldItemPosition = -1;
 
-    private boolean mAttrVertical = false;
+    private int mAttrOrientation = ORIENTATION_HORIZON;
 
     private int mAttrIdcHPadding = DensityUtils.getPxFromDp(getContext(), 0);
 
@@ -69,6 +73,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ViewTab);
+        mAttrOrientation =
+                typedArray.getInt(R.styleable.ViewTab_viewTabOrientation, mAttrOrientation);
         mAttrIdcColor = typedArray.getColor(R.styleable.ViewTab_viewTabIdcColor, mAttrIdcColor);
         mAttrIdcSize =
                 typedArray.getDimensionPixelSize(R.styleable.ViewTab_viewTabIdcSize, mAttrIdcSize);
@@ -79,8 +85,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mAttrIdcHPadding =
                 typedArray.getDimensionPixelSize(
                         R.styleable.ViewTab_viewTabIdcHPadding, mAttrIdcHPadding);
-        mAttrIdcScale = typedArray.getFraction(R.styleable.ViewTab_viewTabIdcScale, 1, 1, mAttrIdcScale);
-
+        mAttrIdcScale =
+                typedArray.getFraction(R.styleable.ViewTab_viewTabIdcScale, 1, 1, mAttrIdcScale);
         mPaint.setColor(mAttrIdcColor);
         mPaint.setStrokeWidth(mAttrIdcSize);
 
@@ -90,10 +96,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mAttrVertical) {
-            onVerticalMeasure(widthMeasureSpec, heightMeasureSpec);
-        } else {
-            onHorizonMeasure(widthMeasureSpec, heightMeasureSpec);
+        switch (mAttrOrientation) {
+            case ORIENTATION_HORIZON:
+                onHorizonMeasure(widthMeasureSpec, heightMeasureSpec);
+                break;
+            case ORIENTATION_VERTICAL:
+                onVerticalMeasure(widthMeasureSpec, heightMeasureSpec);
+                break;
         }
     }
 
@@ -159,6 +168,48 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void onVerticalMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int width = widthSize;
+
+        switch (widthMode) {
+            case MeasureSpec.AT_MOST:
+                width = 0;
+                break;
+            case MeasureSpec.EXACTLY:
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                width = widthSize;
+                break;
+        }
+
+        measureTabs(width, MeasureSpec.EXACTLY, 0, MeasureSpec.UNSPECIFIED);
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int height = heightSize;
+
+        switch (height) {
+            case MeasureSpec.AT_MOST:
+                break;
+            case MeasureSpec.EXACTLY:
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                break;
+        }
+
+        setMeasuredDimension(width, height);
+    }
+
+    private void measureTabs(int width, int widthMode, int height, int heightMode) {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            getChildAt(i)
+                    .measure(
+                            MeasureSpec.makeMeasureSpec(width, widthMode),
+                            MeasureSpec.makeMeasureSpec(height, heightMode));
+        }
     }
 
     public void setCurrentItem(int position) {
@@ -177,10 +228,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (mAttrVertical) {
-            layoutVertical();
-        } else {
-            layoutHorizon();
+        switch (mAttrOrientation) {
+            case ORIENTATION_HORIZON:
+                layoutHorizon();
+                break;
+            case ORIENTATION_VERTICAL:
+                layoutVertical();
+                break;
         }
     }
 
@@ -201,6 +255,15 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void layoutVertical() {
+        int childCount = getChildCount();
+
+        int left = 0;
+        int top = 0;
+        for (int i = 0; i < childCount; i++) {
+            View tab = getChildAt(i);
+            tab.layout(left, top, left + tab.getMeasuredWidth(), top + tab.getMeasuredHeight());
+            top += tab.getMeasuredHeight();
+        }
     }
 
     public void setAdapter(@NonNull ViewTabAdapter adapter) {
@@ -256,7 +319,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         }
     }
 
-    private final ValueAnimator mIndicatorAnimator = ValueAnimator.ofFloat(0, 1);
+    private final ValueAnimator mIndicatorAnimator = ValueAnimator.ofFloat(0, 1f);
 
     {
         mIndicatorAnimator.addUpdateListener(this);
