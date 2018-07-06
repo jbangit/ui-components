@@ -42,6 +42,7 @@
     </declare-styleable>
 
     <declare-styleable name="Spinner">
+        <attr name="spinnerLayoutId" format="reference" />
         <attr name="spinnerNumber" format="integer" />
         <attr name="spinnerMaxNumber" format="integer" />
         <attr name="spinnerMiniNumber" format="integer" />
@@ -64,5 +65,25 @@
             <enum name="little" value="1" />
             <enum name="chip" value="2" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ViewTab">
+        <attr name="viewTabOrientation" format="enum">
+            <enum name="horizon" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="viewTabIdcGravity" format="enum">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+        </attr>
+        <attr name="viewTabIdcColor" format="color" />
+        <attr name="viewTabIdcHPadding" format="dimension" />
+        <attr name="viewTabIdcVPadding" format="dimension" />
+        <attr name="viewTabIdcSize" format="dimension" />
+        <attr name="viewTabIdcScale" format="fraction" />
+    </declare-styleable>
+
+    <declare-styleable name="TextTab">
+        <attr name="textTabTitles" format="reference" />
     </declare-styleable>
 </resources>
