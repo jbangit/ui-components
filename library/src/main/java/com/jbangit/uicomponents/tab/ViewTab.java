@@ -1,16 +1,20 @@
 package com.jbangit.uicomponents.tab;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Scroller;
 
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
@@ -68,7 +72,17 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void defaultInit() {
+        mScroller = new Scroller(getContext());
         setWillNotDraw(false);
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mScroller.computeScrollOffset()) {
+            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            invalidate();
+        }
+        invalidate();
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -445,6 +459,91 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     public void onAnimationUpdate(ValueAnimator animation) {
         mIndicatorAnimateVal = (float) animation.getAnimatedValue();
         invalidate();
+    }
+
+    private float mLastY;
+
+    private Scroller mScroller;
+
+    private VelocityTracker mVelocityTracker = null;
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (!canScroll()) {
+            return false;
+        }
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mScroller.forceFinished(true);
+                mLastY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (Math.abs(event.getY() - mLastY) > 20) {
+                    mLastY = event.getY();
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        return false;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!canScroll()) {
+            return false;
+        }
+
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+        mVelocityTracker.addMovement(event);
+        int bottomEdge = getChildAt(getChildCount() - 1).getBottom() - getHeight();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+            case MotionEvent.ACTION_MOVE:
+
+                int dy = (int) (event.getY() - mLastY);
+
+                if (getScrollY() - dy > bottomEdge) {
+                    dy = getScrollY() - bottomEdge;
+                } else if (getScrollY() - dy < 0) {
+                    dy = getScrollY();
+                }
+
+                scrollBy(0, -dy);
+
+                mLastY = event.getY();
+                return true;
+            case MotionEvent.ACTION_UP:
+                mVelocityTracker.computeCurrentVelocity(1000);
+                float yVelocity = -mVelocityTracker.getYVelocity();
+
+                mScroller.fling(
+                        getScrollX(), getScrollY(), 0, (int) yVelocity, 0, 0, 0, bottomEdge);
+                postInvalidate();
+
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+                return false;
+            case MotionEvent.ACTION_CANCEL:
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.recycle();
+                    mVelocityTracker = null;
+                }
+                return false;
+        }
+
+        return false;
+    }
+
+    private boolean canScroll() {
+        return mAttrOrientation == ORIENTATION_VERTICAL && (getChildAt(getChildCount() - 1).getBottom() > getHeight());
     }
 
     public OnTabChangeListener getOnTabChangeListener() {
