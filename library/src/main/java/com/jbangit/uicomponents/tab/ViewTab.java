@@ -320,7 +320,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
             isTabChanged = true;
         } else {
             isTabChanged =
-                    mOnTabChangeListener.onTabChange(newItem, position, oldItem, mOldItemPosition);
+                    mOnTabChangeListener.onTabChange(oldItem, mOldItemPosition, newItem, position);
         }
 
         if (isTabChanged) {
