@@ -16,7 +16,9 @@ import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class TextTab extends ViewTab {
@@ -49,6 +51,8 @@ public class TextTab extends ViewTab {
 
     private int mAttrTextGravity = Gravity.CENTER;
 
+    private List<CharSequence> mTitle = new ArrayList<>();
+
     public TextTab(Context context) {
         super(context);
     }
@@ -56,14 +60,14 @@ public class TextTab extends ViewTab {
     public TextTab(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(context, attrs);
-        setupAdapter();
+        setTitles(mAttrTitles);
         setCurrentItem(0, false);
     }
 
     public TextTab(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
-        setupAdapter();
+        setTitles(mAttrTitles);
         setCurrentItem(0, false);
     }
 
@@ -115,7 +119,15 @@ public class TextTab extends ViewTab {
         typedArray.recycle();
     }
 
-    private void setupAdapter() {
+    public void setTitles(Collection<CharSequence> titles) {
+        if (mTitle.size() != 0) {
+            mTitle.clear();
+        }
+        mTitle.addAll(titles);
+        setAdapter();
+    }
+
+    private void setAdapter() {
         setAdapter(
                 new ViewTabAdapter() {
                     @Override
@@ -132,7 +144,7 @@ public class TextTab extends ViewTab {
                         layout.setPadding(
                                 mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
 
-                        title.setText(mAttrTitles.get(position));
+                        title.setText(mTitle.get(position));
 
                         return layout;
                     }
@@ -150,7 +162,7 @@ public class TextTab extends ViewTab {
 
                     @Override
                     public int getCount() {
-                        return mAttrTitles.size();
+                        return mTitle.size();
                     }
                 });
     }

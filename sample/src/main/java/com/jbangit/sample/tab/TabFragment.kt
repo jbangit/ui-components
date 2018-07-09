@@ -38,6 +38,12 @@ class TabFragment : Fragment() {
 
         mBinding.viewTab.setCurrentItem(2)
 
+        mBinding.runningTimeSetTab.setTitles(
+            listOf(
+                "one", "two", "three", "four", "five", "six"
+            )
+        )
+
         return mBinding.root
     }
 }

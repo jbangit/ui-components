@@ -27,7 +27,7 @@
             app:viewTabIdcSize="4dp" />
 
         <com.jbangit.uicomponents.tab.TextTab
-            android:id="@+id/textTab2"
+            android:id="@+id/longVerticalTab"
             android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,6 +40,7 @@
             app:viewTabOrientation="vertical" />
 
         <com.jbangit.uicomponents.tab.TextTab
+            android:id="@+id/runningTimeSetTab"
             android:layout_width="100dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -51,7 +52,7 @@
             app:textTabStyle="strong"
             app:viewTabIdcColor="@color/colorForeground"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textTab2"
+            app:layout_constraintStart_toEndOf="@+id/longVerticalTab"
             app:layout_constraintTop_toBottomOf="@+id/textTab" />
     </android.support.constraint.ConstraintLayout>
 </layout>
