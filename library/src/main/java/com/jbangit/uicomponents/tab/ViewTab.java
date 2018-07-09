@@ -231,7 +231,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     public void setCurrentItem(int position, boolean animated) {
-        if (mOldItemPosition != -1) {
+        if (mOldItemPosition != -1 && mOldItemPosition < mItems.size()) {
             mAdapter.onSelected(mItems.get(mOldItemPosition), mOldItemPosition, false);
         }
         mAdapter.onSelected(mItems.get(position), position, true);

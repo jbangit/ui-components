@@ -19,6 +19,7 @@ import com.jbangit.uicomponents.common.Globals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class TextTab extends ViewTab {
@@ -61,20 +62,23 @@ public class TextTab extends ViewTab {
         super(context, attrs);
         initAttrs(context, attrs);
         setTitles(mAttrTitles);
-        setCurrentItem(0, false);
     }
 
     public TextTab(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
         setTitles(mAttrTitles);
-        setCurrentItem(0, false);
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TextTab);
 
-        mAttrTitles = Arrays.asList(typedArray.getTextArray(R.styleable.TextTab_textTabTitles));
+        CharSequence[] titles = typedArray.getTextArray(R.styleable.TextTab_textTabTitles);
+        if (titles != null) {
+            mAttrTitles = Arrays.asList(titles);
+        } else {
+            mAttrTitles = Collections.emptyList();
+        }
 
         switch (typedArray.getInt(R.styleable.TextTab_textTabStyle, STYLE_DRY)) {
             case STYLE_DRY:
@@ -119,12 +123,20 @@ public class TextTab extends ViewTab {
         typedArray.recycle();
     }
 
+    /**
+     * @param titles set empty list to clear all tab
+     */
     public void setTitles(Collection<CharSequence> titles) {
         if (mTitle.size() != 0) {
             mTitle.clear();
         }
+
         mTitle.addAll(titles);
         setAdapter();
+
+        if (titles.size() != 0) {
+            setCurrentItem(0, false);
+        }
     }
 
     private void setAdapter() {

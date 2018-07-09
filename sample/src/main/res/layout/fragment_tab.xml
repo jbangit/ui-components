@@ -46,7 +46,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             app:viewTabOrientation="vertical"
-            app:textTabTitles="@array/text_tab_h_tab"
             app:viewTabIdcVPadding="-4dp"
             app:viewTabIdcScale="30%"
             app:textTabStyle="strong"
