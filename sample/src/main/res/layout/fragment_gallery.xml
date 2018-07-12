@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.jbangit.uicomponents.button.JButton
+                android:id="@+id/delete_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:jButtonSize="little"
+                app:jButtonTitle="Delete Mode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.jbangit.uicomponents.button.JButton
+                android:id="@+id/add_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:jButtonSize="little"
+                app:jButtonTitle="Add Mode"
+                app:layout_constraintBottom_toBottomOf="@+id/delete_mode"
+                app:layout_constraintStart_toEndOf="@+id/delete_mode"
+                app:layout_constraintTop_toTopOf="@+id/delete_mode" />
+
+            <com.jbangit.uicomponents.button.JButton
+                android:id="@+id/reload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:jButtonSize="little"
+                app:jButtonTitle="reload"
+                app:layout_constraintBottom_toBottomOf="@+id/add_mode"
+                app:layout_constraintStart_toEndOf="@+id/add_mode"
+                app:layout_constraintTop_toTopOf="@+id/add_mode" />
+
+            <com.jbangit.uicomponents.gallery.Gallery
+                android:id="@+id/gallery"
+                android:background="@color/colorForeground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:galleryRowNumber="3"
+                app:galleryPictureMax="9"
+                app:galleryPadding="16dp"
+                app:galleryAddMode="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/delete_mode" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+</layout>

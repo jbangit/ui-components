@@ -39,8 +39,10 @@
                 app:navGridItemTitle="Cell" />
 
             <com.jbangit.uicomponents.nav.NavGridItem
+                android:id="@+id/nav_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{view.onClickNavGridItem}"
                 app:navGridItemIcon="@drawable/ic_list"
                 app:navGridItemTitle="List" />
 

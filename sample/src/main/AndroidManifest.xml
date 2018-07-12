@@ -26,6 +26,7 @@
         <activity android:name=".button.ButtonActivity" />
         <activity android:name=".animate.AnimateActivity" />
         <activity android:name=".tab.TabActivity" />
+        <activity android:name=".list.ListActivity" />
     </application>
 
 </manifest>
