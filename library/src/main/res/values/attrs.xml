@@ -119,4 +119,15 @@
         <attr name="waveViewHorizon" format="fraction" />
         <attr name="waveViewTop" format="fraction" />
     </declare-styleable>
+
+    <declare-styleable name="Gallery">
+        <attr name="galleryPadding" format="dimension" />
+        <attr name="galleryRowNumber" format="integer" />
+        <attr name="galleryAddDrawable" format="reference" />
+        <attr name="galleryDeleteDrawable" format="reference" />
+        <attr name="galleryPlaceholderDrawable" format="reference" />
+        <attr name="galleryAddMode" format="boolean" />
+        <attr name="galleryDeleteMode" format="boolean" />
+        <attr name="galleryPictureMax" format="integer" />
+    </declare-styleable>
 </resources>
