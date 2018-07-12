@@ -22,9 +22,13 @@ public class Globals {
 
     // TODO: 2018/6/27 refactor all ripple drawable
     public static Drawable addRipple(Context context, Drawable background) {
+        return addRipple(context, background, background);
+    }
+
+    public static Drawable addRipple(Context context, Drawable background, Drawable mask) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             int rippleColor = context.getResources().getColor(R.color.colorTextDark);
-            return new RippleDrawable(ColorStateList.valueOf(rippleColor), background, background);
+            return new RippleDrawable(ColorStateList.valueOf(rippleColor), background, mask);
         }
         return background;
     }
