@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -32,27 +33,24 @@ import java.util.Objects;
 
 /**
  * There are some PictureView in the Gallery
- * <p>
- * {@link Gallery#setPictures(List)}
- * <p>
- * {@link Gallery#addPicture(String)}
- * <p>
- * {@link Gallery#removePicture(int)}}
- * <p>
- * {@link Gallery#setAddMode(boolean)}
- * <p>
- * {@link Gallery#setDeleteMode(boolean)}
- * <p>
- * {@link Gallery#setOnClickPictureListener(OnClickPictureListener)}
- * <p>
- * {@link Gallery#setOnClickAddPictureListener(OnClickAddPictureListener)}
+ *
+ * <p>{@link Gallery#setPictures(List)}
+ *
+ * <p>{@link Gallery#addPicture(String)}
+ *
+ * <p>{@link Gallery#removePicture(int)}}
+ *
+ * <p>{@link Gallery#setAddMode(boolean)}
+ *
+ * <p>{@link Gallery#setDeleteMode(boolean)}
+ *
+ * <p>{@link Gallery#setOnClickPictureListener(OnClickPictureListener)}
+ *
+ * <p>{@link Gallery#setOnClickAddPictureListener(OnClickAddPictureListener)}
  */
 public class Gallery extends ViewGroup {
 
     public static final int PICTURE_MAX_NUM_INFINITE = Integer.MAX_VALUE;
-
-    // this padding is use for fitting delete button
-    private final int BASE_PADDING = DensityUtils.getPxFromDp(getContext(), 4);
 
     private List<PictureViewHolder> mPictureViewHolders = new ArrayList<>();
 
@@ -70,7 +68,9 @@ public class Gallery extends ViewGroup {
 
     private int mPictureMax = PICTURE_MAX_NUM_INFINITE;
 
-    private int mAttrPadding = DensityUtils.getPxFromDp(getContext(), 4);
+    private int mAttrPadding = 0;
+
+    private int mAttrDeleteButtonMargin = DensityUtils.getPxFromDp(getContext(), 4);
 
     private Drawable mAttrPlaceholder = null;
 
@@ -129,11 +129,16 @@ public class Gallery extends ViewGroup {
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Gallery);
 
+        mAttrDeleteButtonMargin =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.Gallery_galleryDeleteButtonMargin, mAttrDeleteButtonMargin);
+
         mAttrPadding =
                 typedArray.getDimensionPixelOffset(
                         R.styleable.Gallery_galleryPadding, mAttrPadding);
-        if (mAttrPadding > BASE_PADDING) {
-            mAttrPadding -= BASE_PADDING;
+
+        if (mAttrPadding > mAttrDeleteButtonMargin) {
+            mAttrPadding -= mAttrDeleteButtonMargin;
         }
 
         mAttrRowCount = typedArray.getInt(R.styleable.Gallery_galleryRowNumber, mAttrRowCount);
@@ -165,7 +170,6 @@ public class Gallery extends ViewGroup {
         mIsDeleteMode = typedArray.getBoolean(R.styleable.Gallery_galleryDeleteMode, false);
         mPictureMax = typedArray.getInt(R.styleable.Gallery_galleryPictureMax, mPictureMax);
 
-
         typedArray.recycle();
     }
 
@@ -177,10 +181,14 @@ public class Gallery extends ViewGroup {
 
     private void initAddPictureView() {
         if (mAttrAddViewLayoutId != -1) {
-            mAddPictureView = LayoutInflater.from(getContext()).inflate(mAttrAddViewLayoutId, this, false);
+            mAddPictureView =
+                    LayoutInflater.from(getContext()).inflate(mAttrAddViewLayoutId, this, false);
         } else {
-            mAddPictureView = LayoutInflater.from(getContext()).inflate(R.layout.view_item_gallery, this, false);
-            ((ImageView) mAddPictureView.findViewById(R.id.gallery_picture)).setImageDrawable(mAttrAddDrawable);
+            mAddPictureView =
+                    LayoutInflater.from(getContext())
+                            .inflate(R.layout.view_item_gallery, this, false);
+            ((ImageView) mAddPictureView.findViewById(R.id.gallery_picture))
+                    .setImageDrawable(mAttrAddDrawable);
         }
     }
 
@@ -205,7 +213,7 @@ public class Gallery extends ViewGroup {
         }
 
         int allWidthPadding = (mAttrRowCount - 1) * mAttrPadding;
-        int pictureWidth = (width - BASE_PADDING - allWidthPadding) / mAttrRowCount;
+        int pictureWidth = (width - mAttrDeleteButtonMargin - allWidthPadding) / mAttrRowCount;
 
         measureAllPictureView(pictureWidth);
         measureAddPictureView(pictureWidth);
@@ -216,7 +224,7 @@ public class Gallery extends ViewGroup {
         int height = heightSize;
         int allPictureViewHeight = getLines() * getPictureViewHeight();
         int allHeightPadding = (getLines() - 1) * mAttrPadding;
-        int expectedHeight = allPictureViewHeight + allHeightPadding + BASE_PADDING;
+        int expectedHeight = allPictureViewHeight + allHeightPadding + mAttrDeleteButtonMargin;
         switch (heightMode) {
             case MeasureSpec.AT_MOST:
                 height = Math.min(heightSize, expectedHeight);
@@ -234,8 +242,7 @@ public class Gallery extends ViewGroup {
     private void measureAddPictureView(int pictureWidth) {
         mAddPictureView.measure(
                 MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY)
-        );
+                MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY));
     }
 
     private int getPictureViewHeight() {
@@ -246,7 +253,7 @@ public class Gallery extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
 
-        int left = BASE_PADDING;
+        int left = mAttrDeleteButtonMargin;
         int top = 0;
 
         for (int i = 0; i < childCount; i++) {
@@ -260,7 +267,7 @@ public class Gallery extends ViewGroup {
             left += pictureView.getMeasuredWidth() + mAttrPadding;
 
             if ((i + 1) % mAttrRowCount == 0) {
-                left = BASE_PADDING;
+                left = mAttrDeleteButtonMargin;
                 top += pictureView.getMeasuredHeight() + mAttrPadding;
             }
         }
@@ -274,7 +281,8 @@ public class Gallery extends ViewGroup {
         }
 
         for (PictureViewHolder holder : mPictureViewHolders) {
-            holder.getView().measure(
+            holder.getView()
+                    .measure(
                             MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY),
                             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         }
@@ -414,7 +422,16 @@ public class Gallery extends ViewGroup {
             } else {
                 pictureViewHolder.setClickAble(false);
             }
+
+            if (isInEditMode()) {
+                highlightInEditMode(pictureViewHolder);
+            }
         }
+    }
+
+    private void highlightInEditMode(PictureViewHolder pictureViewHolder) {
+        pictureViewHolder.mPicture.setBackground(
+                new ColorDrawable(ColorUtils.setAlphaComponent(Globals.getPrimaryColor(getContext()), 0x10)));
     }
 
     private void onClickPicture(int position) {
@@ -466,22 +483,24 @@ public class Gallery extends ViewGroup {
         ImageView picture = mAddPictureView.findViewById(R.id.gallery_picture);
 
         if (picture == null) {
-            mAddPictureView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickPicture(-1);
-                }
-            });
+            mAddPictureView.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onClickPicture(-1);
+                        }
+                    });
             return;
         }
 
         if (clickAble) {
-            picture.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickPicture(-1);
-                }
-            });
+            picture.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onClickPicture(-1);
+                        }
+                    });
         } else {
             picture.setOnClickListener(null);
             picture.setClickable(false);
@@ -519,7 +538,28 @@ public class Gallery extends ViewGroup {
                                 new ColorDrawable(Color.TRANSPARENT),
                                 new ColorDrawable(Color.BLACK)));
             }
+
+            addDeleteButtonMargin();
             mDelete.setImageDrawable(mAttrDeleteDrawable);
+            makeDeleteDrawableGravityEndTop();
+        }
+
+        private void addDeleteButtonMargin() {
+            ((MarginLayoutParams) mPicture.getLayoutParams()).setMarginEnd(mAttrDeleteButtonMargin);
+            ((MarginLayoutParams) mPicture.getLayoutParams()).topMargin = mAttrDeleteButtonMargin;
+        }
+
+        private void makeDeleteDrawableGravityEndTop() {
+            int paddingStart = 0, paddingBottom = 0;
+            if (mDelete.getMinimumHeight() > mAttrDeleteDrawable.getIntrinsicWidth()) {
+                paddingStart = mDelete.getMinimumWidth() - mAttrDeleteDrawable.getIntrinsicHeight();
+            }
+
+            if (mDelete.getMinimumHeight() > mAttrDeleteDrawable.getIntrinsicHeight()) {
+                paddingBottom =
+                        mDelete.getMinimumHeight() - mAttrDeleteDrawable.getIntrinsicHeight();
+            }
+            mDelete.setPadding(paddingStart, 0, 0, paddingBottom);
         }
 
         @NonNull

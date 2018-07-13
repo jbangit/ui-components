@@ -126,6 +126,7 @@
         <attr name="galleryAddDrawable" format="reference" />
         <attr name="galleryAddView" format="reference" />
         <attr name="galleryDeleteDrawable" format="reference" />
+        <attr name="galleryDeleteButtonMargin" format="dimension" />
         <attr name="galleryPlaceholderDrawable" format="reference" />
         <attr name="galleryAddMode" format="boolean" />
         <attr name="galleryDeleteMode" format="boolean" />
