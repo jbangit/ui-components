@@ -27,7 +27,6 @@ import com.jbangit.uicomponents.common.Globals;
 import com.jbangit.uicomponents.common.view.ViewRecycler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,13 +51,13 @@ public class Gallery extends ViewGroup {
 
     public static final int PICTURE_MAX_NUM_INFINITE = Integer.MAX_VALUE;
 
-    private List<PictureViewHolder> mPictureViewHolders = new ArrayList<>();
+    private final List<PictureViewHolder> mPictureViewHolders = new ArrayList<>();
 
     private View mAddPictureView;
 
-    private ViewRecycler mViewRecycler = new ViewRecycler();
+    private final ViewRecycler mViewRecycler = new ViewRecycler();
 
-    private List<String> mPictures = Collections.emptyList();
+    private final List<String> mPictures = new ArrayList<>();
 
     private int mAttrRowCount = 4;
 
@@ -316,10 +315,11 @@ public class Gallery extends ViewGroup {
     }
 
     public void setPictures(List<String> picture) {
+        mPictures.clear();
         if (picture.size() > mPictureMax) {
-            mPictures = new ArrayList<>(picture.subList(0, mPictureMax));
+            mPictures.addAll(picture.subList(0, mPictureMax));
         } else {
-            mPictures = new ArrayList<>(picture);
+            mPictures.addAll(picture);
         }
         setupView();
     }
