@@ -529,15 +529,9 @@ public class Gallery extends ViewGroup {
 
         private final ImageView mDelete;
 
-        private int mPosition = 0;
+        private final Drawable mRippleForeGround;
 
-        private final OnClickListener onClickListener =
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickPicture(mPosition);
-                    }
-                };
+        private int mPosition = 0;
 
         PictureViewHolder(@NonNull View pictureView, int position) {
             mView = pictureView;
@@ -545,13 +539,17 @@ public class Gallery extends ViewGroup {
             mDelete = pictureView.findViewById(R.id.gallery_delete);
             mPosition = position;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mPicture.setForeground(
-                        Globals.addRipple(
-                                getContext(),
-                                new ColorDrawable(Color.TRANSPARENT),
-                                new ColorDrawable(Color.BLACK)));
-            }
+            mRippleForeGround = Globals.addRipple(
+                    getContext(),
+                    new ColorDrawable(Color.TRANSPARENT),
+                    new ColorDrawable(Color.BLACK));
+
+            mPicture.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickPicture(mPosition);
+                }
+            });
 
             addDeleteButtonMargin();
             mDelete.setImageDrawable(mAttrDeleteDrawable);
@@ -606,11 +604,16 @@ public class Gallery extends ViewGroup {
         }
 
         void setClickAble(boolean clickAble) {
-            if (clickAble) {
-                mPicture.setOnClickListener(onClickListener);
-            } else {
-                mPicture.setOnClickListener(null);
-                mPicture.setClickable(false);
+            setRippleForeground(clickAble);
+        }
+
+        private void setRippleForeground(boolean clickAble) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (clickAble) {
+                    mPicture.setForeground(mRippleForeGround);
+                } else {
+                    mPicture.setForeground(null);
+                }
             }
         }
 
