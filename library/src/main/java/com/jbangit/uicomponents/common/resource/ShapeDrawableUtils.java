@@ -1,4 +1,4 @@
-package com.jbangit.uicomponents.utils.resource;
+package com.jbangit.uicomponents.common.resource;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
-import com.jbangit.uicomponents.utils.resource.ShapeDrawableUtils;
+import com.jbangit.uicomponents.common.resource.ShapeDrawableUtils;
 
 public class JButton extends FrameLayout {
 
