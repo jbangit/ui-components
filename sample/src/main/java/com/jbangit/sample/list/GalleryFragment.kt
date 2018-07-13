@@ -46,7 +46,7 @@ class GalleryFragment : Fragment() {
             }
             gallery.setOnClickAddPictureListener {
                 showToast("Click add!")
-                gallery.addPicture(gallery.pictures[0])
+                gallery.addPicture(URLS[0])
             }
             gallery.setOnClickPictureListener { gallery, position, picture ->
                 showToast("$position : $picture")
@@ -54,7 +54,6 @@ class GalleryFragment : Fragment() {
             reload.setOnClickListener {
                 gallery.pictures = URLS
             }
-            gallery.pictures = URLS
         }
         return mBinding.root
     }
