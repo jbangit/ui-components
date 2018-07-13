@@ -85,12 +85,15 @@ public class Gallery extends ViewGroup {
 
     private OnClickAddPictureListener mOnClickAddPictureListener;
 
+    private boolean mAttrIsAddMode = false;
+
+    private boolean mAttrIsDeleteMode = false;
+
     public Gallery(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(context, attrs);
         initGlide();
         initAddPictureView();
-        initEditMode();
     }
 
     public Gallery(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -98,31 +101,6 @@ public class Gallery extends ViewGroup {
         initAttrs(context, attrs);
         initGlide();
         initAddPictureView();
-        initEditMode();
-    }
-
-    private void initEditMode() {
-        if (!isInEditMode()) {
-            return;
-        }
-
-        List<String> pictures = new ArrayList<>();
-
-        int count;
-        if (mIsAddMode) {
-            if (mPictureMax == PICTURE_MAX_NUM_INFINITE) {
-                mPictureMax = 9;
-            }
-
-            count = mPictureMax - 1;
-        } else {
-            count = mAttrRowCount;
-        }
-
-        for (int i = 0; i < count; i++) {
-            pictures.add("edit mode");
-        }
-        setPictures(pictures);
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -165,8 +143,8 @@ public class Gallery extends ViewGroup {
                     ContextCompat.getDrawable(getContext(), R.drawable.ic_delete_picture);
         }
 
-        mIsAddMode = typedArray.getBoolean(R.styleable.Gallery_galleryAddMode, false);
-        mIsDeleteMode = typedArray.getBoolean(R.styleable.Gallery_galleryDeleteMode, false);
+        mAttrIsAddMode = typedArray.getBoolean(R.styleable.Gallery_galleryAddMode, mAttrIsAddMode);
+        mAttrIsDeleteMode = typedArray.getBoolean(R.styleable.Gallery_galleryDeleteMode, mAttrIsDeleteMode);
         mPictureMax = typedArray.getInt(R.styleable.Gallery_galleryPictureMax, mPictureMax);
 
         typedArray.recycle();
@@ -189,6 +167,42 @@ public class Gallery extends ViewGroup {
             ((ImageView) mAddPictureView.findViewById(R.id.gallery_picture))
                     .setImageDrawable(mAttrAddDrawable);
         }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        initView();
+        initEditMode();
+    }
+
+    private void initEditMode() {
+        if (!isInEditMode()) {
+            return;
+        }
+
+        List<String> pictures = new ArrayList<>();
+
+        int count;
+        if (isAddMode()) {
+            if (mPictureMax == PICTURE_MAX_NUM_INFINITE) {
+                mPictureMax = 9;
+            }
+
+            count = mPictureMax - 1;
+        } else {
+            count = mAttrRowCount;
+        }
+
+        for (int i = 0; i < count; i++) {
+            pictures.add("edit mode");
+        }
+        setPictures(pictures);
+    }
+
+    private void initView() {
+        setAddMode(mAttrIsAddMode);
+        setDeleteMode(mAttrIsDeleteMode);
     }
 
     @Override
