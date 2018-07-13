@@ -124,6 +124,7 @@
         <attr name="galleryPadding" format="dimension" />
         <attr name="galleryRowNumber" format="integer" />
         <attr name="galleryAddDrawable" format="reference" />
+        <attr name="galleryAddView" format="reference" />
         <attr name="galleryDeleteDrawable" format="reference" />
         <attr name="galleryPlaceholderDrawable" format="reference" />
         <attr name="galleryAddMode" format="boolean" />

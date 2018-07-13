@@ -56,7 +56,7 @@ public class Gallery extends ViewGroup {
 
     private List<PictureViewHolder> mPictureViewHolders = new ArrayList<>();
 
-    private PictureViewHolder mAddPictureViewHolder;
+    private View mAddPictureView;
 
     private ViewRecycler mViewRecycler = new ViewRecycler();
 
@@ -73,6 +73,8 @@ public class Gallery extends ViewGroup {
     private int mAttrPadding = DensityUtils.getPxFromDp(getContext(), 4);
 
     private Drawable mAttrPlaceholder = null;
+
+    private int mAttrAddViewLayoutId;
 
     private Drawable mAttrAddDrawable = null;
 
@@ -151,6 +153,8 @@ public class Gallery extends ViewGroup {
             DrawableCompat.setTint(Objects.requireNonNull(mAttrAddDrawable), grayColor);
         }
 
+        mAttrAddViewLayoutId = typedArray.getResourceId(R.styleable.Gallery_galleryAddView, -1);
+
         mAttrDeleteDrawable = typedArray.getDrawable(R.styleable.Gallery_galleryDeleteDrawable);
         if (mAttrDeleteDrawable == null) {
             mAttrDeleteDrawable =
@@ -160,6 +164,7 @@ public class Gallery extends ViewGroup {
         mIsAddMode = typedArray.getBoolean(R.styleable.Gallery_galleryAddMode, false);
         mIsDeleteMode = typedArray.getBoolean(R.styleable.Gallery_galleryDeleteMode, false);
         mPictureMax = typedArray.getInt(R.styleable.Gallery_galleryPictureMax, mPictureMax);
+
 
         typedArray.recycle();
     }
@@ -171,13 +176,11 @@ public class Gallery extends ViewGroup {
     }
 
     private void initAddPictureView() {
-        mAddPictureViewHolder = new PictureViewHolder(createPictureView(), -1);
-        mAddPictureViewHolder.setDelete(false);
-        mAddPictureViewHolder.setDrawable(mAttrAddDrawable);
-        if (mOnClickAddPictureListener != null) {
-            mAddPictureViewHolder.setClickAble(true);
+        if (mAttrAddViewLayoutId != -1) {
+            mAddPictureView = LayoutInflater.from(getContext()).inflate(mAttrAddViewLayoutId, this, false);
         } else {
-            mAddPictureViewHolder.setClickAble(false);
+            mAddPictureView = LayoutInflater.from(getContext()).inflate(R.layout.view_item_gallery, this, false);
+            ((ImageView) mAddPictureView.findViewById(R.id.gallery_picture)).setImageDrawable(mAttrAddDrawable);
         }
     }
 
@@ -205,6 +208,7 @@ public class Gallery extends ViewGroup {
         int pictureWidth = (width - BASE_PADDING - allWidthPadding) / mAttrRowCount;
 
         measureAllPictureView(pictureWidth);
+        measureAddPictureView(pictureWidth);
 
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
@@ -225,6 +229,13 @@ public class Gallery extends ViewGroup {
         }
 
         setMeasuredDimension(width, height);
+    }
+
+    private void measureAddPictureView(int pictureWidth) {
+        mAddPictureView.measure(
+                MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY)
+        );
     }
 
     private int getPictureViewHeight() {
@@ -258,15 +269,12 @@ public class Gallery extends ViewGroup {
     }
 
     private void measureAllPictureView(int pictureWidth) {
-        if (getChildCount() == 0) {
+        if (mPictureViewHolders.size() == 0) {
             return;
         }
 
-        int childCount = getChildCount();
-
-        for (int i = 0; i < childCount; i++) {
-            getChildAt(i)
-                    .measure(
+        for (PictureViewHolder holder : mPictureViewHolders) {
+            holder.getView().measure(
                             MeasureSpec.makeMeasureSpec(pictureWidth, MeasureSpec.EXACTLY),
                             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         }
@@ -341,12 +349,11 @@ public class Gallery extends ViewGroup {
     public void setAddMode(boolean addMode) {
         if (mIsAddMode != addMode) {
             if (addMode && mPictures.size() < mPictureMax) {
-                View view = mAddPictureViewHolder.getView();
-                if (!view.isAttachedToWindow()) {
-                    addView(view);
+                if (!mAddPictureView.isAttachedToWindow()) {
+                    addView(mAddPictureView);
                 }
             } else {
-                removeView(mAddPictureViewHolder.getView());
+                removeView(mAddPictureView);
             }
         }
 
@@ -392,8 +399,7 @@ public class Gallery extends ViewGroup {
     private void setupAddPictureView() {
         if (mIsAddMode) {
             if (mPictures.size() < mPictureMax) {
-                View addPictureView = mAddPictureViewHolder.getView();
-                addViewInLayout(addPictureView, -1, addPictureView.getLayoutParams());
+                addViewInLayout(mAddPictureView, -1, mAddPictureView.getLayoutParams());
             }
         }
     }
@@ -449,9 +455,36 @@ public class Gallery extends ViewGroup {
         mOnClickAddPictureListener = onClickAddPictureListener;
 
         if (mOnClickAddPictureListener == null) {
-            mAddPictureViewHolder.setClickAble(false);
+            setAddPictureViewClickAble(false);
         } else {
-            mAddPictureViewHolder.setClickAble(true);
+            setAddPictureViewClickAble(true);
+        }
+    }
+
+    private void setAddPictureViewClickAble(boolean clickAble) {
+
+        ImageView picture = mAddPictureView.findViewById(R.id.gallery_picture);
+
+        if (picture == null) {
+            mAddPictureView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickPicture(-1);
+                }
+            });
+            return;
+        }
+
+        if (clickAble) {
+            picture.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickPicture(-1);
+                }
+            });
+        } else {
+            picture.setOnClickListener(null);
+            picture.setClickable(false);
         }
     }
 
