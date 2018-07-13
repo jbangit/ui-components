@@ -56,6 +56,8 @@
                 app:galleryPictureMax="9"
                 app:galleryPadding="16dp"
                 app:galleryAddMode="true"
+                app:galleryAddDrawable="@drawable/ic_aside_bar"
+                app:galleryAddView="@layout/view_item_add_picture"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/delete_mode" />
