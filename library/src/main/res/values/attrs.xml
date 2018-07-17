@@ -46,7 +46,7 @@
         <attr name="gridRadioGroupCheckedStrokeColor" format="color" />
         <attr name="gridRadioGroupUncheckedStrokeColor" format="color" />
         <attr name="gridRadioGroupStrokeWidth" format="dimension" />
-        <attr name="gridRadioGroupRadius" format="color" />
+        <attr name="gridRadioGroupRadius" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="Spinner">

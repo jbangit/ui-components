@@ -26,6 +26,7 @@ import com.jbangit.uicomponents.common.resource.ShapeDrawableUtils;
 import com.jbangit.uicomponents.common.view.ViewRecycler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -131,7 +132,8 @@ public class GridRadioGroup extends ViewGroup {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.GridRadioGroup);
 
-        int primaryColor = Globals.getPrimaryColor(context);
+        int primaryColor;
+        primaryColor = Globals.getPrimaryColor(context);
 
         mAttrCheckedColor = primaryColor;
         mAttrCheckedTextColor = getResources().getColor(R.color.colorForeground);
@@ -141,8 +143,7 @@ public class GridRadioGroup extends ViewGroup {
 
         mAttrTextSize =
                 typedArray.getDimensionPixelOffset(
-                        R.styleable.GridRadioGroup_gridRadioGroupRadius, mAttrTextSize);
-
+                        R.styleable.GridRadioGroup_gridRadioGroupTextSize, mAttrTextSize);
         mAttrCheckedColor =
                 typedArray.getColor(
                         R.styleable.GridRadioGroup_gridRadioGroupCheckedColor, mAttrCheckedColor);
@@ -158,25 +159,20 @@ public class GridRadioGroup extends ViewGroup {
                 typedArray.getColor(
                         R.styleable.GridRadioGroup_gridRadioGroupUncheckedTextColor,
                         mAttrUncheckedTextColor);
-        mAttrRadius =
-                typedArray.getDimensionPixelOffset(
-                        R.styleable.GridRadioGroup_gridRadioGroupRadius, mAttrRadius);
-
         mAttrCheckedStrokeColor =
                 typedArray.getColor(
                         R.styleable.GridRadioGroup_gridRadioGroupCheckedStrokeColor,
                         mAttrCheckedStrokeColor);
-
         mAttrUncheckedStrokeColor =
                 typedArray.getColor(
                         R.styleable.GridRadioGroup_gridRadioGroupUncheckedStrokeColor,
-                        mAttrUncheckedTextColor);
-
+                        mAttrUncheckedStrokeColor);
+        mAttrRadius =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupRadius, mAttrRadius);
         mAttrStrokeWidth =
                 typedArray.getDimensionPixelOffset(
-                        R.styleable.GridRadioGroup_gridRadioGroupStrokeWidth,
-                        mAttrStrokeWidth
-                );
+                        R.styleable.GridRadioGroup_gridRadioGroupStrokeWidth, mAttrStrokeWidth);
 
         typedArray.recycle();
 
@@ -288,6 +284,31 @@ public class GridRadioGroup extends ViewGroup {
         mSelectedIndexes = saveState.mSelectIndexes;
         setupItemView();
         super.onRestoreInstanceState(saveState.getSuperState());
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        initEditMode();
+    }
+
+    private void initEditMode() {
+        if (isInEditMode()) {
+            setItem(
+                    Arrays.asList(
+                            "One",
+                            "Two",
+                            "Three",
+                            "Four",
+                            "Five",
+                            "Six",
+                            "Seven",
+                            "Eight",
+                            "Night",
+                            "Ten",
+                            "Long Long Long"));
+            check(0);
+        }
     }
 
     @Override
