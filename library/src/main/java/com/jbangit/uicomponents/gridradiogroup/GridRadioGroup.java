@@ -57,7 +57,7 @@ public class GridRadioGroup extends ViewGroup {
 
     public static final int NONE_CHECKED_INDEX = -1;
 
-    private Set<Integer> mCheckedIndexes = new TreeSet<>();
+    private final Set<Integer> mCheckedIndexes = new TreeSet<>();
 
     private int mLastCheckedIndex = NONE_CHECKED_INDEX;
 
@@ -324,8 +324,11 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = (SaveState) state;
+        mItems.clear();
         mItems.addAll(saveState.mItems);
-        mCheckedIndexes = saveState.mSelectIndexes;
+        mCheckedIndexes.clear();
+        mCheckedIndexes.addAll(saveState.mSelectIndexes);
+
         setupItemView();
         super.onRestoreInstanceState(saveState.getSuperState());
     }
@@ -453,11 +456,7 @@ public class GridRadioGroup extends ViewGroup {
             ViewHolder viewHolder = mViewHolders.get(i);
             viewHolder.setTitle(mItems.get(i));
 
-            if (mAttrMultipleChoice) {
-                viewHolder.setChecked(mCheckedIndexes.contains(i));
-            } else {
-                viewHolder.setChecked(i == mLastCheckedIndex);
-            }
+            viewHolder.setChecked(mCheckedIndexes.contains(i));
         }
     }
 
