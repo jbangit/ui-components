@@ -56,11 +56,11 @@ public class GridRadioGroup extends ViewGroup {
 
     private static final int DEFAULT_HORIZON_INSET_PADDING = 4;
 
-    public static final int NONE_SELECTED_INDEX = -1;
+    public static final int NONE_CHECKED_INDEX = -1;
 
-    private Set<Integer> mSelectedIndexes = new TreeSet<>();
+    private Set<Integer> mCheckedIndexes = new TreeSet<>();
 
-    private int mLastSelectedIndex = NONE_SELECTED_INDEX;
+    private int mLastCheckedIndex = NONE_CHECKED_INDEX;
 
     private int mGridHorizonInset;
 
@@ -265,25 +265,25 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     private void doSingleCheck(int index) {
-        if (mLastSelectedIndex == index) {
+        if (mLastCheckedIndex == index) {
             return;
         }
 
-        mSelectedIndexes.clear();
-        mSelectedIndexes.add(index);
+        mCheckedIndexes.clear();
+        mCheckedIndexes.add(index);
 
-        mViewHolders.get(mLastSelectedIndex).setChecked(false);
+        mViewHolders.get(mLastCheckedIndex).setChecked(false);
         mViewHolders.get(index).setChecked(true);
 
-        mLastSelectedIndex = index;
+        mLastCheckedIndex = index;
     }
 
     private void doMultipleCheck(int index) {
-        if (mSelectedIndexes.contains(index)) {
-            mSelectedIndexes.remove(index);
+        if (mCheckedIndexes.contains(index)) {
+            mCheckedIndexes.remove(index);
             mViewHolders.get(index).setChecked(false);
         } else {
-            mSelectedIndexes.add(index);
+            mCheckedIndexes.add(index);
             mViewHolders.get(index).setChecked(true);
         }
     }
@@ -294,7 +294,7 @@ public class GridRadioGroup extends ViewGroup {
     public void setItem(Collection<String> item) {
         mItems = new ArrayList<>(item);
 
-        mSelectedIndexes.clear();
+        mCheckedIndexes.clear();
         processEmptyChoice();
 
         setupItemView();
@@ -305,10 +305,10 @@ public class GridRadioGroup extends ViewGroup {
      */
     private void processEmptyChoice() {
         if (mAttrAllowEmptyChoice) {
-            mLastSelectedIndex = -1;
+            mLastCheckedIndex = -1;
         } else if (!mAttrMultipleChoice && mItems.size() > 0) {
-            mLastSelectedIndex = 0;
-            mSelectedIndexes.add(0);
+            mLastCheckedIndex = 0;
+            mCheckedIndexes.add(0);
         }
     }
 
@@ -317,7 +317,7 @@ public class GridRadioGroup extends ViewGroup {
     protected Parcelable onSaveInstanceState() {
         SaveState saveState = new SaveState(super.onSaveInstanceState());
         saveState.mItems = mItems;
-        saveState.mSelectIndexes = mSelectedIndexes;
+        saveState.mSelectIndexes = mCheckedIndexes;
         return saveState;
     }
 
@@ -325,7 +325,7 @@ public class GridRadioGroup extends ViewGroup {
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = (SaveState) state;
         mItems = saveState.mItems;
-        mSelectedIndexes = saveState.mSelectIndexes;
+        mCheckedIndexes = saveState.mSelectIndexes;
         setupItemView();
         super.onRestoreInstanceState(saveState.getSuperState());
     }
@@ -454,9 +454,9 @@ public class GridRadioGroup extends ViewGroup {
             viewHolder.setTitle(mItems.get(i));
 
             if (mAttrMultipleChoice) {
-                viewHolder.setChecked(mSelectedIndexes.contains(i));
+                viewHolder.setChecked(mCheckedIndexes.contains(i));
             } else {
-                viewHolder.setChecked(i == mLastSelectedIndex);
+                viewHolder.setChecked(i == mLastCheckedIndex);
             }
         }
     }
@@ -470,12 +470,12 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     public Collection<Integer> getCheckedIndexes() {
-        return mSelectedIndexes;
+        return mCheckedIndexes;
     }
 
     public Collection<String> getCheckedItems() {
         ArrayList<String> items = new ArrayList<>();
-        for (Integer index : mSelectedIndexes) {
+        for (Integer index : mCheckedIndexes) {
             items.add(mItems.get(index));
         }
         return items;
@@ -512,9 +512,9 @@ public class GridRadioGroup extends ViewGroup {
             super(source);
             source.readStringList(mItems);
 
-            int selectIndexesSize = source.readInt();
+            int checkedIndexesSize = source.readInt();
 
-            for (int i = 0; i < selectIndexesSize; i++) {
+            for (int i = 0; i < checkedIndexesSize; i++) {
                 mSelectIndexes.add(source.readInt());
             }
         }
@@ -534,13 +534,13 @@ public class GridRadioGroup extends ViewGroup {
     public void onClickItem(int index) {
         if (mOnCheckedChangeListener != null) {
             if (mAttrMultipleChoice) {
-                if (mOnCheckedChangeListener.onCheckedChange(NONE_SELECTED_INDEX, null, index, mItems.get(index))) {
+                if (mOnCheckedChangeListener.onCheckedChange(NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
                     check(index);
                 }
             } else {
-                String lastItem = mLastSelectedIndex == NONE_SELECTED_INDEX ? null : mItems.get(mLastSelectedIndex);
+                String lastItem = mLastCheckedIndex == NONE_CHECKED_INDEX ? null : mItems.get(mLastCheckedIndex);
                 if (mOnCheckedChangeListener.onCheckedChange(
-                        mLastSelectedIndex, lastItem, index, mItems.get(index))) {
+                        mLastCheckedIndex, lastItem, index, mItems.get(index))) {
                     check(index);
                 }
             }
