@@ -36,8 +36,6 @@ import java.util.TreeSet;
 /**
  * {@link GridRadioGroup#setItem(Collection)}
  *
- * <p>{@link GridRadioGroup#initItem(Collection)}
- *
  * <p>{@link GridRadioGroup#getCheckedIndexes()}
  *
  * <p>{@link GridRadioGroup#getCheckedItems()}
@@ -58,7 +56,11 @@ public class GridRadioGroup extends ViewGroup {
 
     private static final int DEFAULT_HORIZON_INSET_PADDING = 4;
 
+    public static final int NONE_SELECTED_INDEX = -1;
+
     private Set<Integer> mSelectedIndexes = new TreeSet<>();
+
+    private int mLastSelectedIndex = NONE_SELECTED_INDEX;
 
     private int mGridHorizonInset;
 
@@ -105,6 +107,10 @@ public class GridRadioGroup extends ViewGroup {
     private List<ViewHolder> mViewHolders = new ArrayList<>();
 
     private int mAttrTextSize;
+
+    private boolean mAttrMultipleChoice = false;
+
+    private boolean mAttrAllowEmptyChoice = false;
 
     private Drawable mCheckedBackground;
 
@@ -174,6 +180,17 @@ public class GridRadioGroup extends ViewGroup {
                 typedArray.getDimensionPixelOffset(
                         R.styleable.GridRadioGroup_gridRadioGroupStrokeWidth, mAttrStrokeWidth);
 
+        mAttrMultipleChoice =
+                typedArray.getBoolean(
+                        R.styleable.GridRadioGroup_gridRadioGroupMultipleChoice,
+                        mAttrMultipleChoice);
+
+        mAttrAllowEmptyChoice =
+                typedArray.getBoolean(
+                        R.styleable.GridRadioGroup_gridRadioGroupAllowEmptyChoice,
+                        mAttrAllowEmptyChoice
+                );
+
         typedArray.recycle();
 
         mGridHorizonInset = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
@@ -239,33 +256,60 @@ public class GridRadioGroup extends ViewGroup {
         }
     }
 
-    public void check(int i) {
-        if (mSelectedIndexes.contains(i)) {
-            mSelectedIndexes.remove(i);
+    public void check(int index) {
+        if (mAttrMultipleChoice) {
+            doMultipleCheck(index);
         } else {
-            mSelectedIndexes.add(i);
+            doSingleCheck(index);
         }
     }
 
-    private void showChecked(int index) {
+    private void doSingleCheck(int index) {
+        if (mLastSelectedIndex == index) {
+            return;
+        }
+
+        mSelectedIndexes.clear();
+        mSelectedIndexes.add(index);
+
+        mViewHolders.get(mLastSelectedIndex).setChecked(false);
+        mViewHolders.get(index).setChecked(true);
+
+        mLastSelectedIndex = index;
+    }
+
+    private void doMultipleCheck(int index) {
         if (mSelectedIndexes.contains(index)) {
-            mViewHolders.get(index).setChecked(true);
-        } else {
+            mSelectedIndexes.remove(index);
             mViewHolders.get(index).setChecked(false);
+        } else {
+            mSelectedIndexes.add(index);
+            mViewHolders.get(index).setChecked(true);
         }
     }
 
-    /** the checked will not be clear */
+    /**
+     * the checked will be clear
+     */
     public void setItem(Collection<String> item) {
         mItems = new ArrayList<>(item);
+
+        mSelectedIndexes.clear();
+        processEmptyChoice();
+
         setupItemView();
     }
 
-    /** clear all checked */
-    public void initItem(Collection<String> item) {
-        mItems = new ArrayList<>(item);
-        mSelectedIndexes.clear();
-        setupItemView();
+    /**
+     * In single choice mode,
+     */
+    private void processEmptyChoice() {
+        if (mAttrAllowEmptyChoice) {
+            mLastSelectedIndex = -1;
+        } else if (!mAttrMultipleChoice && mItems.size() > 0) {
+            mLastSelectedIndex = 0;
+            mSelectedIndexes.add(0);
+        }
     }
 
     @Nullable
@@ -307,7 +351,11 @@ public class GridRadioGroup extends ViewGroup {
                             "Night",
                             "Ten",
                             "Long Long Long"));
-            check(0);
+            if (!mAttrAllowEmptyChoice) {
+                check(2);
+                check(1);
+                check(0);
+            }
         }
     }
 
@@ -373,6 +421,10 @@ public class GridRadioGroup extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if (!changed) {
+            return;
+        }
+
         int left = getPaddingLeft(), top = getPaddingTop();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -401,10 +453,10 @@ public class GridRadioGroup extends ViewGroup {
             ViewHolder viewHolder = mViewHolders.get(i);
             viewHolder.setTitle(mItems.get(i));
 
-            if (mSelectedIndexes.contains(i)) {
-                viewHolder.setChecked(true);
+            if (mAttrMultipleChoice) {
+                viewHolder.setChecked(mSelectedIndexes.contains(i));
             } else {
-                viewHolder.setChecked(false);
+                viewHolder.setChecked(i == mLastSelectedIndex);
             }
         }
     }
@@ -432,7 +484,7 @@ public class GridRadioGroup extends ViewGroup {
     public interface OnCheckedChangeListener {
 
         /** @return false to intercept */
-        boolean onCheckedChange(int index, String item);
+        boolean onCheckedChange(int oldIndex, String oldItem, int newIndex, String newItem);
     }
 
     private static class SaveState extends BaseSavedState {
@@ -481,13 +533,19 @@ public class GridRadioGroup extends ViewGroup {
 
     public void onClickItem(int index) {
         if (mOnCheckedChangeListener != null) {
-            if (mOnCheckedChangeListener.onCheckedChange(index, mItems.get(index))) {
-                check(index);
-                showChecked(index);
+            if (mAttrMultipleChoice) {
+                if (mOnCheckedChangeListener.onCheckedChange(NONE_SELECTED_INDEX, null, index, mItems.get(index))) {
+                    check(index);
+                }
+            } else {
+                String lastItem = mLastSelectedIndex == NONE_SELECTED_INDEX ? null : mItems.get(mLastSelectedIndex);
+                if (mOnCheckedChangeListener.onCheckedChange(
+                        mLastSelectedIndex, lastItem, index, mItems.get(index))) {
+                    check(index);
+                }
             }
         } else {
             check(index);
-            showChecked(index);
         }
     }
 
