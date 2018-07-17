@@ -28,7 +28,6 @@ import com.jbangit.uicomponents.common.view.ViewRecycler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -100,11 +99,11 @@ public class GridRadioGroup extends ViewGroup {
 
     private OnCheckedChangeListener mOnCheckedChangeListener;
 
-    private List<String> mItems = Collections.emptyList();
+    private final List<String> mItems = new ArrayList<>();
 
-    private ViewRecycler mViewRecycler = new ViewRecycler();
+    private final ViewRecycler mViewRecycler = new ViewRecycler();
 
-    private List<ViewHolder> mViewHolders = new ArrayList<>();
+    private final List<ViewHolder> mViewHolders = new ArrayList<>();
 
     private int mAttrTextSize;
 
@@ -292,7 +291,8 @@ public class GridRadioGroup extends ViewGroup {
      * the checked will be clear
      */
     public void setItem(Collection<String> item) {
-        mItems = new ArrayList<>(item);
+        mItems.clear();
+        mItems.addAll(item);
 
         mCheckedIndexes.clear();
         processEmptyChoice();
@@ -324,7 +324,7 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = (SaveState) state;
-        mItems = saveState.mItems;
+        mItems.addAll(saveState.mItems);
         mCheckedIndexes = saveState.mSelectIndexes;
         setupItemView();
         super.onRestoreInstanceState(saveState.getSuperState());
@@ -470,7 +470,7 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     public Collection<Integer> getCheckedIndexes() {
-        return mCheckedIndexes;
+        return new ArrayList<>(mCheckedIndexes);
     }
 
     public Collection<String> getCheckedItems() {
