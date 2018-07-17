@@ -63,7 +63,12 @@ public class ShapeDrawableUtils {
         }
 
         public Builder stroke(int dpWidth, int color) {
-            mDrawable.setStroke(dpToPx(mContext, dpWidth), color);
+            strokePx(dpToPx(mContext, dpWidth), color);
+            return this;
+        }
+
+        public Builder strokePx(int pxWidth, int color) {
+            mDrawable.setStroke(pxWidth, color);
             return this;
         }
 
