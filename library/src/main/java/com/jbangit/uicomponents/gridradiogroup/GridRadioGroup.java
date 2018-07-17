@@ -1,21 +1,29 @@
 package com.jbangit.uicomponents.gridradiogroup;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.drawable.RippleDrawable;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.Dimension;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
+import com.jbangit.uicomponents.common.resource.ShapeDrawableUtils;
+import com.jbangit.uicomponents.common.view.ViewRecycler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +53,9 @@ public class GridRadioGroup extends ViewGroup {
 
     private static final int DEFAULT_VERTICAL_INSET = 16;
 
-    private List<String> mItems = Collections.emptyList();
+    private static final int DEFAULT_VERTICAL_INSET_PADDING = 8;
+
+    private static final int DEFAULT_HORIZON_INSET_PADDING = 4;
 
     private Set<Integer> mSelectedIndexes = new TreeSet<>();
 
@@ -53,15 +63,55 @@ public class GridRadioGroup extends ViewGroup {
 
     private int mGridVerticalInset;
 
+    @ColorInt
     private int mAttrCheckedColor;
 
+    @ColorInt
     private int mAttrUncheckedColor;
+
+    @ColorInt
+    private int mAttrCheckedTextColor;
+
+    @ColorInt
+    private int mAttrUncheckedTextColor;
+
+    @ColorInt
+    private int mAttrCheckedStrokeColor;
+
+    @ColorInt
+    private int mAttrUncheckedStrokeColor;
+
+    @Dimension()
+    private int mAttrStrokeWidth;
+
+    @Dimension()
+    private int mAttrRadius;
+
+    private int mButtonVerticalPadding;
+
+    private int mButtonHorizonPadding;
 
     private int mGridWidth = 0;
 
     private int mGridHeight = 0;
 
     private OnCheckedChangeListener mOnCheckedChangeListener;
+
+    private List<String> mItems = Collections.emptyList();
+
+    private ViewRecycler mViewRecycler = new ViewRecycler();
+
+    private List<ViewHolder> mViewHolders = new ArrayList<>();
+
+    private int mAttrTextSize;
+
+    private Drawable mCheckedBackground;
+
+    private Drawable mUncheckedBackground;
+
+    private Drawable mForegroundDrawable;
+
+    private Drawable mForegroundRippleMasker;
 
     public GridRadioGroup(Context context) {
         super(context);
@@ -72,76 +122,124 @@ public class GridRadioGroup extends ViewGroup {
         initAttrs(context, attrs);
     }
 
-    private void initAttrs(Context context, AttributeSet attrs) {
-
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.GridRadioGroup);
-        mAttrCheckedColor =
-                typedArray.getColor(
-                        R.styleable.GridRadioGroup_gridRadioGroupCheckedColor,
-                        Globals.getPrimaryColor(context));
-        typedArray.recycle();
-
-        mAttrUncheckedColor = getResources().getColor(R.color.colorTextGray);
-        mGridHorizonInset = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
-        mGridVerticalInset = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET);
-        setBackgroundColor(getResources().getColor(R.color.colorForeground));
-    }
-
     public GridRadioGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
     }
 
-    private void showItems() {
+    private void initAttrs(Context context, AttributeSet attrs) {
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.GridRadioGroup);
+
+        int primaryColor = Globals.getPrimaryColor(context);
+
+        mAttrCheckedColor = primaryColor;
+        mAttrCheckedTextColor = getResources().getColor(R.color.colorForeground);
+        mAttrUncheckedColor = getResources().getColor(R.color.colorBackground);
+        mAttrUncheckedTextColor = getResources().getColor(R.color.colorTextDark);
+        mAttrTextSize = DensityUtils.getPxFromSp(context, 16);
+
+        mAttrTextSize =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupRadius, mAttrTextSize);
+
+        mAttrCheckedColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupCheckedColor, mAttrCheckedColor);
+        mAttrUncheckedColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupUncheckedColor,
+                        mAttrUncheckedColor);
+        mAttrCheckedTextColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupCheckedTextColor,
+                        mAttrCheckedTextColor);
+        mAttrUncheckedTextColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupUncheckedTextColor,
+                        mAttrUncheckedTextColor);
+        mAttrRadius =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupRadius, mAttrRadius);
+
+        mAttrCheckedStrokeColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupCheckedStrokeColor,
+                        mAttrCheckedStrokeColor);
+
+        mAttrUncheckedStrokeColor =
+                typedArray.getColor(
+                        R.styleable.GridRadioGroup_gridRadioGroupUncheckedStrokeColor,
+                        mAttrUncheckedTextColor);
+
+        mAttrStrokeWidth =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupStrokeWidth,
+                        mAttrStrokeWidth
+                );
+
+        typedArray.recycle();
+
+        mGridHorizonInset = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
+        mGridVerticalInset = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET);
+        mButtonHorizonPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET_PADDING);
+        mButtonVerticalPadding = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET_PADDING);
+
+        generateDrawable(context);
+    }
+
+    private void generateDrawable(Context context) {
+        mCheckedBackground =
+                ShapeDrawableUtils.builder(context)
+                        .solid(mAttrCheckedColor)
+                        .corner(mAttrRadius)
+                        .strokePx(mAttrStrokeWidth, mAttrCheckedStrokeColor)
+                        .build();
+        mUncheckedBackground =
+                ShapeDrawableUtils.builder(context)
+                        .solid(mAttrUncheckedColor)
+                        .corner(mAttrRadius)
+                        .strokePx(mAttrStrokeWidth, mAttrUncheckedStrokeColor)
+                        .build();
+        mForegroundDrawable = new ColorDrawable(Color.TRANSPARENT);
+        mForegroundRippleMasker =
+                ShapeDrawableUtils.builder(getContext())
+                        .corner(mAttrRadius)
+                        .solid(Color.BLACK)
+                        .strokePx(mAttrStrokeWidth, mAttrUncheckedStrokeColor)
+                        .build();
+    }
+
+    private void setupItemView() {
+        cachedAllView();
+        mViewHolders.clear();
         removeAllViewsInLayout();
-        for (int i = 0; i < mItems.size(); i++) {
-            String item = mItems.get(i);
-            addItemView(item, i);
+
+        for (int index = 0; index < mItems.size(); index++) {
+            View view = getView();
+            mViewHolders.add(new ViewHolder(view, index));
+            addViewInLayout(view, -1, view.getLayoutParams(), true);
         }
 
-        showAllChecked();
         requestLayout();
     }
 
-    private void addItemView(final String item, final int i) {
-        View itemView =
-                LayoutInflater.from(getContext())
-                        .inflate(R.layout.view_grid_radio_group, this, false);
-        TextView titleView = itemView.findViewById(R.id.title);
-        titleView.setText(item);
-        addViewInLayout(itemView, -1, null, true);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            RippleDrawable r =
-                    new RippleDrawable(
-                            ColorStateList.valueOf(
-                                    getResources().getColor(R.color.colorTextLightGray)),
-                            titleView.getBackground(),
-                            null);
-            titleView.setBackground(r);
+    private View getView() {
+        View view = mViewRecycler.get();
+        if (view == null) {
+            view = createView();
+            view.setLayoutParams(generateDefaultLayoutParams());
         }
-
-        itemView.setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnCheckedChangeListener != null) {
-                            if (mOnCheckedChangeListener.onCheckedChange(i, item)) {
-                                check(i);
-                                showChecked(i);
-                            }
-                        } else {
-                            check(i);
-                            showChecked(i);
-                        }
-                    }
-                });
+        return view;
     }
 
-    private void showAllChecked() {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            showChecked(i);
+    private View createView() {
+        return new AppCompatTextView(getContext());
+    }
+
+    private void cachedAllView() {
+        for (ViewHolder viewHolder : mViewHolders) {
+            mViewRecycler.recycle(viewHolder.getView());
         }
     }
 
@@ -153,29 +251,25 @@ public class GridRadioGroup extends ViewGroup {
         }
     }
 
-    private void showChecked(int i) {
-        if (mSelectedIndexes.contains(i)) {
-            ((TextView) getItemView(i).findViewById(R.id.title)).setTextColor(mAttrCheckedColor);
+    private void showChecked(int index) {
+        if (mSelectedIndexes.contains(index)) {
+            mViewHolders.get(index).setChecked(true);
         } else {
-            ((TextView) getItemView(i).findViewById(R.id.title)).setTextColor(mAttrUncheckedColor);
+            mViewHolders.get(index).setChecked(false);
         }
-    }
-
-    private View getItemView(int i) {
-        return getChildAt(i);
     }
 
     /** the checked will not be clear */
     public void setItem(Collection<String> item) {
         mItems = new ArrayList<>(item);
-        showItems();
+        setupItemView();
     }
 
     /** clear all checked */
     public void initItem(Collection<String> item) {
         mItems = new ArrayList<>(item);
         mSelectedIndexes.clear();
-        showItems();
+        setupItemView();
     }
 
     @Nullable
@@ -192,7 +286,7 @@ public class GridRadioGroup extends ViewGroup {
         SaveState saveState = (SaveState) state;
         mItems = saveState.mItems;
         mSelectedIndexes = saveState.mSelectIndexes;
-        showItems();
+        setupItemView();
         super.onRestoreInstanceState(saveState.getSuperState());
     }
 
@@ -277,6 +371,21 @@ public class GridRadioGroup extends ViewGroup {
                 top += mGridHeight + mGridVerticalInset;
             }
         }
+
+        initItemViews();
+    }
+
+    private void initItemViews() {
+        for (int i = 0; i < mViewHolders.size(); i++) {
+            ViewHolder viewHolder = mViewHolders.get(i);
+            viewHolder.setTitle(mItems.get(i));
+
+            if (mSelectedIndexes.contains(i)) {
+                viewHolder.setChecked(true);
+            } else {
+                viewHolder.setChecked(false);
+            }
+        }
     }
 
     public OnCheckedChangeListener getOnCheckedChangeListener() {
@@ -346,6 +455,71 @@ public class GridRadioGroup extends ViewGroup {
             for (Integer index : mSelectIndexes) {
                 out.writeInt(index);
             }
+        }
+    }
+
+    public void onClickItem(int index) {
+        if (mOnCheckedChangeListener != null) {
+            if (mOnCheckedChangeListener.onCheckedChange(index, mItems.get(index))) {
+                check(index);
+                showChecked(index);
+            }
+        } else {
+            check(index);
+            showChecked(index);
+        }
+    }
+
+    class ViewHolder {
+
+        private final AppCompatTextView mButton;
+
+        private final int mIndex;
+
+        ViewHolder(View view, int index) {
+            mIndex = index;
+            mButton = (AppCompatTextView) view;
+
+            mButton.setGravity(Gravity.CENTER);
+            mButton.setPadding(
+                    mButtonHorizonPadding,
+                    mButtonVerticalPadding,
+                    mButtonHorizonPadding,
+                    mButtonVerticalPadding);
+
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                    mButton, 1, mAttrTextSize, 4, TypedValue.COMPLEX_UNIT_PX);
+
+            mButton.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onClickItem(mIndex);
+                        }
+                    });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mButton.setForeground(
+                        Globals.addRipple(
+                                getContext(), mForegroundDrawable, mForegroundRippleMasker));
+            }
+        }
+
+        void setTitle(String title) {
+            mButton.setText(title);
+        }
+
+        void setChecked(boolean checked) {
+            if (checked) {
+                mButton.setBackground(mCheckedBackground);
+                mButton.setTextColor(mAttrCheckedTextColor);
+            } else {
+                mButton.setBackground(mUncheckedBackground);
+                mButton.setTextColor(mAttrUncheckedTextColor);
+            }
+        }
+
+        View getView() {
+            return mButton;
         }
     }
 }
