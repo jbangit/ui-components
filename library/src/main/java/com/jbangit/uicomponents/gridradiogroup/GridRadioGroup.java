@@ -47,10 +47,6 @@ import java.util.TreeSet;
  */
 public class GridRadioGroup extends ViewGroup {
 
-    private static final int DEFAULT_HORIZON_INSET = 12;
-
-    private static final int DEFAULT_VERTICAL_INSET = 16;
-
     private static final int DEFAULT_VERTICAL_INSET_PADDING = 8;
 
     private static final int DEFAULT_HORIZON_INSET_PADDING = 4;
@@ -85,6 +81,18 @@ public class GridRadioGroup extends ViewGroup {
     @Dimension()
     private int mAttrRadius;
 
+    private int mAttrRowNumber = 4;
+
+    private int mAttrVerticalInsetPadding = DensityUtils.getPxFromDp(getContext(), 12);
+
+    private int mAttrHorizonInsetPadding = DensityUtils.getPxFromDp(getContext(), 12);
+
+    private float mAttrVerticalInsetFraction = -1f;
+
+    private float mAttrHorizonInsetFraction = -1f;
+
+    private boolean mAttrIsOuterPadding = true;
+
     private int mButtonVerticalPadding;
 
     private int mButtonHorizonPadding;
@@ -115,10 +123,6 @@ public class GridRadioGroup extends ViewGroup {
 
     private LayoutHelper mLayoutHelper = null;
 
-    private int mHorizonInsetPadding;
-
-    private int mVerticalInsetPadding;
-
     public GridRadioGroup(Context context) {
         super(context);
     }
@@ -147,6 +151,34 @@ public class GridRadioGroup extends ViewGroup {
         mAttrUncheckedColor = getResources().getColor(R.color.colorBackground);
         mAttrUncheckedTextColor = getResources().getColor(R.color.colorTextDark);
         mAttrTextSize = DensityUtils.getPxFromSp(context, 16);
+
+        mAttrRowNumber =
+                typedArray.getInt(
+                        R.styleable.GridRadioGroup_gridRadioGroupRowNumber, mAttrRowNumber);
+
+        mAttrHorizonInsetPadding =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupHorizonInsetPadding,
+                        mAttrHorizonInsetPadding);
+        mAttrVerticalInsetPadding =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.GridRadioGroup_gridRadioGroupVerticalInsetPadding,
+                        mAttrVerticalInsetPadding);
+        mAttrHorizonInsetFraction =
+                typedArray.getFraction(
+                        R.styleable.GridRadioGroup_gridRadioGroupHorizonInsetFraction,
+                        1,
+                        1,
+                        mAttrHorizonInsetFraction);
+        mAttrVerticalInsetFraction =
+                typedArray.getFraction(
+                        R.styleable.GridRadioGroup_gridRadioGroupVerticalInsetFraction,
+                        1,
+                        1,
+                        mAttrVerticalInsetFraction);
+
+        mAttrIsOuterPadding =
+                typedArray.getBoolean(R.styleable.GridRadioGroup_gridRadioGroupOuterPadding, false);
 
         mAttrTextSize =
                 typedArray.getDimensionPixelOffset(
@@ -193,8 +225,6 @@ public class GridRadioGroup extends ViewGroup {
 
         typedArray.recycle();
 
-        mHorizonInsetPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
-        mVerticalInsetPadding = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET);
         mButtonHorizonPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET_PADDING);
         mButtonVerticalPadding = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET_PADDING);
 
@@ -247,9 +277,7 @@ public class GridRadioGroup extends ViewGroup {
 
         FixedPaddingGridLayoutHelper layoutHelper =
                 new FixedPaddingGridLayoutHelper(this, viewGroupHelper);
-        layoutHelper.setRowCount(4);
-        layoutHelper.setHorizonInsetPadding(mHorizonInsetPadding);
-        layoutHelper.setVerticalInsetPadding(mVerticalInsetPadding);
+        layoutHelper.setRowNumber(mAttrRowNumber);
         layoutHelper.setOnGetChildViewHeight(
                 new FixedPaddingGridLayoutHelper.OnGetChildViewHeight() {
                     @Override
@@ -257,6 +285,11 @@ public class GridRadioGroup extends ViewGroup {
                         return getItemHeight();
                     }
                 });
+        layoutHelper.setHorizonInsetPadding(mAttrHorizonInsetPadding);
+        layoutHelper.setHorizonInsetFraction(mAttrHorizonInsetFraction);
+        layoutHelper.setVerticalInsetPadding(mAttrVerticalInsetPadding);
+        layoutHelper.setVerticalInsetFraction(mAttrVerticalInsetFraction);
+        layoutHelper.setOuterPadding(mAttrIsOuterPadding);
 
         mLayoutHelper = layoutHelper;
     }

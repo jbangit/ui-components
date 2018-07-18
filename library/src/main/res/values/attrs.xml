@@ -38,6 +38,12 @@
     </declare-styleable>
 
     <declare-styleable name="GridRadioGroup">
+        <attr name="gridRadioGroupRowNumber" format="integer" />
+        <attr name="gridRadioGroupHorizonInsetPadding" format="dimension" />
+        <attr name="gridRadioGroupHorizonInsetFraction" format="fraction" />
+        <attr name="gridRadioGroupVerticalInsetPadding" format="dimension" />
+        <attr name="gridRadioGroupVerticalInsetFraction" format="fraction" />
+        <attr name="gridRadioGroupOuterPadding" format="boolean" />
         <attr name="gridRadioGroupTextSize" format="dimension" />
         <attr name="gridRadioGroupCheckedColor" format="color" />
         <attr name="gridRadioGroupUncheckedColor" format="color" />
