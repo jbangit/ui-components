@@ -24,6 +24,8 @@ import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
 import com.jbangit.uicomponents.common.resource.ShapeDrawableUtils;
 import com.jbangit.uicomponents.common.view.ViewRecycler;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.LayoutHelper;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.gridlayouthelper.FixedPaddingGridLayoutHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,8 +49,6 @@ public class GridRadioGroup extends ViewGroup {
 
     private static final int DEFAULT_HORIZON_INSET = 12;
 
-    private static final int ROW_COUNT = 4;
-
     private static final int DEFAULT_VERTICAL_INSET = 16;
 
     private static final int DEFAULT_VERTICAL_INSET_PADDING = 8;
@@ -60,10 +60,6 @@ public class GridRadioGroup extends ViewGroup {
     private final Set<Integer> mCheckedIndexes = new TreeSet<>();
 
     private int mLastCheckedIndex = NONE_CHECKED_INDEX;
-
-    private int mGridHorizonInset;
-
-    private int mGridVerticalInset;
 
     @ColorInt
     private int mAttrCheckedColor;
@@ -93,10 +89,6 @@ public class GridRadioGroup extends ViewGroup {
 
     private int mButtonHorizonPadding;
 
-    private int mGridWidth = 0;
-
-    private int mGridHeight = 0;
-
     private OnCheckedChangeListener mOnCheckedChangeListener;
 
     private final List<String> mItems = new ArrayList<>();
@@ -119,6 +111,14 @@ public class GridRadioGroup extends ViewGroup {
 
     private Drawable mForegroundRippleMasker;
 
+    private ViewHolder mSampleViewHolder;
+
+    private LayoutHelper mLayoutHelper = null;
+
+    private int mHorizonInsetPadding;
+
+    private int mVerticalInsetPadding;
+
     public GridRadioGroup(Context context) {
         super(context);
     }
@@ -126,11 +126,13 @@ public class GridRadioGroup extends ViewGroup {
     public GridRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(context, attrs);
+        initLayoutHelper();
     }
 
     public GridRadioGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
+        initLayoutHelper();
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -187,17 +189,19 @@ public class GridRadioGroup extends ViewGroup {
         mAttrAllowEmptyChoice =
                 typedArray.getBoolean(
                         R.styleable.GridRadioGroup_gridRadioGroupAllowEmptyChoice,
-                        mAttrAllowEmptyChoice
-                );
+                        mAttrAllowEmptyChoice);
 
         typedArray.recycle();
 
-        mGridHorizonInset = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
-        mGridVerticalInset = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET);
+        mHorizonInsetPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET);
+        mVerticalInsetPadding = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET);
         mButtonHorizonPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET_PADDING);
         mButtonVerticalPadding = DensityUtils.getPxFromDp(context, DEFAULT_VERTICAL_INSET_PADDING);
 
         generateDrawable(context);
+
+        mSampleViewHolder = new ViewHolder(createView(), -1);
+        mSampleViewHolder.setTitle("S");
     }
 
     private void generateDrawable(Context context) {
@@ -220,6 +224,47 @@ public class GridRadioGroup extends ViewGroup {
                         .solid(Color.BLACK)
                         .strokePx(mAttrStrokeWidth, mAttrUncheckedStrokeColor)
                         .build();
+    }
+
+    private void initLayoutHelper() {
+        LayoutHelper.ViewGroupHelper viewGroupHelper =
+                new LayoutHelper.ViewGroupHelper() {
+                    @Override
+                    public View getChildView(int index) {
+                        return mViewHolders.get(index).getView();
+                    }
+
+                    @Override
+                    public int getChildCount() {
+                        return mViewHolders.size();
+                    }
+
+                    @Override
+                    public void onSetMeasuredDimension(int measuredWidth, int measuredHeight) {
+                        setMeasuredDimension(measuredWidth, measuredHeight);
+                    }
+                };
+
+        FixedPaddingGridLayoutHelper layoutHelper =
+                new FixedPaddingGridLayoutHelper(this, viewGroupHelper);
+        layoutHelper.setRowCount(4);
+        layoutHelper.setHorizonInsetPadding(mHorizonInsetPadding);
+        layoutHelper.setVerticalInsetPadding(mVerticalInsetPadding);
+        layoutHelper.setOnGetChildViewHeight(
+                new FixedPaddingGridLayoutHelper.OnGetChildViewHeight() {
+                    @Override
+                    public int onGetChildViewHeight() {
+                        return getItemHeight();
+                    }
+                });
+
+        mLayoutHelper = layoutHelper;
+    }
+
+    private int getItemHeight() {
+        View sampleView = mSampleViewHolder.getView();
+        sampleView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        return sampleView.getMeasuredHeight();
     }
 
     private void setupItemView() {
@@ -300,9 +345,7 @@ public class GridRadioGroup extends ViewGroup {
         setupItemView();
     }
 
-    /**
-     * In single choice mode,
-     */
+    /** Only in single choice mode, */
     private void processEmptyChoice() {
         if (mAttrAllowEmptyChoice) {
             mLastCheckedIndex = -1;
@@ -365,89 +408,12 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        if (getChildCount() == 0) {
-            setMeasuredDimension(0, 0);
-            return;
-        }
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        switch (widthMode) {
-            case MeasureSpec.AT_MOST:
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                break;
-        }
-
-        int allInsetWith = mGridHorizonInset * (ROW_COUNT - 1);
-        int allPaddingWidth = getPaddingLeft() + getPaddingRight();
-        mGridWidth = (width - allInsetWith - allPaddingWidth) / ROW_COUNT;
-
-        measureChildren();
-        int lineCount = ((getChildCount() - 1) / ROW_COUNT) + 1;
-        mGridHeight = getChildAt(0).getMeasuredHeight();
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int allInsetHeight = mGridVerticalInset * (lineCount - 1);
-        int allPaddingHeight = getPaddingTop() + getPaddingBottom();
-        int expectHeight = lineCount * mGridHeight + allInsetHeight + allPaddingHeight;
-
-        int height = heightSize;
-        switch (heightMode) {
-            case MeasureSpec.AT_MOST:
-                height = Math.min(heightSize, expectHeight);
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                break;
-        }
-
-        setMeasuredDimension(width, height);
-    }
-
-    private void measureChildren() {
-        int childCount = getChildCount();
-
-        int widthSpec = MeasureSpec.makeMeasureSpec(mGridWidth, MeasureSpec.EXACTLY);
-        int heightSpec = MeasureSpec.UNSPECIFIED;
-        for (int i = 0; i < childCount; i++) {
-            getChildAt(i).measure(widthSpec, heightSpec);
-        }
+        mLayoutHelper.onViewGroupMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (!changed) {
-            return;
-        }
-
-        int left = getPaddingLeft(), top = getPaddingTop();
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childView = getChildAt(i);
-
-            childView.layout(
-                    left,
-                    top,
-                    left + childView.getMeasuredWidth(),
-                    top + childView.getMeasuredHeight());
-
-            left += mGridWidth + mGridHorizonInset;
-
-            if ((i + 1) % ROW_COUNT == 0) {
-                // end of the line
-                left = getPaddingLeft();
-                top += mGridHeight + mGridVerticalInset;
-            }
-        }
-
+        mLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
         initItemViews();
     }
 
@@ -533,11 +499,15 @@ public class GridRadioGroup extends ViewGroup {
     public void onClickItem(int index) {
         if (mOnCheckedChangeListener != null) {
             if (mAttrMultipleChoice) {
-                if (mOnCheckedChangeListener.onCheckedChange(NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
+                if (mOnCheckedChangeListener.onCheckedChange(
+                        NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
                     check(index);
                 }
             } else {
-                String lastItem = mLastCheckedIndex == NONE_CHECKED_INDEX ? null : mItems.get(mLastCheckedIndex);
+                String lastItem =
+                        mLastCheckedIndex == NONE_CHECKED_INDEX
+                                ? null
+                                : mItems.get(mLastCheckedIndex);
                 if (mOnCheckedChangeListener.onCheckedChange(
                         mLastCheckedIndex, lastItem, index, mItems.get(index))) {
                     check(index);
