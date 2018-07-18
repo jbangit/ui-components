@@ -1,8 +1,10 @@
 package com.jbangit.sample.list
 
-import com.jbangit.sample.common.SingleFragmentActivity
+import com.jbangit.sample.common.MultipleFragmentActivity
 
-class ListActivity : SingleFragmentActivity() {
-    override val fragment = GalleryFragment()
-
+class ListActivity : MultipleFragmentActivity() {
+    override val fragments = arrayListOf(
+        GalleryFragment(),
+        GridRadioGroupFragment()
+    )
 }
