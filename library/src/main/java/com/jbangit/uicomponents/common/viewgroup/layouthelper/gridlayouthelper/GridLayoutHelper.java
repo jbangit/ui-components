@@ -19,7 +19,7 @@ abstract class GridLayoutHelper implements LayoutHelper {
 
     private LayoutHelper.ViewGroupHelper mViewGroupHelper;
 
-    private int mRowCount = 4;
+    private int mRowNumber = 4;
 
     private int mHorizonInsetPadding;
 
@@ -34,8 +34,8 @@ abstract class GridLayoutHelper implements LayoutHelper {
         mViewGroupHelper = viewGroupHelper;
     }
 
-    public void setRowCount(int rowCount) {
-        mRowCount = rowCount;
+    public void setRowNumber(int rowNumber) {
+        mRowNumber = rowNumber;
     }
 
     @Override
@@ -82,10 +82,10 @@ abstract class GridLayoutHelper implements LayoutHelper {
     }
 
     private int getExpectHeight() {
-        int lineCount = ((mViewGroupHelper.getChildCount() - 1) / mRowCount) + 1;
+        int lineCount = ((mViewGroupHelper.getChildCount() - 1) / mRowNumber) + 1;
 
         int allInsetPaddingHeight = mVerticalInsetPadding * (lineCount - 1);
-        int allPaddingHeight = mViewGroup.getPaddingTop() + mViewGroup.getPaddingBottom();
+        int allPaddingHeight = mViewGroup.getPaddingTop() + mViewGroup.getPaddingBottom() + 2 * getExtraTopPadding();
 
         return lineCount * mChildViewHeight + allInsetPaddingHeight + allPaddingHeight;
     }
@@ -107,7 +107,9 @@ abstract class GridLayoutHelper implements LayoutHelper {
             return;
         }
 
-        int left = mViewGroup.getPaddingLeft(), top = mViewGroup.getPaddingTop();
+        int left = mViewGroup.getPaddingLeft() + getExtraLeftPadding();
+        int top = mViewGroup.getPaddingTop() + getExtraTopPadding();
+
         int childCount = mViewGroupHelper.getChildCount();
 
         for (int i = 0; i < childCount; i++) {
@@ -121,12 +123,20 @@ abstract class GridLayoutHelper implements LayoutHelper {
 
             left += childView.getMeasuredWidth() + mHorizonInsetPadding;
 
-            if ((i + 1) % mRowCount == 0) {
+            if ((i + 1) % mRowNumber == 0) {
                 // end of the line
-                left = mViewGroup.getPaddingStart();
+                left = mViewGroup.getPaddingStart() + getExtraLeftPadding();
                 top += childView.getMeasuredHeight() + mVerticalInsetPadding;
             }
         }
+    }
+
+    protected int getExtraLeftPadding() {
+        return 0;
+    }
+
+    protected int getExtraTopPadding() {
+        return 0;
     }
 
     protected void setSetMeasureResult(
@@ -152,8 +162,8 @@ abstract class GridLayoutHelper implements LayoutHelper {
         return mViewGroupHelper;
     }
 
-    protected int getRowCount() {
-        return mRowCount;
+    protected int getRowNumber() {
+        return mRowNumber;
     }
 
     /**

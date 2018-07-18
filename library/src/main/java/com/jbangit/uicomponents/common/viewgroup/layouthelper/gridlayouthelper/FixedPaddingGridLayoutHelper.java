@@ -14,7 +14,21 @@ public class FixedPaddingGridLayoutHelper extends GridLayoutHelper {
 
     private int mVerticalInsetPadding;
 
+    private float mHorizonInsetFraction = -1f;
+
+    private float mVerticalInsetFraction = -1f;
+
+    private boolean mIsOuterPadding = false;
+
     private OnGetChildViewHeight mOnGetChildViewHeight;
+
+    private int mItemHorizonPadding;
+
+    private int mItemHeight;
+
+    private int mItemWidth;
+
+    private int mItemVerticalPadding;
 
     public FixedPaddingGridLayoutHelper(
             ViewGroup viewGroup, LayoutHelper.ViewGroupHelper viewGroupHelper) {
@@ -23,14 +37,49 @@ public class FixedPaddingGridLayoutHelper extends GridLayoutHelper {
 
     @Override
     protected void onMeasure(int width) {
-        int totalHorizonInsetPaddingWith = mHorizonInsetPadding * (getRowCount() - 1);
-        int childViewWidth = (width - totalHorizonInsetPaddingWith) / getRowCount();
+
+        if (mHorizonInsetFraction > 0) {
+            // width = getRowNumber() * itemWidth + getPaddingCount() * itemPadding;
+            // width = getRowNumber() * itemWidth + getPaddingCount() * mHorizonInsetFraction * itemWidth;
+            // itemPadding = mHorizonInsetFraction * itemWidth;
+            mItemWidth = Math.round(width / (getRowNumber() + getPaddingCount() * mHorizonInsetFraction));
+            mItemHorizonPadding = Math.round(mHorizonInsetFraction * mItemWidth);
+        } else {
+            int totalHorizonInsetPaddingWith = mHorizonInsetPadding * getPaddingCount();
+            mItemWidth = (width - totalHorizonInsetPaddingWith) / getRowNumber();
+            mItemHorizonPadding = mHorizonInsetPadding;
+        }
+
+        mItemHeight = mOnGetChildViewHeight.onGetChildViewHeight();
+        if (mVerticalInsetFraction > 0) {
+            mItemVerticalPadding = Math.round(mVerticalInsetFraction * mItemHeight);
+        } else {
+            mItemVerticalPadding = mVerticalInsetPadding;
+        }
 
         setSetMeasureResult(
-                childViewWidth,
-                mOnGetChildViewHeight.onGetChildViewHeight(),
-                mHorizonInsetPadding,
-                mVerticalInsetPadding);
+                mItemWidth,
+                mItemHeight,
+                mItemHorizonPadding,
+                mItemVerticalPadding);
+    }
+
+    @Override
+    protected int getExtraLeftPadding() {
+        return mIsOuterPadding ? mItemHorizonPadding : 0;
+    }
+
+    @Override
+    protected int getExtraTopPadding() {
+        return mIsOuterPadding ? mItemVerticalPadding : 0;
+    }
+
+    private int getPaddingCount() {
+        if (mIsOuterPadding) {
+            return getRowNumber() + 1;
+        } else {
+            return getRowNumber() - 1;
+        }
     }
 
     public void setHorizonInsetPadding(int horizonInsetPadding) {
@@ -43,6 +92,18 @@ public class FixedPaddingGridLayoutHelper extends GridLayoutHelper {
 
     public void setOnGetChildViewHeight(OnGetChildViewHeight onGetChildViewHeight) {
         mOnGetChildViewHeight = onGetChildViewHeight;
+    }
+
+    public void setHorizonInsetFraction(float horizonInsetFraction) {
+        mHorizonInsetFraction = horizonInsetFraction;
+    }
+
+    public void setVerticalInsetFraction(float verticalInsetFraction) {
+        mVerticalInsetFraction = verticalInsetFraction;
+    }
+
+    public void setOuterPadding(boolean isOuterPadding) {
+        mIsOuterPadding = isOuterPadding;
     }
 
     public interface OnGetChildViewHeight {
