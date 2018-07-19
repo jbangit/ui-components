@@ -276,7 +276,8 @@ public class GridRadioGroup extends ViewGroup {
                 };
 
         FixedPaddingGridLayoutHelper layoutHelper =
-                new FixedPaddingGridLayoutHelper(this, viewGroupHelper);
+                new FixedPaddingGridLayoutHelper(this);
+        layoutHelper.setViewGroupHelper(viewGroupHelper);
         layoutHelper.setRowNumber(mAttrRowNumber);
         layoutHelper.setOnGetChildViewHeight(
                 new FixedPaddingGridLayoutHelper.OnGetChildViewHeight() {

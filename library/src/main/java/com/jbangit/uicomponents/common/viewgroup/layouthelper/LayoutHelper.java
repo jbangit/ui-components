@@ -15,6 +15,8 @@ public interface LayoutHelper {
      */
     void onViewGroupLayout(boolean changed, int l, int t, int r, int b);
 
+    void setViewGroupHelper(ViewGroupHelper viewGroupHelper);
+
     interface ViewGroupHelper {
 
         /**

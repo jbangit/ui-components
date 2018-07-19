@@ -29,9 +29,8 @@ abstract class GridLayoutHelper implements LayoutHelper {
 
     private int mChildViewHeight;
 
-    GridLayoutHelper(ViewGroup viewGroup, LayoutHelper.ViewGroupHelper viewGroupHelper) {
+    GridLayoutHelper(ViewGroup viewGroup) {
         mViewGroup = viewGroup;
-        mViewGroupHelper = viewGroupHelper;
     }
 
     public void setRowNumber(int rowNumber) {
@@ -129,6 +128,11 @@ abstract class GridLayoutHelper implements LayoutHelper {
                 top += childView.getMeasuredHeight() + mVerticalInsetPadding;
             }
         }
+    }
+
+    @Override
+    public void setViewGroupHelper(ViewGroupHelper viewGroupHelper) {
+        mViewGroupHelper = viewGroupHelper;
     }
 
     protected int getExtraLeftPadding() {

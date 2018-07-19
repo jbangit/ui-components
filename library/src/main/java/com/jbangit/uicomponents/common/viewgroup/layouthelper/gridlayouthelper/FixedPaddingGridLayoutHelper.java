@@ -2,8 +2,6 @@ package com.jbangit.uicomponents.common.viewgroup.layouthelper.gridlayouthelper;
 
 import android.view.ViewGroup;
 
-import com.jbangit.uicomponents.common.viewgroup.layouthelper.LayoutHelper;
-
 /**
  * This layout helper make a grid that has fixed number of row. The item width is depending on the
  * padding including ViewGroup padding and item inset padding.
@@ -31,8 +29,8 @@ public class FixedPaddingGridLayoutHelper extends GridLayoutHelper {
     private int mItemVerticalPadding;
 
     public FixedPaddingGridLayoutHelper(
-            ViewGroup viewGroup, LayoutHelper.ViewGroupHelper viewGroupHelper) {
-        super(viewGroup, viewGroupHelper);
+            ViewGroup viewGroup) {
+        super(viewGroup);
     }
 
     @Override
