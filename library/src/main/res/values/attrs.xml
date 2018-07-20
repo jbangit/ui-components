@@ -88,6 +88,11 @@
             <enum name="horizon" value="0" />
             <enum name="vertical" value="1" />
         </attr>
+        <attr name="viewTabLayoutStyle" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="fill" value="1" />
+            <enum name="wrap" value="2" />
+        </attr>
         <attr name="viewTabIdcGravity" format="enum">
             <enum name="top" value="0" />
             <enum name="bottom" value="1" />

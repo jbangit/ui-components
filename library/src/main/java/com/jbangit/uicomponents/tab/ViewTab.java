@@ -6,19 +6,26 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Scroller;
 
 import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.LayoutHelper;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.singleRow.SingleRowLayoutHelper;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.singleline.SingleLineLayoutHelper;
+import com.jbangit.uicomponents.common.viewgroup.scrollhelper.ScrollHelper;
+import com.jbangit.uicomponents.common.viewgroup.scrollhelper.scrollerhelper.HorizonScrollHelper;
+import com.jbangit.uicomponents.common.viewgroup.scrollhelper.scrollerhelper.VerticalScrollerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +40,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     public static final int INDICATOR_GRAVITY_BOTTOM = 1;
 
+    public static final int LAYOUT_STYLE_FILL = 0;
+
+    public static final int LAYOUT_STYLE_WRAP = 1;
+
     private ViewTabAdapter mAdapter;
 
-    private List<View> mItems = new ArrayList<>();
+    private List<View> mViewItems = new ArrayList<>();
 
     private int mOldItemPosition = -1;
 
@@ -53,7 +64,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private int mAttrIdcGravity = INDICATOR_GRAVITY_BOTTOM;
 
+    private int mAttrLayoutStyle = LAYOUT_STYLE_FILL;
+
     private OnTabChangeListener mOnTabChangeListener = null;
+
+    private LayoutHelper mLayoutHelper;
+
+    private ScrollHelper mScrollHelper;
 
     public ViewTab(Context context) {
         super(context);
@@ -63,26 +80,20 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         super(context, attrs);
         defaultInit();
         initAttrs(context, attrs);
+        initLayoutHelper();
+        initScrollHelper();
     }
 
     public ViewTab(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         defaultInit();
         initAttrs(context, attrs);
+        initLayoutHelper();
+        initScrollHelper();
     }
 
     private void defaultInit() {
-        mScroller = new Scroller(getContext());
         setWillNotDraw(false);
-    }
-
-    @Override
-    public void computeScroll() {
-        if (mScroller.computeScrollOffset()) {
-            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
-            invalidate();
-        }
-        invalidate();
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -101,68 +112,117 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                         R.styleable.ViewTab_viewTabIdcHPadding, mAttrIdcHPadding);
         mAttrIdcScale =
                 typedArray.getFraction(R.styleable.ViewTab_viewTabIdcScale, 1, 1, mAttrIdcScale);
+        mAttrLayoutStyle =
+                typedArray.getInt(R.styleable.ViewTab_viewTabLayoutStyle, mAttrLayoutStyle);
         mPaint.setColor(mAttrIdcColor);
         mPaint.setStrokeWidth(mAttrIdcSize);
 
         typedArray.recycle();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    private void initLayoutHelper() {
         switch (mAttrOrientation) {
             case ORIENTATION_HORIZON:
-                onHorizonMeasure(widthMeasureSpec, heightMeasureSpec);
+                SingleLineLayoutHelper singleLineLayoutHelper = new SingleLineLayoutHelper();
+                singleLineLayoutHelper.setOnGetHeightListener(
+                        new SingleLineLayoutHelper.OnGetViewHeight() {
+                            @Override
+                            public int onGetHeight() {
+                                return getTabHeight();
+                            }
+                        });
+                singleLineLayoutHelper.setStyle(mAttrLayoutStyle);
+                mLayoutHelper = singleLineLayoutHelper;
                 break;
             case ORIENTATION_VERTICAL:
-                onVerticalMeasure(widthMeasureSpec, heightMeasureSpec);
+                SingleRowLayoutHelper singleRowLayoutHelper = new SingleRowLayoutHelper();
+                singleRowLayoutHelper.setOnGetWidthListener(
+                        new SingleRowLayoutHelper.OnGetWidthListener() {
+                            @Override
+                            public int onGetWidth() {
+                                return getTabWidth();
+                            }
+                        });
+                mLayoutHelper = singleRowLayoutHelper;
+                singleRowLayoutHelper.setStyle(mAttrLayoutStyle);
                 break;
         }
+
+        mLayoutHelper.setViewGroupHelper(
+                new LayoutHelper.ViewGroupHelper() {
+                    @Override
+                    public View getChildView(int index) {
+                        return getChildAt(index);
+                    }
+
+                    @Override
+                    public int getChildCount() {
+                        return ViewTab.this.getChildCount();
+                    }
+
+                    @Override
+                    public void onSetMeasuredDimension(int measuredWidth, int measuredHeight) {
+                        setMeasuredDimension(measuredWidth, measuredHeight);
+                    }
+                });
     }
 
-    private void onHorizonMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+    private void initScrollHelper() {
 
-        int childCount = getChildCount();
-
-        int tabWidth = 0;
-
-        int width = widthSize;
-        tabWidth = widthSize / childCount;
-        switch (widthMode) {
-            case MeasureSpec.AT_MOST:
+        switch (mAttrOrientation) {
+            case ORIENTATION_HORIZON:
+                HorizonScrollHelper horizonScrollHelper = new HorizonScrollHelper(getContext());
+                mScrollHelper = horizonScrollHelper;
+                horizonScrollHelper.setOnGetContentWidthListener(
+                        new HorizonScrollHelper.OnGetContentWidthListener() {
+                            @Override
+                            public int onGetContentWidth() {
+                                return getChildAt(getChildCount() - 1).getRight();
+                            }
+                        });
                 break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                break;
-        }
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int tabHeight = getTabHeight();
-
-        int height = heightSize;
-        switch (heightMode) {
-            case MeasureSpec.AT_MOST:
-                height = Math.min(tabHeight, height);
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
+            case ORIENTATION_VERTICAL:
+                VerticalScrollerHelper verticalScrollHelper =
+                        new VerticalScrollerHelper(getContext());
+                verticalScrollHelper.setOnGetContentHeightListener(
+                        new VerticalScrollerHelper.OnGetContentHeightListener() {
+                            @Override
+                            public int onGetContentHeight() {
+                                return getChildAt(getChildCount() - 1).getBottom();
+                            }
+                        });
+                mScrollHelper = verticalScrollHelper;
                 break;
         }
 
-        measureTabs(tabWidth, tabHeight);
+        mScrollHelper.setViewGroupHelper(
+                new ScrollHelper.ViewGroupHelper() {
+                    @Override
+                    public ViewGroup getViewGroup() {
+                        return ViewTab.this;
+                    }
+                });
+    }
 
-        setMeasuredDimension(width, height);
+    @Override
+    public void computeScroll() {
+        mScrollHelper.onViewGroupComputeScroll();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        mLayoutHelper.onViewGroupMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mScrollHelper.onDetachedFromWindow();
     }
 
     private int getTabHeight() {
         if (getChildCount() == 0) {
-            return 10;
+            return 0;
         }
         View view = getChildAt(0);
         view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -170,60 +230,14 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         return view.getMeasuredHeight();
     }
 
-    private void measureTabs(int tabWidth, int tabHeight) {
-        int tabCount = getChildCount();
-
-        for (int i = 0; i < tabCount; i++) {
-            getChildAt(i)
-                    .measure(
-                            MeasureSpec.makeMeasureSpec(tabWidth, MeasureSpec.EXACTLY),
-                            MeasureSpec.makeMeasureSpec(tabHeight, MeasureSpec.EXACTLY));
+    public int getTabWidth() {
+        if (getChildCount() == 0) {
+            return 0;
         }
-    }
+        View view = getChildAt(0);
+        view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 
-    private void onVerticalMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int width = widthSize;
-
-        switch (widthMode) {
-            case MeasureSpec.AT_MOST:
-                width = 0;
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                width = widthSize;
-                break;
-        }
-
-        measureTabs(width, MeasureSpec.EXACTLY, 0, MeasureSpec.UNSPECIFIED);
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int height = heightSize;
-
-        switch (height) {
-            case MeasureSpec.AT_MOST:
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                break;
-        }
-
-        setMeasuredDimension(width, height);
-    }
-
-    private void measureTabs(int width, int widthMode, int height, int heightMode) {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            getChildAt(i)
-                    .measure(
-                            MeasureSpec.makeMeasureSpec(width, widthMode),
-                            MeasureSpec.makeMeasureSpec(height, heightMode));
-        }
+        return view.getMeasuredWidth();
     }
 
     public void setCurrentItem(int position) {
@@ -231,10 +245,10 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     public void setCurrentItem(int position, boolean animated) {
-        if (mOldItemPosition != -1 && mOldItemPosition < mItems.size()) {
-            mAdapter.onSelected(mItems.get(mOldItemPosition), mOldItemPosition, false);
+        if (mOldItemPosition != -1 && mOldItemPosition < mViewItems.size()) {
+            mAdapter.onSelected(mViewItems.get(mOldItemPosition), mOldItemPosition, false);
         }
-        mAdapter.onSelected(mItems.get(position), position, true);
+        mAdapter.onSelected(mViewItems.get(position), position, true);
 
         mOldItemPosition = position;
         moveIndicatorTo(position, animated);
@@ -242,56 +256,33 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        switch (mAttrOrientation) {
-            case ORIENTATION_HORIZON:
-                layoutHorizon();
-                break;
-            case ORIENTATION_VERTICAL:
-                layoutVertical();
-                break;
-        }
+        mLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
     }
 
-    private void layoutHorizon() {
-        int childCount = getChildCount();
-
-        int layoutX = 0;
-        int layoutY = 0;
-        for (int i = 0; i < childCount; i++) {
-            View view = getChildAt(i);
-            view.layout(
-                    layoutX,
-                    layoutY,
-                    layoutX + view.getMeasuredWidth(),
-                    layoutY + view.getMeasuredHeight());
-            layoutX += view.getMeasuredWidth();
-        }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return mScrollHelper.onViewGroupInterceptTouchEvent(event);
     }
 
-    private void layoutVertical() {
-        int childCount = getChildCount();
-
-        int left = 0;
-        int top = 0;
-        for (int i = 0; i < childCount; i++) {
-            View tab = getChildAt(i);
-            tab.layout(left, top, left + tab.getMeasuredWidth(), top + tab.getMeasuredHeight());
-            top += tab.getMeasuredHeight();
-        }
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mScrollHelper.onViewGroupTouchEvent(event);
     }
 
     public void setAdapter(@NonNull ViewTabAdapter adapter) {
         mAdapter = adapter;
 
         removeAllViewsInLayout();
-        mItems.clear();
+        mViewItems.clear();
 
         int viewCount = mAdapter.getCount();
         for (int i = 0; i < viewCount; i++) {
             View view = mAdapter.getItemView(this, i);
             addViewInLayout(view, -1, view.getLayoutParams());
 
-            initTabItem(view, i);
+            mViewItems.add(view);
+            initViewItem(view, i);
         }
         requestLayout();
     }
@@ -300,8 +291,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         return mAdapter;
     }
 
-    private void initTabItem(View tabItem, final int position) {
-        mItems.add(tabItem);
+    private void initViewItem(View tabItem, final int position) {
         tabItem.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -312,8 +302,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void onClickTabItem(int position) {
-        View newItem = mItems.get(position);
-        View oldItem = mOldItemPosition == -1 ? null : mItems.get(mOldItemPosition);
+        View newItem = mViewItems.get(position);
+        View oldItem = mOldItemPosition == -1 ? null : mViewItems.get(mOldItemPosition);
 
         boolean isTabChanged;
         if (mOnTabChangeListener == null) {
@@ -361,7 +351,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void moveIndicatorTo(final int position, final boolean animated) {
-        final View item = mItems.get(position);
+        final View item = mViewItems.get(position);
 
         if (isLaidOut()) {
             if (animated) {
@@ -461,97 +451,60 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         invalidate();
     }
 
-    private float mLastY;
-
-    private Scroller mScroller;
-
-    private VelocityTracker mVelocityTracker = null;
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!canScroll()) {
-            return false;
-        }
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mScroller.forceFinished(true);
-                mLastY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (Math.abs(event.getY() - mLastY) > 20) {
-                    mLastY = event.getY();
-                    return true;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-        }
-        return false;
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!canScroll()) {
-            return false;
-        }
-
-        if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
-        mVelocityTracker.addMovement(event);
-        int bottomEdge = getChildAt(getChildCount() - 1).getBottom() - getHeight();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                return true;
-            case MotionEvent.ACTION_MOVE:
-
-                int dy = (int) (event.getY() - mLastY);
-
-                if (getScrollY() - dy > bottomEdge) {
-                    dy = getScrollY() - bottomEdge;
-                } else if (getScrollY() - dy < 0) {
-                    dy = getScrollY();
-                }
-
-                scrollBy(0, -dy);
-
-                mLastY = event.getY();
-                return true;
-            case MotionEvent.ACTION_UP:
-                mVelocityTracker.computeCurrentVelocity(1000);
-                float yVelocity = -mVelocityTracker.getYVelocity();
-
-                mScroller.fling(
-                        getScrollX(), getScrollY(), 0, (int) yVelocity, 0, 0, 0, bottomEdge);
-                postInvalidate();
-
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
-                return false;
-            case MotionEvent.ACTION_CANCEL:
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.recycle();
-                    mVelocityTracker = null;
-                }
-                return false;
-        }
-
-        return false;
-    }
-
-    private boolean canScroll() {
-        return mAttrOrientation == ORIENTATION_VERTICAL && (getChildAt(getChildCount() - 1).getBottom() > getHeight());
-    }
-
     public OnTabChangeListener getOnTabChangeListener() {
         return mOnTabChangeListener;
     }
 
     public void setOnTabChangeListener(OnTabChangeListener onTabChangeListener) {
         mOnTabChangeListener = onTabChangeListener;
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SaveState saveState = new SaveState(super.onSaveInstanceState());
+        saveState.mOldItemPosition = mOldItemPosition;
+        return saveState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SaveState saveState = ((SaveState) state);
+        mOldItemPosition = saveState.mOldItemPosition;
+        setCurrentItem(mOldItemPosition, false);
+
+        super.onRestoreInstanceState(state);
+    }
+
+    private static class SaveState extends BaseSavedState {
+
+        public static final Creator<SaveState> CREATOR =
+                new Creator<SaveState>() {
+                    public SaveState createFromParcel(Parcel in) {
+                        return new SaveState(in);
+                    }
+
+                    public SaveState[] newArray(int size) {
+                        return new SaveState[size];
+                    }
+                };
+
+        private int mOldItemPosition;
+
+        SaveState(Parcelable superState) {
+            super(superState);
+        }
+
+        SaveState(Parcel source) {
+            super(source);
+            mOldItemPosition = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(mOldItemPosition);
+        }
     }
 
     public interface OnTabChangeListener {
@@ -567,4 +520,6 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
         int getCount();
     }
+
+
 }
