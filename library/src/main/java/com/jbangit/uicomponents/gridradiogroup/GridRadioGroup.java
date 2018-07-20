@@ -312,6 +312,7 @@ public class GridRadioGroup extends ViewGroup {
             addViewInLayout(view, -1, view.getLayoutParams(), true);
         }
 
+        initItemViews();
         requestLayout();
     }
 
@@ -322,6 +323,15 @@ public class GridRadioGroup extends ViewGroup {
             view.setLayoutParams(generateDefaultLayoutParams());
         }
         return view;
+    }
+
+    private void initItemViews() {
+        for (int i = 0; i < mViewHolders.size(); i++) {
+            ViewHolder viewHolder = mViewHolders.get(i);
+            viewHolder.setTitle(mItems.get(i));
+
+            viewHolder.setChecked(mCheckedIndexes.contains(i));
+        }
     }
 
     private View createView() {
@@ -448,16 +458,6 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
-        initItemViews();
-    }
-
-    private void initItemViews() {
-        for (int i = 0; i < mViewHolders.size(); i++) {
-            ViewHolder viewHolder = mViewHolders.get(i);
-            viewHolder.setTitle(mItems.get(i));
-
-            viewHolder.setChecked(mCheckedIndexes.contains(i));
-        }
     }
 
     public OnCheckedChangeListener getOnCheckedChangeListener() {

@@ -102,10 +102,6 @@ abstract class GridLayoutHelper implements LayoutHelper {
 
     @Override
     public void onViewGroupLayout(boolean changed, int l, int t, int r, int b) {
-        if (!changed) {
-            return;
-        }
-
         int left = mViewGroup.getPaddingLeft() + getExtraLeftPadding();
         int top = mViewGroup.getPaddingTop() + getExtraTopPadding();
 

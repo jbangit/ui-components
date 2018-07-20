@@ -285,7 +285,6 @@ public class Gallery extends ViewGroup {
             }
         }
 
-        initPictureView();
     }
 
     private void measureAllPictureView(int pictureWidth) {
@@ -385,6 +384,7 @@ public class Gallery extends ViewGroup {
     private void setupView() {
         setupPictureView();
         setupAddPictureView();
+        initPictureView();
         requestLayout();
     }
 

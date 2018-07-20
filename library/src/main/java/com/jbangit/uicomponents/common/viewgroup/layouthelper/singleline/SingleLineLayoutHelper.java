@@ -115,10 +115,6 @@ public class SingleLineLayoutHelper implements LayoutHelper {
 
     @Override
     public void onViewGroupLayout(boolean changed, int l, int t, int r, int b) {
-        if (!changed) {
-            return;
-        }
-
         int childCount = mViewGroupHelper.getChildCount();
 
         int left = 0;
