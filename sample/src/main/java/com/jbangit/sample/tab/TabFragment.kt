@@ -40,7 +40,7 @@ class TabFragment : Fragment() {
 
         mBinding.runningTimeSetTab.setTitles(
             listOf(
-                "one", "two", "three", "four", "five", "six"
+                "one", "two", "three", "four"
             )
         )
 
