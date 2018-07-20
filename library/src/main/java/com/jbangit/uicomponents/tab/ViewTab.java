@@ -353,7 +353,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     private void moveIndicatorTo(final int position, final boolean animated) {
         final View item = mViewItems.get(position);
 
-        if (isLaidOut()) {
+        if (!isLayoutRequested() && isLaidOut()) {
             if (animated) {
                 moveIndicatorWithAnimate(item);
             } else {
@@ -381,14 +381,6 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mIndicatorFromX1 = mIndicatorToX1;
         mIndicatorFromX2 = mIndicatorToX2;
         mIndicatorAnimateVal = 1f;
-        getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                            }
-                        });
     }
 
     private void moveIndicatorWithAnimate(View item) {
@@ -520,6 +512,4 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
         int getCount();
     }
-
-
 }
