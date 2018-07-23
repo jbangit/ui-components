@@ -53,6 +53,8 @@ public class ShapeDrawableUtils {
 
         private int[] mStartEndColor = new int[2];
 
+        private int mShape = GradientDrawable.RECTANGLE;
+
         Builder(Context context) {
             mContext = context;
         }
@@ -102,10 +104,15 @@ public class ShapeDrawableUtils {
             return this;
         }
 
+        public Builder shape(int shape) {
+            mShape = shape;
+            return this;
+        }
+
         // TODO: 2018/6/27 us a standard builder pattern
         public Drawable build() {
             // set shape at least , or set to ripple drawable mask doest not work
-            mDrawable.setShape(GradientDrawable.RECTANGLE);
+            mDrawable.setShape(mShape);
             return mDrawable;
         }
     }
