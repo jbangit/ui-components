@@ -71,6 +71,19 @@
         <attr name="jButtonTextSize" format="dimension" />
         <attr name="jButtonColor" format="color" />
         <attr name="jButtonTextColor" format="color" />
+        <attr name="jButtonVPadding" format="dimension" />
+        <attr name="jButtonHPadding" format="dimension" />
+        <attr name="jButtonInsetPadding" format="dimension" />
+        <attr name="jButtonShape" format="enum">
+            <enum name="rect" value="0" />
+            <enum name="oval" value="1" />
+        </attr>
+        <attr name="jButtonIconGravity" format="enum">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
         <attr name="jButtonStyle" format="enum">
             <enum name="fill" value="0" />
             <enum name="stroke" value="1" />

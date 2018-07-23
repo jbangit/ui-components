@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +20,7 @@ import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
 import com.jbangit.uicomponents.common.resource.ShapeDrawableUtils;
 
-public class JButton extends FrameLayout {
+public class JButton extends ViewGroup {
 
     public static final int STYLE_FILL = 0;
 
@@ -32,23 +34,33 @@ public class JButton extends FrameLayout {
 
     private static final int SIZE_CHIP = 2;
 
+    private static final int ICON_GRAVITY_LEFT = 0;
+
+    private static final int ICON_GRAVITY_TOP = 1;
+
+    private static final int ICON_GRAVITY_RIGHT = 2;
+
+    private static final int ICON_GRAVITY_BOTTOM = 3;
+
+    private static final int SHAPE_RECT = 0;
+
+    private static final int SHAPE_OVAL = 1;
+
     private static final int DEFAULT_STROKE_WIDTH = 1;
 
-    private String mAttrTitle;
+    private String mAttrTitle = null;
 
-    private float mAttrRadius;
+    private int mAttrRadius;
 
     private Drawable mAttrIcon;
-
-    private View mLayout;
 
     private TextView mTitle;
 
     private ImageView mIcon;
 
-    private int mHPadding;
+    private int mAttrHPadding;
 
-    private int mVPadding;
+    private int mAttrVPadding;
 
     @ColorInt
     private int mAttrTextColor;
@@ -59,7 +71,13 @@ public class JButton extends FrameLayout {
     @ColorInt
     private int mStrokeColor;
 
-    private int mAttrTextSize;
+    private int mAttrTextSize = DensityUtils.getPxFromSp(getContext(), 16);
+
+    private int mAttrInsetPadding = DensityUtils.getPxFromDp(getContext(), 4);
+
+    private int mAttrIconGravity = ICON_GRAVITY_LEFT;
+
+    private int mAttrShape = SHAPE_RECT;
 
     public JButton(Context context) {
         super(context);
@@ -77,12 +95,14 @@ public class JButton extends FrameLayout {
         initAttrs(context, attrs);
     }
 
+    private void defaultInit() {
+    }
+
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.JButton);
-        mAttrTitle = typedArray.getString(R.styleable.JButton_jButtonTitle);
-        mAttrIcon = typedArray.getDrawable(R.styleable.JButton_jButtonIcon);
-        int attrColor = typedArray.getColor(
-                R.styleable.JButton_jButtonColor, Globals.getPrimaryColor(context));
+        int attrColor =
+                typedArray.getColor(
+                        R.styleable.JButton_jButtonColor, Globals.getPrimaryColor(context));
 
         int attrSize = SIZE_NORMAL;
 
@@ -110,46 +130,64 @@ public class JButton extends FrameLayout {
         attrSize = typedArray.getInt(R.styleable.JButton_jButtonSize, attrSize);
         switch (attrSize) {
             case SIZE_NORMAL:
-                mHPadding = DensityUtils.getPxFromDp(context, 16);
-                mVPadding = DensityUtils.getPxFromDp(context, 16);
+                mAttrHPadding = DensityUtils.getPxFromDp(context, 16);
+                mAttrVPadding = DensityUtils.getPxFromDp(context, 16);
                 mAttrTextSize = DensityUtils.getPxFromSp(context, 16);
                 break;
 
             case SIZE_LITTLE:
-                mHPadding = DensityUtils.getPxFromDp(context, 12);
-                mVPadding = DensityUtils.getPxFromDp(context, 8);
+                mAttrHPadding = DensityUtils.getPxFromDp(context, 12);
+                mAttrVPadding = DensityUtils.getPxFromDp(context, 8);
                 mAttrTextSize = DensityUtils.getPxFromSp(context, 14);
                 break;
 
             case SIZE_CHIP:
-                mHPadding = DensityUtils.getPxFromDp(context, 12);
-                mVPadding = DensityUtils.getPxFromDp(context, 4);
+                mAttrHPadding = DensityUtils.getPxFromDp(context, 12);
+                mAttrVPadding = DensityUtils.getPxFromDp(context, 4);
                 mAttrTextSize = DensityUtils.getPxFromSp(context, 14);
                 break;
         }
 
-        mAttrRadius = typedArray.getDimension(R.styleable.JButton_jButtonRadius, mAttrRadius);
+        mAttrTitle = typedArray.getString(R.styleable.JButton_jButtonTitle);
+        mAttrIcon = typedArray.getDrawable(R.styleable.JButton_jButtonIcon);
+        mAttrHPadding =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.JButton_jButtonHPadding, mAttrHPadding);
+        mAttrVPadding =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.JButton_jButtonVPadding, mAttrVPadding);
+        mAttrInsetPadding =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.JButton_jButtonInsetPadding, mAttrInsetPadding);
+        mAttrInsetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
         mAttrTextColor = typedArray.getColor(R.styleable.JButton_jButtonTextColor, mAttrTextColor);
-        mAttrTextSize = (int) typedArray.getDimension(R.styleable.JButton_jButtonTextSize, mAttrTextSize);
+        mAttrTextSize =
+                typedArray.getDimensionPixelOffset(
+                        R.styleable.JButton_jButtonTextSize, mAttrTextSize);
+        mAttrIconGravity =
+                typedArray.getInt(R.styleable.JButton_jButtonIconGravity, mAttrIconGravity);
+        mAttrRadius =
+                typedArray.getDimensionPixelOffset(R.styleable.JButton_jButtonRadius, mAttrRadius);
+        mAttrShape = typedArray.getInt(R.styleable.JButton_jButtonShape, mAttrShape);
 
         typedArray.recycle();
-    }
-
-    private void defaultInit() {
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         inflate();
-
-        initViews();
     }
 
     private void inflate() {
-        mLayout = inflate(getContext(), R.layout.view_j_button, this);
-        mTitle = mLayout.findViewById(R.id.title);
-        mIcon = mLayout.findViewById(R.id.icon);
+        mTitle = new TextView(getContext());
+        mIcon = new ImageView(getContext());
+
+        initViews();
+
+        addViewInLayout(mTitle, -1, generateDefaultLayoutParams(), true);
+        addViewInLayout(mIcon, -1, generateDefaultLayoutParams(), true);
+        requestLayout();
     }
 
     private void initViews() {
@@ -161,20 +199,199 @@ public class JButton extends FrameLayout {
             mIcon.setVisibility(View.GONE);
         }
 
-        mTitle.setTextSize(mAttrTextSize);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                mTitle, 1, mAttrTextSize, 1, TypedValue.COMPLEX_UNIT_PX);
         mTitle.setTextColor(mAttrTextColor);
 
-        mLayout.setPadding(mHPadding, mVPadding, mHPadding, mVPadding);
-        mLayout.setBackground(Globals.addRipple(getContext(), getBackgroundDrawable()));
+        setPadding(mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
+        setBackground(
+                Globals.addRipple(
+                        getContext(), getBackgroundDrawable(), getBackgroundMaskDrawable()));
     }
 
     private Drawable getBackgroundDrawable() {
         return ShapeDrawableUtils.builder(getContext())
                 .solid(mSolidColor)
                 .stroke(DEFAULT_STROKE_WIDTH, mStrokeColor)
-                .cornerPx((int) mAttrRadius)
+                .cornerPx(mAttrRadius)
+                .shape(getShape(mAttrShape))
                 .build();
+    }
+
+    private Drawable getBackgroundMaskDrawable() {
+        return ShapeDrawableUtils.builder(getContext())
+                .solid(Color.BLACK)
+                .stroke(DEFAULT_STROKE_WIDTH, Color.BLACK)
+                .cornerPx(Math.round(mAttrRadius))
+                .shape(getShape(mAttrShape))
+                .build();
+    }
+
+    private int getShape(int attrShape) {
+        switch (attrShape) {
+            case SHAPE_RECT:
+                return GradientDrawable.RECTANGLE;
+            case SHAPE_OVAL:
+                return GradientDrawable.OVAL;
+            default:
+                return GradientDrawable.RECTANGLE;
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        mTitle.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        mIcon.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+
+        int expectedWidth = 0;
+        int expectedHeight = 0;
+
+        switch (mAttrIconGravity) {
+            case ICON_GRAVITY_LEFT:
+            case ICON_GRAVITY_RIGHT:
+                expectedWidth =
+                        mTitle.getMeasuredWidth()
+                                + mAttrInsetPadding
+                                + mIcon.getMeasuredWidth()
+                                + getPaddingLeft()
+                                + getPaddingRight();
+                expectedHeight =
+                        Math.max(mTitle.getMeasuredHeight(), mIcon.getMeasuredHeight())
+                                + getPaddingTop()
+                                + getPaddingBottom();
+                break;
+            case ICON_GRAVITY_TOP:
+            case ICON_GRAVITY_BOTTOM:
+                expectedWidth =
+                        Math.max(mTitle.getMeasuredWidth(), mIcon.getMeasuredWidth())
+                                + getPaddingLeft()
+                                + getPaddingRight();
+                expectedHeight =
+                        mTitle.getMeasuredHeight()
+                                + mAttrInsetPadding
+                                + mIcon.getMeasuredHeight()
+                                + getPaddingTop()
+                                + getPaddingBottom();
+                break;
+        }
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int width = 0;
+        switch (widthMode) {
+            case MeasureSpec.AT_MOST:
+                width = Math.min(widthSize, expectedWidth);
+                break;
+            case MeasureSpec.EXACTLY:
+                width = widthSize;
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                width = expectedWidth;
+                break;
+        }
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int height = 0;
+        switch (heightMode) {
+            case MeasureSpec.AT_MOST:
+                height = Math.min(heightSize, expectedHeight);
+                break;
+            case MeasureSpec.EXACTLY:
+                height = heightSize;
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                height = expectedHeight;
+                break;
+        }
+
+        setMeasuredDimension(width, height);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        switch (mAttrIconGravity) {
+            case ICON_GRAVITY_LEFT:
+            case ICON_GRAVITY_RIGHT:
+                int left =
+                        (getMeasuredWidth()
+                                - mIcon.getMeasuredWidth()
+                                - mTitle.getMeasuredWidth()
+                                - mAttrInsetPadding)
+                                / 2;
+                int iconTop = (getMeasuredHeight() - mIcon.getMeasuredHeight()) / 2;
+                int titleTop = (getMeasuredHeight() - mTitle.getMeasuredHeight()) / 2;
+
+                if (mAttrIconGravity == ICON_GRAVITY_LEFT) {
+                    mIcon.layout(
+                            left,
+                            iconTop,
+                            left + mIcon.getMeasuredWidth(),
+                            iconTop + mIcon.getMeasuredHeight());
+                    left += mIcon.getMeasuredWidth() + mAttrInsetPadding;
+
+                    mTitle.layout(
+                            left,
+                            titleTop,
+                            left + mTitle.getMeasuredWidth(),
+                            titleTop + mTitle.getMeasuredHeight());
+                } else {
+                    mTitle.layout(
+                            left,
+                            titleTop,
+                            left + mTitle.getMeasuredWidth(),
+                            titleTop + mTitle.getMeasuredHeight());
+
+                    left += mTitle.getMeasuredWidth() + mAttrInsetPadding;
+
+                    mIcon.layout(
+                            left,
+                            iconTop,
+                            left + mIcon.getMeasuredWidth(),
+                            iconTop + mIcon.getMeasuredHeight());
+                }
+                break;
+            case ICON_GRAVITY_TOP:
+            case ICON_GRAVITY_BOTTOM:
+                int top =
+                        (getMeasuredHeight()
+                                - mIcon.getMeasuredHeight()
+                                - mTitle.getMeasuredHeight()
+                                - mAttrInsetPadding)
+                                / 2;
+                int iconLeft = (getMeasuredWidth() - mIcon.getMeasuredWidth()) / 2;
+                int titleLeft = (getMeasuredWidth() - mTitle.getMeasuredWidth()) / 2;
+
+                if (mAttrIconGravity == ICON_GRAVITY_TOP) {
+                    mIcon.layout(
+                            iconLeft,
+                            top,
+                            iconLeft + mIcon.getMeasuredWidth(),
+                            top + mIcon.getMeasuredHeight());
+                    top += mIcon.getMeasuredWidth() + mAttrInsetPadding;
+
+                    mTitle.layout(
+                            titleLeft,
+                            top,
+                            titleLeft + mTitle.getMeasuredWidth(),
+                            top + mTitle.getMeasuredHeight());
+                } else {
+                    mTitle.layout(
+                            titleLeft,
+                            top,
+                            titleLeft + mTitle.getMeasuredWidth(),
+                            top + mTitle.getMeasuredHeight());
+
+                    top += mTitle.getMeasuredHeight() + mAttrInsetPadding;
+
+                    mIcon.layout(
+                            iconLeft,
+                            top,
+                            iconLeft + mIcon.getMeasuredWidth(),
+                            top + mIcon.getMeasuredHeight());
+                }
+                break;
+        }
     }
 
     public CharSequence getTitle() {
@@ -184,5 +401,4 @@ public class JButton extends FrameLayout {
     public void setTitle(CharSequence title) {
         mTitle.setText(title);
     }
-
 }
