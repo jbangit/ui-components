@@ -67,7 +67,7 @@ class MainFragment : Fragment() {
             }
             R.id.button -> {
                 startActivity(
-                    Intent(context, TabActivity::class.java)
+                    Intent(context, ButtonActivity::class.java)
                 )
             }
             R.id.animate -> {
@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
             }
             R.id.nav_tab -> {
                 startActivity(
-                    Intent(context, ButtonActivity::class.java)
+                    Intent(context, TabActivity::class.java)
                 )
             }
             R.id.nav_list -> {
