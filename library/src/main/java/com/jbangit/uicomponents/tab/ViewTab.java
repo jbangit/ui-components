@@ -245,10 +245,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     public void setCurrentItem(int position, boolean animated) {
-        if (mOldItemPosition != -1 && mOldItemPosition < mViewItems.size()) {
+        if (mOldItemPosition != -1) {
             mAdapter.onSelected(mViewItems.get(mOldItemPosition), mOldItemPosition, false);
         }
-        mAdapter.onSelected(mViewItems.get(position), position, true);
+
+        if (position != -1) {
+            mAdapter.onSelected(mViewItems.get(position), position, true);
+        }
 
         mOldItemPosition = position;
         moveIndicatorTo(position, animated);
@@ -350,8 +353,18 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
+    /**
+     *
+     * @param position when no item selected, pass position by -1
+     * @param animated is move with animation
+     */
     private void moveIndicatorTo(final int position, final boolean animated) {
-        final View item = mViewItems.get(position);
+        final View item;
+        if (position == -1) {
+            item = null;
+        } else {
+            item = mViewItems.get(position);
+        }
 
         if (!isLayoutRequested() && isLaidOut()) {
             if (animated) {
@@ -376,14 +389,20 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         }
     }
 
-    private void moveIndicator(View item) {
+    /**
+     * @param item null if no item select
+     */
+    private void moveIndicator(@Nullable View item) {
         setupIndicatorTargetPosition(item);
         mIndicatorFromX1 = mIndicatorToX1;
         mIndicatorFromX2 = mIndicatorToX2;
         mIndicatorAnimateVal = 1f;
     }
 
-    private void moveIndicatorWithAnimate(View item) {
+    /**
+     * @param item null if no item select
+     */
+    private void moveIndicatorWithAnimate(@Nullable View item) {
         mIndicatorFromX1 = getCurAnimateX1();
         mIndicatorFromX2 = getCurAnimateX2();
         setupIndicatorTargetPosition(item);
@@ -393,17 +412,26 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mIndicatorAnimator.start();
     }
 
-    private void setupIndicatorTargetPosition(View item) {
+    /**
+     * @param item null if no item select
+     */
+    private void setupIndicatorTargetPosition(@Nullable View item) {
         switch (mAttrIdcGravity) {
             case INDICATOR_GRAVITY_TOP:
-                mIndicatorY = item.getTop() + mAttrIdcVPadding + mAttrIdcSize / 2;
+                mIndicatorY = mAttrIdcVPadding + mAttrIdcSize / 2;
                 break;
             case INDICATOR_GRAVITY_BOTTOM:
-                mIndicatorY = item.getBottom() + mAttrIdcVPadding - mAttrIdcSize / 2;
+                mIndicatorY = getHeight() + mAttrIdcVPadding - mAttrIdcSize / 2;
                 break;
         }
-        mIndicatorToX1 = item.getLeft();
-        mIndicatorToX2 = item.getRight();
+
+        if (item == null) {
+            mIndicatorToX1 = 0;
+            mIndicatorToX2 = 0;
+        } else {
+            mIndicatorToX1 = item.getLeft();
+            mIndicatorToX2 = item.getRight();
+        }
 
         float length = mIndicatorToX2 - mIndicatorToX1;
         float scaledLength = length * (1 - mAttrIdcScale) / 2;
@@ -462,8 +490,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = ((SaveState) state);
-        mOldItemPosition = saveState.mOldItemPosition;
-        setCurrentItem(mOldItemPosition, false);
+        setCurrentItem(saveState.mOldItemPosition, false);
 
         super.onRestoreInstanceState(state);
     }
