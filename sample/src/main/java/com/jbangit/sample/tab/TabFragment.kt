@@ -36,13 +36,13 @@ class TabFragment : Fragment() {
             override fun getCount() = 4
         }
 
-        mBinding.viewTab.setCurrentItem(2)
-
         mBinding.runningTimeSetTab.setTitles(
             listOf(
                 "one", "two", "three", "four"
             )
         )
+
+        mBinding.setNull.setOnClickListener { mBinding.viewTab.setCurrentItem(-1) }
 
         return mBinding.root
     }
