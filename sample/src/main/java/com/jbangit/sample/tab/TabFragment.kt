@@ -33,8 +33,18 @@ class TabFragment : Fragment() {
                     ?.setTextColor(if (selected) 0xFFFF00FF.toInt() else 0xFFFF0000.toInt())
             }
 
-            override fun getCount() = 4
+            override fun getCount() = 0
         }
+
+        mBinding.viewTab.holderView =
+                LayoutInflater.from(context).inflate(
+                    R.layout.view_item_tab_fragment_tab, container, false
+                )
+
+        mBinding.viewTab.emptyView =
+                LayoutInflater.from(context).inflate(
+                    R.layout.view_empty_tab_fragment_tab, container, false
+                )
 
         mBinding.runningTimeSetTab.setTitles(
             listOf(

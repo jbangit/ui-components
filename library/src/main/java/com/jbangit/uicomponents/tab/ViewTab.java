@@ -21,6 +21,7 @@ import com.jbangit.uicomponents.R;
 import com.jbangit.uicomponents.common.DensityUtils;
 import com.jbangit.uicomponents.common.Globals;
 import com.jbangit.uicomponents.common.viewgroup.layouthelper.LayoutHelper;
+import com.jbangit.uicomponents.common.viewgroup.layouthelper.emptyview.EmptyViewLayoutHelper;
 import com.jbangit.uicomponents.common.viewgroup.layouthelper.singleRow.SingleRowLayoutHelper;
 import com.jbangit.uicomponents.common.viewgroup.layouthelper.singleline.SingleLineLayoutHelper;
 import com.jbangit.uicomponents.common.viewgroup.scrollhelper.ScrollHelper;
@@ -70,7 +71,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private LayoutHelper mLayoutHelper;
 
+    private EmptyViewLayoutHelper mEmptyLayoutHelper;
+
     private ScrollHelper mScrollHelper;
+
+    private View mHolderView;
+
+    private View mEmptyView;
 
     public ViewTab(Context context) {
         super(context);
@@ -148,7 +155,29 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                 break;
         }
 
-        mLayoutHelper.setViewGroupHelper(
+        mEmptyLayoutHelper = new EmptyViewLayoutHelper();
+        mEmptyLayoutHelper.setOnGetWidthListener(
+                new EmptyViewLayoutHelper.OnGetWidthListener() {
+                    @Override
+                    public int onGetWidth() {
+                        if (mHolderView == null) {
+                            return 0;
+                        }
+                        return mHolderView.getMeasuredWidth();
+                    }
+                });
+        mEmptyLayoutHelper.setOnGetHeightListener(
+                new EmptyViewLayoutHelper.OnGetHeightListener() {
+                    @Override
+                    public int onGetHeight() {
+                        if (mHolderView == null) {
+                            return 0;
+                        }
+                        return mHolderView.getMeasuredHeight();
+                    }
+                });
+
+        LayoutHelper.ViewGroupHelper viewGroupHelper =
                 new LayoutHelper.ViewGroupHelper() {
                     @Override
                     public View getChildView(int index) {
@@ -164,7 +193,16 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                     public void onSetMeasuredDimension(int measuredWidth, int measuredHeight) {
                         setMeasuredDimension(measuredWidth, measuredHeight);
                     }
-                });
+
+                    @NonNull
+                    @Override
+                    public ViewGroup getViewGroup() {
+                        return ViewTab.this;
+                    }
+                };
+
+        mEmptyLayoutHelper.setViewGroupHelper(viewGroupHelper);
+        mLayoutHelper.setViewGroupHelper(viewGroupHelper);
     }
 
     private void initScrollHelper() {
@@ -211,7 +249,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mLayoutHelper.onViewGroupMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mViewItems.size() == 0) {
+            mEmptyLayoutHelper.onViewGroupMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            mLayoutHelper.onViewGroupMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override
@@ -240,6 +282,29 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         return view.getMeasuredWidth();
     }
 
+    public View getEmptyView() {
+        return mEmptyView;
+    }
+
+    public void setEmptyView(View emptyView) {
+        mEmptyView = emptyView;
+
+        if (mViewItems.size() == 0) {
+            removeAllViewsInLayout();
+            addViewInLayout(mEmptyView, -1, mEmptyView.getLayoutParams(), true);
+            requestLayout();
+        }
+    }
+
+    public View getHolderView() {
+        return mHolderView;
+    }
+
+    public void setHolderView(View holderView) {
+        mHolderView = holderView;
+        mHolderView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+    }
+
     public void setCurrentItem(int position) {
         setCurrentItem(position, true);
     }
@@ -259,7 +324,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        mLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
+        if (mViewItems.size() == 0) {
+            mEmptyLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
+        } else {
+            mLayoutHelper.onViewGroupLayout(changed, l, t, r, b);
+        }
     }
 
     @Override
@@ -287,6 +356,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
             mViewItems.add(view);
             initViewItem(view, i);
         }
+
+        if (mViewItems.size() == 0 && mEmptyView != null) {
+            addViewInLayout(mEmptyView, -1, mEmptyView.getLayoutParams(), true);
+        }
+
         requestLayout();
     }
 
@@ -354,7 +428,6 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     /**
-     *
      * @param position when no item selected, pass position by -1
      * @param animated is move with animation
      */
@@ -412,9 +485,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mIndicatorAnimator.start();
     }
 
-    /**
-     * @param item null if no item select
-     */
+    /** @param item null if no item select */
     private void setupIndicatorTargetPosition(@Nullable View item) {
         switch (mAttrIdcGravity) {
             case INDICATOR_GRAVITY_TOP:
