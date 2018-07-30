@@ -215,7 +215,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                         new HorizonScrollHelper.OnGetContentWidthListener() {
                             @Override
                             public int onGetContentWidth() {
-                                return getChildAt(getChildCount() - 1).getRight();
+                                if (mViewItems.size() == 0) {
+                                    return 0;
+                                } else {
+                                    return getChildAt(getChildCount() - 1).getRight();
+                                }
                             }
                         });
                 break;
@@ -226,7 +230,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                         new VerticalScrollerHelper.OnGetContentHeightListener() {
                             @Override
                             public int onGetContentHeight() {
-                                return getChildAt(getChildCount() - 1).getBottom();
+                                if (mViewItems.size() == 0) {
+                                    return 0;
+                                } else {
+                                    return getChildAt(getChildCount() - 1).getBottom();
+                                }
                             }
                         });
                 mScrollHelper = verticalScrollHelper;
