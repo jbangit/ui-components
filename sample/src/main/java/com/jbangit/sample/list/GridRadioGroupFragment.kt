@@ -36,6 +36,16 @@ class GridRadioGroupFragment : Fragment() {
 
         mBinding.gridRadioGroup.check(0)
 
+        mBinding.uncheckableGridRadioGroup.setItem(
+            arrayListOf(
+                "One",
+                "Two",
+                "Three",
+                "Long Long Long"
+            )
+        )
+        mBinding.uncheckableGridRadioGroup.check(1)
+
         return mBinding.root
     }
 }

@@ -18,12 +18,27 @@
 
             app:gridRadioGroupAllowEmptyChoice="false"
             app:gridRadioGroupHorizonInsetFraction="100%"
-            app:gridRadioGroupRadius="2sp"
             app:gridRadioGroupOuterPadding="true"
+            app:gridRadioGroupRadius="2sp"
             app:gridRadioGroupRowNumber="5"
             app:gridRadioGroupTextSize="16sp"
             app:gridRadioGroupVerticalInsetFraction="100%"
             app:layout_constraintTop_toTopOf="parent">
+
+        </com.jbangit.uicomponents.gridradiogroup.GridRadioGroup>
+
+        <com.jbangit.uicomponents.gridradiogroup.GridRadioGroup
+            android:id="@+id/uncheckable_grid_radio_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+
+            android:background="@color/colorForeground"
+            app:gridRadioGroupCheckable="false"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/grid_radio_group">
 
         </com.jbangit.uicomponents.gridradiogroup.GridRadioGroup>
 

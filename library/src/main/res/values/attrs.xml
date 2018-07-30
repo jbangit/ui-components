@@ -53,6 +53,7 @@
         <attr name="gridRadioGroupUncheckedStrokeColor" format="color" />
         <attr name="gridRadioGroupStrokeWidth" format="dimension" />
         <attr name="gridRadioGroupRadius" format="dimension" />
+        <attr name="gridRadioGroupCheckable" format="boolean" />
         <attr name="gridRadioGroupMultipleChoice" format="boolean" />
         <attr name="gridRadioGroupAllowEmptyChoice" format="boolean" />
     </declare-styleable>

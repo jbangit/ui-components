@@ -108,6 +108,8 @@ public class GridRadioGroup extends ViewGroup {
 
     private int mAttrTextSize;
 
+    private boolean mAttrCheckable = true;
+
     private boolean mAttrMultipleChoice = false;
 
     private boolean mAttrAllowEmptyChoice = false;
@@ -177,7 +179,6 @@ public class GridRadioGroup extends ViewGroup {
                         1,
                         1,
                         mAttrVerticalInsetFraction);
-
         mAttrIsOuterPadding =
                 typedArray.getBoolean(R.styleable.GridRadioGroup_gridRadioGroupOuterPadding, false);
 
@@ -213,12 +214,13 @@ public class GridRadioGroup extends ViewGroup {
         mAttrStrokeWidth =
                 typedArray.getDimensionPixelOffset(
                         R.styleable.GridRadioGroup_gridRadioGroupStrokeWidth, mAttrStrokeWidth);
-
+        mAttrCheckable =
+                typedArray.getBoolean(
+                        R.styleable.GridRadioGroup_gridRadioGroupCheckable, mAttrCheckable);
         mAttrMultipleChoice =
                 typedArray.getBoolean(
                         R.styleable.GridRadioGroup_gridRadioGroupMultipleChoice,
                         mAttrMultipleChoice);
-
         mAttrAllowEmptyChoice =
                 typedArray.getBoolean(
                         R.styleable.GridRadioGroup_gridRadioGroupAllowEmptyChoice,
@@ -442,11 +444,6 @@ public class GridRadioGroup extends ViewGroup {
                             "Three",
                             "Four",
                             "Five",
-                            "Six",
-                            "Seven",
-                            "Eight",
-                            "Night",
-                            "Ten",
                             "Long Long Long"));
             if (!mAttrAllowEmptyChoice) {
                 check(2);
@@ -579,13 +576,15 @@ public class GridRadioGroup extends ViewGroup {
             TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                     mButton, 1, mAttrTextSize, 4, TypedValue.COMPLEX_UNIT_PX);
 
-            mButton.setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onClickItem(mIndex);
-                        }
-                    });
+            if (mAttrCheckable) {
+                mButton.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onClickItem(mIndex);
+                            }
+                        });
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mButton.setForeground(
                         Globals.addRipple(
