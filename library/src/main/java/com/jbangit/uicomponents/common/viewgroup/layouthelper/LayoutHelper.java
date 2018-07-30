@@ -1,5 +1,6 @@
 package com.jbangit.uicomponents.common.viewgroup.layouthelper;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,5 +34,11 @@ public interface LayoutHelper {
          * Invoke {@link ViewGroup#setMeasuredDimension(int, int)}
          */
         void onSetMeasuredDimension(int measuredWidth, int measuredHeight);
+
+        /**
+         * @return the view group use layout helper
+         */
+        @NonNull
+        ViewGroup getViewGroup();
     }
 }
