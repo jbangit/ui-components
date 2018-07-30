@@ -484,6 +484,14 @@ public class GridRadioGroup extends ViewGroup {
         return items;
     }
 
+    public int getCheckedIndex() {
+        if (mCheckedIndexes.iterator().hasNext()) {
+            return mCheckedIndexes.iterator().next();
+        } else {
+            return -1;
+        }
+    }
+
     public interface OnCheckedChangeListener {
 
         /** @return false to intercept */
