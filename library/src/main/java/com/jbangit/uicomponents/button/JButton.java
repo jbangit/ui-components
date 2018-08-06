@@ -2,9 +2,11 @@ package com.jbangit.uicomponents.button;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
@@ -70,6 +72,9 @@ public class JButton extends ViewGroup {
 
     @ColorInt
     private int mStrokeColor;
+
+    @ColorInt
+    private int mDisableColor = getResources().getColor(R.color.colorTextLightGray);
 
     private int mAttrTextSize = DensityUtils.getPxFromSp(getContext(), 16);
 
@@ -210,12 +215,22 @@ public class JButton extends ViewGroup {
     }
 
     private Drawable getBackgroundDrawable() {
-        return ShapeDrawableUtils.builder(getContext())
-                .solid(mSolidColor)
-                .stroke(DEFAULT_STROKE_WIDTH, mStrokeColor)
-                .cornerPx(mAttrRadius)
-                .shape(getShape(mAttrShape))
-                .build();
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_enabled},
+                ShapeDrawableUtils.builder(getContext())
+                        .solid(mSolidColor)
+                        .stroke(DEFAULT_STROKE_WIDTH, mStrokeColor)
+                        .cornerPx(mAttrRadius)
+                        .shape(getShape(mAttrShape))
+                        .build());
+        stateListDrawable.addState(new int[]{},
+                ShapeDrawableUtils.builder(getContext())
+                        .solid(mDisableColor)
+                        .stroke(DEFAULT_STROKE_WIDTH, mDisableColor)
+                        .cornerPx(mAttrRadius)
+                        .shape(getShape(mAttrShape))
+                        .build());
+        return stateListDrawable;
     }
 
     private Drawable getBackgroundMaskDrawable() {
@@ -400,5 +415,15 @@ public class JButton extends ViewGroup {
 
     public void setTitle(CharSequence title) {
         mTitle.setText(title);
+    }
+
+    @BindingAdapter("jButtonTitle")
+    public static void setTitle(JButton jButton, CharSequence title) {
+        jButton.setTitle(title);
+    }
+
+    @BindingAdapter("jButtonEnable")
+    public static void setEnable(JButton jButton, boolean enabled) {
+        jButton.setEnabled(enabled);
     }
 }

@@ -35,14 +35,14 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:onClick="@{view::onClick}"
-            app:jButtonShape="oval"
+            app:jButtonHPadding="0dp"
             app:jButtonIcon="@drawable/ic_spinner_plus"
             app:jButtonIconGravity="top"
-            app:jButtonVPadding="0dp"
-            app:jButtonHPadding="0dp"
             app:jButtonInsetPadding="0dp"
+            app:jButtonShape="oval"
             app:jButtonStyle="stroke"
             app:jButtonTitle="Button Stroke"
+            app:jButtonVPadding="0dp"
             app:layout_constraintBottom_toTopOf="@+id/radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -114,6 +114,14 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/special" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/disable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{view::onClick}"
+            app:jButtonTitle='@{"Disable Button"}'
+            app:jButtonEnable="@{false}" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
