@@ -28,5 +28,6 @@ class AnimateFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         showToast(v?.id.toString())
+        mBinding.dragLayout.collapse()
     }
 }

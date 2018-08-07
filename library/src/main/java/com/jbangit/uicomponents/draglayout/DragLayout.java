@@ -176,6 +176,7 @@ public class DragLayout extends ViewGroup {
         if (getScrollX() > collapsePosition) {
             mIsExpanded = true;
             mScroller.startScroll(getScrollX(), 0, rightViewZone - getScrollX(), 0, 300);
+            collapseOther();
         } else {
             mIsExpanded = false;
             mScroller.startScroll(getScrollX(), 0, -getScrollX(), 0, 300);
@@ -189,6 +190,7 @@ public class DragLayout extends ViewGroup {
         }
         mScroller.startScroll(getScrollX(), 0, -getScrollX(), 0, 300);
         invalidate();
+        mIsExpanded = false;
     }
 
     public void expand() {
@@ -198,6 +200,21 @@ public class DragLayout extends ViewGroup {
         }
         mScroller.startScroll(getScrollX(), 0, rightViewZone - getScrollX(), 0, 300);
         invalidate();
+        mIsExpanded = true;
+        collapseOther();
+    }
+
+    private void collapseOther() {
+        if (!(getParent() instanceof ViewGroup)) {
+            return;
+        }
+        ViewGroup parent = (ViewGroup) getParent();
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View view = parent.getChildAt(i);
+            if (view instanceof DragLayout && view != this) {
+                ((DragLayout) view).collapse();
+            }
+        }
     }
 
     @Override
