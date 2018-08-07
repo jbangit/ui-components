@@ -167,4 +167,14 @@
         <attr name="galleryDeleteMode" format="boolean" />
         <attr name="galleryPictureMax" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="DragLayout_Layout">
+        <attr name="layout_dragLayoutPosition" format="enum">
+            <enum name="content" value="0" />
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
+        </attr>
+    </declare-styleable>
 </resources>

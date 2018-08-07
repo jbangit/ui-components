@@ -4,11 +4,48 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.jbangit.sample.animate.AnimateFragment" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.jbangit.uicomponents.draglayout.DragLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/draw_layout_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorForeground"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Try drag to left"
+                android:textColor="@color/colorTextDark"
+                android:textSize="16sp"
+                app:layout_dragLayoutPosition="content" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_dragLayoutPosition="right">
+
+                <com.jbangit.uicomponents.button.JButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:onClick="@{view.onClick}"
+                    app:jButtonTitle="hello" />
+
+            </FrameLayout>
+        </com.jbangit.uicomponents.draglayout.DragLayout>
 
         <com.jbangit.uicomponents.animate.WaveView
             android:layout_width="0dp"
