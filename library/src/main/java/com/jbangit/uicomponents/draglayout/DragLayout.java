@@ -28,7 +28,7 @@ public class DragLayout extends ViewGroup {
 
     private View mBottomView;
 
-    private boolean mIsCollapsed;
+    private boolean mIsExpanded;
 
     private ViewConfiguration mViewConfiguration;
 
@@ -152,7 +152,6 @@ public class DragLayout extends ViewGroup {
                 } else if (getScrollX() - dx >= rightViewZone) {
                     dx = getScrollX() - rightViewZone;
                 }
-
                 scrollBy(-dx, 0);
 
                 mLastX = event.getX();
@@ -160,26 +159,45 @@ public class DragLayout extends ViewGroup {
 
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                int collapsePosition;
-
-                if (mIsCollapsed) {
-                    collapsePosition = (int) (rightViewZone * (1 - COLLAPSE_POSITION_P));
-                } else {
-                    collapsePosition = (int) (rightViewZone * COLLAPSE_POSITION_P);
-                }
-
-                if (getScrollX() > collapsePosition) {
-                    mIsCollapsed = true;
-                    mScroller.startScroll(getScrollX(), 0, rightViewZone - getScrollX(), 0, 300);
-                } else {
-                    mIsCollapsed = false;
-                    mScroller.startScroll(getScrollX(), 0, -getScrollX(), 0, 300);
-                }
-
-                invalidate();
+                collapseOrExpand(rightViewZone);
                 break;
         }
         return true;
+    }
+
+    private void collapseOrExpand(int rightViewZone) {
+        int collapsePosition;
+        if (mIsExpanded) {
+            collapsePosition = (int) (rightViewZone * (1 - COLLAPSE_POSITION_P));
+        } else {
+            collapsePosition = (int) (rightViewZone * COLLAPSE_POSITION_P);
+        }
+
+        if (getScrollX() > collapsePosition) {
+            mIsExpanded = true;
+            mScroller.startScroll(getScrollX(), 0, rightViewZone - getScrollX(), 0, 300);
+        } else {
+            mIsExpanded = false;
+            mScroller.startScroll(getScrollX(), 0, -getScrollX(), 0, 300);
+        }
+        invalidate();
+    }
+
+    public void collapse() {
+        if (!mIsExpanded) {
+            return;
+        }
+        mScroller.startScroll(getScrollX(), 0, -getScrollX(), 0, 300);
+        invalidate();
+    }
+
+    public void expand() {
+        int rightViewZone = mRightView.getRight() - getWidth();
+        if (!mIsExpanded) {
+            return;
+        }
+        mScroller.startScroll(getScrollX(), 0, rightViewZone - getScrollX(), 0, 300);
+        invalidate();
     }
 
     @Override
