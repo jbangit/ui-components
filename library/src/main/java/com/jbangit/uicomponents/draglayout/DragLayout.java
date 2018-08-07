@@ -159,6 +159,7 @@ public class DragLayout extends ViewGroup {
                 break;
 
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 int collapsePosition;
 
                 if (mIsCollapsed) {
