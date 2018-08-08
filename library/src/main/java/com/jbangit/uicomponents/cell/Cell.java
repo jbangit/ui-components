@@ -2,6 +2,7 @@ package com.jbangit.uicomponents.cell;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -119,5 +120,20 @@ public class Cell extends FrameLayout {
         } else {
             mIcAction.setVisibility(View.VISIBLE);
         }
+    }
+
+    @BindingAdapter("cellTitle")
+    public static void setTitle(Cell cell, CharSequence title) {
+        cell.setTitle(title);
+    }
+
+    @BindingAdapter("cellSubject")
+    public static void setSubject(Cell cell, CharSequence subject) {
+        cell.setSubject(subject);
+    }
+
+    @BindingAdapter("cellIcon")
+    public static void setIcon(Cell cell, Drawable drawable) {
+        cell.setIcon(drawable);
     }
 }

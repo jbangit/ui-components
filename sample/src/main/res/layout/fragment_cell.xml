@@ -124,6 +124,13 @@
 
             </com.jbangit.uicomponents.cell.CellGroup>
 
+            <com.jbangit.uicomponents.cell.Cell
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellTitle='@{"binding title"}'
+                app:cellSubject='@{"binding subject"}'
+                app:cellIcon="@{@drawable/ic_cell}" />
+
         </LinearLayout>
     </ScrollView>
 </layout>
