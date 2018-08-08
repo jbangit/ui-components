@@ -407,9 +407,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
         requestLayout();
 
-        mSelectedPosition = -1;
-
+        resetTabPosition();
         setCurrentItem(mCurrentItem, false);
+    }
+
+    private void resetTabPosition() {
+        mSelectedPosition = -1;
+        moveIndicatorTo(-1, false);
     }
 
     public ViewTabAdapter getAdapter() {
