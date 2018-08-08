@@ -49,7 +49,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private List<View> mViewItems = new ArrayList<>();
 
-    private int mOldItemPosition = -1;
+    private int mCurrentItem = -1;
 
     private int mAttrOrientation = ORIENTATION_HORIZON;
 
@@ -318,16 +318,52 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     public void setCurrentItem(int position, boolean animated) {
-        if (mOldItemPosition != -1) {
-            mAdapter.onSelected(mViewItems.get(mOldItemPosition), mOldItemPosition, false);
+        mCurrentItem = position;
+        changeTab(mCurrentItem, animated);
+    }
+
+    private int mSelectedPosition = -1;
+
+    public void changeTab(int position, boolean animated) {
+        if (!canChangeTab(position)) {
+            return;
         }
 
+        // uncheck last tab
+        if (mSelectedPosition != -1) {
+            mAdapter.onSelected(mViewItems.get(mSelectedPosition), mSelectedPosition, false);
+        }
+
+        // check new tab
         if (position != -1) {
             mAdapter.onSelected(mViewItems.get(position), position, true);
         }
 
-        mOldItemPosition = position;
+        mSelectedPosition = position;
         moveIndicatorTo(position, animated);
+    }
+
+    private boolean canChangeTab(int position) {
+        if (position >= mViewItems.size() & position != -1) {
+            return false;
+        }
+
+        if (position == mSelectedPosition) {
+            return false;
+        }
+
+        View newItem = position == -1 ? null : mViewItems.get(position);
+        View oldItem = mSelectedPosition == -1 ? null : mViewItems.get(mSelectedPosition);
+
+        boolean canChangeTab;
+        if (mOnTabChangeListener == null) {
+            canChangeTab = true;
+        } else {
+            canChangeTab =
+                    mOnTabChangeListener.onTabChange(oldItem, mCurrentItem, newItem, position);
+        }
+
+        return canChangeTab;
     }
 
     @Override
@@ -370,6 +406,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         }
 
         requestLayout();
+        setCurrentItem(mCurrentItem, false);
+        mSelectedPosition = -1;
     }
 
     public ViewTabAdapter getAdapter() {
@@ -387,25 +425,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void onClickTabItem(int position) {
-        View newItem = mViewItems.get(position);
-        View oldItem = mOldItemPosition == -1 ? null : mViewItems.get(mOldItemPosition);
-
-        boolean isTabChanged;
-        if (mOnTabChangeListener == null) {
-            isTabChanged = true;
-        } else {
-            isTabChanged =
-                    mOnTabChangeListener.onTabChange(oldItem, mOldItemPosition, newItem, position);
-        }
-
-        if (isTabChanged) {
-            if (oldItem != null) {
-                mAdapter.onSelected(oldItem, mOldItemPosition, false);
-            }
-            mAdapter.onSelected(newItem, position, true);
-            mOldItemPosition = position;
-            moveIndicatorTo(position, true);
-        }
+        setCurrentItem(position);
     }
 
     private final ValueAnimator mIndicatorAnimator = ValueAnimator.ofFloat(0, 1f);
@@ -562,15 +582,14 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     @Override
     protected Parcelable onSaveInstanceState() {
         SaveState saveState = new SaveState(super.onSaveInstanceState());
-        saveState.mOldItemPosition = mOldItemPosition;
+        saveState.mCurrentItem = mCurrentItem;
         return saveState;
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = ((SaveState) state);
-        setCurrentItem(saveState.mOldItemPosition, false);
-
+        setCurrentItem(saveState.mCurrentItem, false);
         super.onRestoreInstanceState(state);
     }
 
@@ -587,7 +606,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                     }
                 };
 
-        private int mOldItemPosition;
+        private int mCurrentItem;
 
         SaveState(Parcelable superState) {
             super(superState);
@@ -595,13 +614,13 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
         SaveState(Parcel source) {
             super(source);
-            mOldItemPosition = source.readInt();
+            mCurrentItem = source.readInt();
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(mOldItemPosition);
+            out.writeInt(mCurrentItem);
         }
     }
 
