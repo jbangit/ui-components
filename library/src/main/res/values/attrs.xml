@@ -56,6 +56,7 @@
         <attr name="gridRadioGroupCheckable" format="boolean" />
         <attr name="gridRadioGroupMultipleChoice" format="boolean" />
         <attr name="gridRadioGroupAllowEmptyChoice" format="boolean" />
+        <attr name="gridRadioGroupItems" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Spinner">

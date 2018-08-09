@@ -2,6 +2,7 @@ package com.jbangit.uicomponents.gridradiogroup;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -65,16 +67,25 @@ public class GridRadioGroup extends ViewGroup {
     private int mAttrUncheckedColor;
 
     @ColorInt
+    private int mAttrUncheckableColor;
+
+    @ColorInt
     private int mAttrCheckedTextColor;
 
     @ColorInt
     private int mAttrUncheckedTextColor;
 
     @ColorInt
+    private int mAttrUncheckableTextColor;
+
+    @ColorInt
     private int mAttrCheckedStrokeColor;
 
     @ColorInt
     private int mAttrUncheckedStrokeColor;
+
+    @ColorInt
+    private int mAttrUncheckableStrokeColor;
 
     @Dimension()
     private int mAttrStrokeWidth;
@@ -100,7 +111,7 @@ public class GridRadioGroup extends ViewGroup {
 
     private OnCheckedChangeListener mOnCheckedChangeListener;
 
-    private final List<String> mItems = new ArrayList<>();
+    private final List<CharSequence> mItems = new ArrayList<>();
 
     private final ViewRecycler mViewRecycler = new ViewRecycler();
 
@@ -114,9 +125,13 @@ public class GridRadioGroup extends ViewGroup {
 
     private boolean mAttrAllowEmptyChoice = false;
 
+    private CharSequence[] mAttrItems;
+
     private Drawable mCheckedBackground;
 
     private Drawable mUncheckedBackground;
+
+    private Drawable mUncheckableBackground;
 
     private Drawable mForegroundDrawable;
 
@@ -153,6 +168,8 @@ public class GridRadioGroup extends ViewGroup {
         mAttrCheckedTextColor = getResources().getColor(R.color.colorForeground);
         mAttrUncheckedColor = getResources().getColor(R.color.colorBackground);
         mAttrUncheckedTextColor = getResources().getColor(R.color.colorTextDark);
+        mAttrUncheckableColor = getResources().getColor(R.color.colorBackground);
+        mAttrUncheckableTextColor = getResources().getColor(R.color.colorTextGray);
         mAttrTextSize = DensityUtils.getPxFromSp(context, 16);
 
         mAttrRowNumber =
@@ -226,6 +243,8 @@ public class GridRadioGroup extends ViewGroup {
                         R.styleable.GridRadioGroup_gridRadioGroupAllowEmptyChoice,
                         mAttrAllowEmptyChoice);
 
+        mAttrItems = typedArray.getTextArray(R.styleable.GridRadioGroup_gridRadioGroupItems);
+
         typedArray.recycle();
 
         mButtonHorizonPadding = DensityUtils.getPxFromDp(context, DEFAULT_HORIZON_INSET_PADDING);
@@ -249,6 +268,12 @@ public class GridRadioGroup extends ViewGroup {
                         .solid(mAttrUncheckedColor)
                         .corner(mAttrRadius)
                         .strokePx(mAttrStrokeWidth, mAttrUncheckedStrokeColor)
+                        .build();
+        mUncheckableBackground =
+                ShapeDrawableUtils.builder(context)
+                        .solid(mAttrUncheckableColor)
+                        .corner(mAttrRadius)
+                        .strokePx(mAttrStrokeWidth, mAttrUncheckableStrokeColor)
                         .build();
         mForegroundDrawable = new ColorDrawable(Color.TRANSPARENT);
         mForegroundRippleMasker =
@@ -284,8 +309,7 @@ public class GridRadioGroup extends ViewGroup {
                     }
                 };
 
-        FixedPaddingGridLayoutHelper layoutHelper =
-                new FixedPaddingGridLayoutHelper(this);
+        FixedPaddingGridLayoutHelper layoutHelper = new FixedPaddingGridLayoutHelper(this);
         layoutHelper.setViewGroupHelper(viewGroupHelper);
         layoutHelper.setRowNumber(mAttrRowNumber);
         layoutHelper.setOnGetChildViewHeight(
@@ -388,9 +412,11 @@ public class GridRadioGroup extends ViewGroup {
     /**
      * the checked will be clear
      */
-    public void setItem(Collection<String> item) {
+    public void setItem(@Nullable Collection<? extends CharSequence> item) {
         mItems.clear();
-        mItems.addAll(item);
+        if (item != null) {
+            mItems.addAll(item);
+        }
 
         mCheckedIndexes.clear();
         processEmptyChoice();
@@ -432,19 +458,16 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        initEditMode();
+        if (mAttrItems == null) {
+            initEditMode();
+        } else {
+            setItem(Arrays.asList(mAttrItems));
+        }
     }
 
     private void initEditMode() {
         if (isInEditMode()) {
-            setItem(
-                    Arrays.asList(
-                            "One",
-                            "Two",
-                            "Three",
-                            "Four",
-                            "Five",
-                            "Long Long Long"));
+            setItem(Arrays.asList("One", "Two", "Three", "Four", "Five", "Long Long Long"));
             if (!mAttrAllowEmptyChoice) {
                 check(2);
                 check(1);
@@ -476,8 +499,8 @@ public class GridRadioGroup extends ViewGroup {
         return new ArrayList<>(mCheckedIndexes);
     }
 
-    public Collection<String> getCheckedItems() {
-        ArrayList<String> items = new ArrayList<>();
+    public Collection<CharSequence> getCheckedItems() {
+        ArrayList<CharSequence> items = new ArrayList<>();
         for (Integer index : mCheckedIndexes) {
             items.add(mItems.get(index));
         }
@@ -495,7 +518,8 @@ public class GridRadioGroup extends ViewGroup {
     public interface OnCheckedChangeListener {
 
         /** @return false to intercept */
-        boolean onCheckedChange(int oldIndex, String oldItem, int newIndex, String newItem);
+        boolean onCheckedChange(
+                int oldIndex, CharSequence oldItem, int newIndex, CharSequence newItem);
     }
 
     private static class SaveState extends BaseSavedState {
@@ -511,7 +535,7 @@ public class GridRadioGroup extends ViewGroup {
                     }
                 };
 
-        List<String> mItems;
+        List<CharSequence> mItems;
 
         Set<Integer> mSelectIndexes;
 
@@ -521,10 +545,14 @@ public class GridRadioGroup extends ViewGroup {
 
         SaveState(Parcel source) {
             super(source);
-            source.readStringList(mItems);
 
+            int itemSize = source.readInt();
+            for (int i = 0; i < itemSize; i++) {
+                mItems.add(TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source));
+            }
+
+            mSelectIndexes = new TreeSet<>();
             int checkedIndexesSize = source.readInt();
-
             for (int i = 0; i < checkedIndexesSize; i++) {
                 mSelectIndexes.add(source.readInt());
             }
@@ -533,7 +561,11 @@ public class GridRadioGroup extends ViewGroup {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeStringList(mItems);
+
+            out.writeInt(mItems.size());
+            for (CharSequence item : mItems) {
+                TextUtils.writeToParcel(item, out, 0);
+            }
 
             out.writeInt(mSelectIndexes.size());
             for (Integer index : mSelectIndexes) {
@@ -550,7 +582,7 @@ public class GridRadioGroup extends ViewGroup {
                     check(index);
                 }
             } else {
-                String lastItem =
+                CharSequence lastItem =
                         mLastCheckedIndex == NONE_CHECKED_INDEX
                                 ? null
                                 : mItems.get(mLastCheckedIndex);
@@ -600,7 +632,7 @@ public class GridRadioGroup extends ViewGroup {
             }
         }
 
-        void setTitle(String title) {
+        void setTitle(CharSequence title) {
             mButton.setText(title);
         }
 
@@ -609,13 +641,25 @@ public class GridRadioGroup extends ViewGroup {
                 mButton.setBackground(mCheckedBackground);
                 mButton.setTextColor(mAttrCheckedTextColor);
             } else {
-                mButton.setBackground(mUncheckedBackground);
-                mButton.setTextColor(mAttrUncheckedTextColor);
+                if (mAttrCheckable) {
+                    mButton.setBackground(mUncheckedBackground);
+                    mButton.setTextColor(mAttrUncheckedTextColor);
+                } else {
+                    mButton.setBackground(mUncheckableBackground);
+                    mButton.setTextColor(mAttrUncheckableTextColor);
+                }
             }
         }
 
         View getView() {
             return mButton;
         }
+    }
+
+    @BindingAdapter("gridRadioGroupItems")
+    public static void setItem(
+            GridRadioGroup gridRadioGroup,
+            @Nullable Collection<? extends CharSequence> collections) {
+        gridRadioGroup.setItem(collections);
     }
 }

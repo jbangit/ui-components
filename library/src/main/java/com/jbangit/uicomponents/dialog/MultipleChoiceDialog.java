@@ -95,7 +95,7 @@ public class MultipleChoiceDialog extends BottomDialogFragment {
         return mChoice.getCheckedIndexes();
     }
 
-    public Collection<String> getChosenItem() {
+    public Collection<CharSequence> getChosenItem() {
         return mChoice.getCheckedItems();
     }
 
