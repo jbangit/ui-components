@@ -34,8 +34,6 @@ class GridRadioGroupFragment : Fragment() {
             )
         )
 
-        mBinding.gridRadioGroup.check(0)
-
         mBinding.uncheckableGridRadioGroup.setItem(
             arrayListOf(
                 "One",
@@ -46,6 +44,9 @@ class GridRadioGroupFragment : Fragment() {
         )
         mBinding.uncheckableGridRadioGroup.check(1)
 
+        mBinding.loadItem.setOnClickListener {
+            mBinding.items = arrayListOf("one", "two", "three")
+        }
         return mBinding.root
     }
 }

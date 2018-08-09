@@ -4,6 +4,11 @@
 
     <data>
 
+        <import type="java.util.List" />
+
+        <variable
+            name="items"
+            type="List&lt;String&gt;" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -14,8 +19,8 @@
             android:id="@+id/grid_radio_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorForeground"
 
+            android:background="@color/colorForeground"
             app:gridRadioGroupAllowEmptyChoice="false"
             app:gridRadioGroupHorizonInsetFraction="100%"
             app:gridRadioGroupOuterPadding="true"
@@ -23,6 +28,8 @@
             app:gridRadioGroupRowNumber="5"
             app:gridRadioGroupTextSize="16sp"
             app:gridRadioGroupVerticalInsetFraction="100%"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         </com.jbangit.uicomponents.gridradiogroup.GridRadioGroup>
@@ -41,6 +48,27 @@
             app:layout_constraintTop_toBottomOf="@+id/grid_radio_group">
 
         </com.jbangit.uicomponents.gridradiogroup.GridRadioGroup>
+
+        <com.jbangit.uicomponents.gridradiogroup.GridRadioGroup
+            android:id="@+id/data_binding_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:gridRadioGroupItems='@{items}'
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uncheckable_grid_radio_group" />
+
+        <com.jbangit.uicomponents.button.JButton
+            android:id="@+id/load_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:jButtonSize="little"
+            app:jButtonTitle="load items"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/data_binding_radio" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
