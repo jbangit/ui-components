@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -77,10 +78,6 @@ public class Spinner extends FrameLayout {
 
     public int getNumber() {
         return mNumber;
-    }
-
-    public void setNumber(int number) {
-        setNumber(number, false);
     }
 
     public int getMiniNumber() {
@@ -179,7 +176,7 @@ public class Spinner extends FrameLayout {
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        setNumber((Integer) animation.getAnimatedValue(), true);
+                        setNumber((Integer) animation.getAnimatedValue());
                     }
                 });
 
@@ -188,7 +185,7 @@ public class Spinner extends FrameLayout {
                     @Override
                     public void onClick(View v) {
                         if (mNumber < mMaxNumber) {
-                            setNumber(mNumber + 1, true);
+                            setNumber(mNumber + 1);
                         }
                     }
                 });
@@ -217,7 +214,7 @@ public class Spinner extends FrameLayout {
                     @Override
                     public void onClick(View v) {
                         if (mNumber > mMiniNumber) {
-                            setNumber(mNumber - 1, true);
+                            setNumber(mNumber - 1);
                         }
                     }
                 });
@@ -251,11 +248,11 @@ public class Spinner extends FrameLayout {
         mNumberView.setText(String.valueOf(mNumber));
     }
 
-    private void setNumber(int number, boolean withUser) {
+    private void setNumber(int number) {
         mNumber = number;
         showNumber();
 
-        if (withUser && mOnSpinnerChangeListener != null) {
+        if (mOnSpinnerChangeListener != null) {
             mOnSpinnerChangeListener.onSpinnerChange(this, mNumber);
         }
     }
@@ -310,5 +307,26 @@ public class Spinner extends FrameLayout {
             out.writeInt(mMaxNumber);
             out.writeInt(mMiniNumber);
         }
+    }
+
+    @BindingAdapter("spinnerNumber")
+    public static void setNumber(Spinner spinner, int number) {
+        spinner.setNumber(number);
+    }
+
+    @BindingAdapter("spinnerMaxNumber")
+    public static void setMaxNumber(Spinner spinner, int maxNumber) {
+        spinner.setNumber(maxNumber);
+    }
+
+    @BindingAdapter("spinnerMineNumber")
+    public static void setMiniNumber(Spinner spinner, int miniNumber) {
+        spinner.setNumber(miniNumber);
+    }
+
+    @BindingAdapter("spinnerOnChange")
+    public static void setOnChangeListener(Spinner spinner,
+                                           OnSpinnerChangeListener onSpinnerChangeListener) {
+        spinner.setOnSpinnerChangeListener(onSpinnerChangeListener);
     }
 }
