@@ -266,13 +266,31 @@ public class Spinner extends FrameLayout {
         return mOnSpinnerChangeListener;
     }
 
-    public void setOnSpinnerChangeListener(OnSpinnerChangeListener onSpinnerChangeListener) {
-        mOnSpinnerChangeListener = onSpinnerChangeListener;
+    public void setOnSpinnerChangeListener(OnSpinnerChangeListener listener) {
+        mOnSpinnerChangeListener = listener;
+    }
+
+    public void setOnSpinnerChangeListener(final SimpleOnSpinnerChangeListener listener) {
+        if (listener == null) {
+            mOnSpinnerChangeListener = null;
+            return;
+        }
+        mOnSpinnerChangeListener = new OnSpinnerChangeListener() {
+            @Override
+            public void onSpinnerChange(@NonNull Spinner spinner, int number) {
+                listener.onSpinnerChange(number);
+            }
+        };
     }
 
     public interface OnSpinnerChangeListener {
 
         void onSpinnerChange(@NonNull Spinner spinner, int number);
+    }
+
+    public interface SimpleOnSpinnerChangeListener {
+
+        void onSpinnerChange(int number);
     }
 
     private static class SaveState extends BaseSavedState {
@@ -331,7 +349,13 @@ public class Spinner extends FrameLayout {
 
     @BindingAdapter("spinnerOnChange")
     public static void setOnChangeListener(Spinner spinner,
-                                           OnSpinnerChangeListener onSpinnerChangeListener) {
-        spinner.setOnSpinnerChangeListener(onSpinnerChangeListener);
+                                           OnSpinnerChangeListener listener) {
+        spinner.setOnSpinnerChangeListener(listener);
+    }
+
+    @BindingAdapter("spinnerOnChange")
+    public static void setOnChangeListener(Spinner spinner,
+                                           SimpleOnSpinnerChangeListener listener) {
+        spinner.setOnSpinnerChangeListener(listener);
     }
 }
