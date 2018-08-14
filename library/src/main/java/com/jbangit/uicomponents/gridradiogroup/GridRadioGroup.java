@@ -410,16 +410,16 @@ public class GridRadioGroup extends ViewGroup {
         mCheckedIndexes.add(index);
 
         boolean canChangeCheck;
-        CharSequence lastItem = mLastCheckedIndex == NONE_CHECKED_INDEX
-                ? null
-                : mItems.get(mLastCheckedIndex);
+        CharSequence lastItem =
+                mLastCheckedIndex == NONE_CHECKED_INDEX ? null : mItems.get(mLastCheckedIndex);
         CharSequence newItem = mItems.get(index);
 
         if (mOnCheckedChangeListener == null) {
             canChangeCheck = true;
         } else {
-            canChangeCheck = mOnCheckedChangeListener.onCheckedChange(
-                    mLastCheckedIndex, lastItem, index, newItem);
+            canChangeCheck =
+                    mOnCheckedChangeListener.onCheckedChange(
+                            mLastCheckedIndex, lastItem, index, newItem);
         }
 
         if (canChangeCheck) {
@@ -442,8 +442,9 @@ public class GridRadioGroup extends ViewGroup {
         if (mOnCheckedChangeListener == null) {
             canChangeCheck = true;
         } else {
-            canChangeCheck = mOnCheckedChangeListener.onCheckedChange(
-                    NONE_CHECKED_INDEX, null, index, mItems.get(index));
+            canChangeCheck =
+                    mOnCheckedChangeListener.onCheckedChange(
+                            NONE_CHECKED_INDEX, null, index, mItems.get(index));
         }
 
         if (canChangeCheck) {
@@ -615,25 +616,25 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     public void onClickItem(int index) {
-//        if (mOnCheckedChangeListener != null) {
-//            if (mAttrMultipleChoice) {
-//                if (mOnCheckedChangeListener.onCheckedChange(
-//                        NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
-//                    check(index);
-//                }
-//            } else {
-//                CharSequence lastItem =
-//                        mLastCheckedIndex == NONE_CHECKED_INDEX
-//                                ? null
-//                                : mItems.get(mLastCheckedIndex);
-//                if (mOnCheckedChangeListener.onCheckedChange(
-//                        mLastCheckedIndex, lastItem, index, mItems.get(index))) {
-//                    check(index);
-//                }
-//            }
-//        } else {
-            check(index);
-//        }
+        //        if (mOnCheckedChangeListener != null) {
+        //            if (mAttrMultipleChoice) {
+        //                if (mOnCheckedChangeListener.onCheckedChange(
+        //                        NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
+        //                    check(index);
+        //                }
+        //            } else {
+        //                CharSequence lastItem =
+        //                        mLastCheckedIndex == NONE_CHECKED_INDEX
+        //                                ? null
+        //                                : mItems.get(mLastCheckedIndex);
+        //                if (mOnCheckedChangeListener.onCheckedChange(
+        //                        mLastCheckedIndex, lastItem, index, mItems.get(index))) {
+        //                    check(index);
+        //                }
+        //            }
+        //        } else {
+        check(index);
+        //        }
     }
 
     class ViewHolder {
@@ -704,9 +705,13 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     @BindingAdapter("gridRadioGroupCheckedIndex")
-    public static void setCheckedIndex(
-            GridRadioGroup gridRadioGroup,
-            int index) {
+    public static void setCheckedIndex(GridRadioGroup gridRadioGroup, int index) {
         gridRadioGroup.check(index);
+    }
+
+    @BindingAdapter("gridRadioGroupOnCheckedChange")
+    public static void setOnCheckedChange(
+            GridRadioGroup gridRadioGroup, OnCheckedChangeListener listener) {
+        gridRadioGroup.setOnCheckedChangeListener(listener);
     }
 }
