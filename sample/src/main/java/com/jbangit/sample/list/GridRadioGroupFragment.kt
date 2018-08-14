@@ -25,6 +25,7 @@ class GridRadioGroupFragment : Fragment() {
                     container,
                     false
                 )
+        mBinding.view = this
 
         mBinding.gridRadioGroup.setItem(
             arrayListOf(
@@ -53,5 +54,9 @@ class GridRadioGroupFragment : Fragment() {
             true
         }
         return mBinding.root
+    }
+
+    fun onCheckedChange(index: Int) {
+        showToast("$index")
     }
 }
