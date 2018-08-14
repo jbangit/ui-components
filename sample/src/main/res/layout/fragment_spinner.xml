@@ -3,6 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="view"
+            type="com.jbangit.sample.spinner.SpinnerFragment" />
+    </data>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -42,6 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner"
             app:spinnerLayoutId="@layout/customize_view_spinner"
+            app:spinnerOnChange="@{view.onChange}"
             app:spinnerMaxNumber="50"
             app:spinnerMiniNumber="-1"
             app:spinnerNumber="5" />

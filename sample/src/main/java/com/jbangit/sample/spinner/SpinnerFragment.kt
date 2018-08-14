@@ -27,4 +27,9 @@ class SpinnerFragment : Fragment() {
 
         return mBinding.root
     }
+
+    fun onChange(number: Int) {
+
+    }
+
 }

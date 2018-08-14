@@ -349,12 +349,6 @@ public class Spinner extends FrameLayout {
 
     @BindingAdapter("spinnerOnChange")
     public static void setOnChangeListener(Spinner spinner,
-                                           OnSpinnerChangeListener listener) {
-        spinner.setOnSpinnerChangeListener(listener);
-    }
-
-    @BindingAdapter("spinnerOnChange")
-    public static void setOnChangeListener(Spinner spinner,
                                            SimpleOnSpinnerChangeListener listener) {
         spinner.setOnSpinnerChangeListener(listener);
     }
