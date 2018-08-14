@@ -170,7 +170,6 @@ public class Spinner extends FrameLayout {
             DrawableCompat.setTint(((ImageView) mMinus).getDrawable(), primaryColor);
         }
 
-        showNumber();
         mNumberAnimator.setInterpolator(new LinearInterpolator());
         mNumberAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
@@ -238,6 +237,12 @@ public class Spinner extends FrameLayout {
                         return false;
                     }
                 });
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        setNumber(mNumber);
     }
 
     private boolean isDefaultLayout() {
