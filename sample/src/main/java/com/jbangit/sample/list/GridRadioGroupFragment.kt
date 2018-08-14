@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jbangit.sample.R
 import com.jbangit.sample.databinding.FragmentGridRadioFragmentBinding
+import com.jbangit.sample.showToast
 
 class GridRadioGroupFragment : Fragment() {
     private lateinit var mBinding: FragmentGridRadioFragmentBinding
@@ -46,6 +47,10 @@ class GridRadioGroupFragment : Fragment() {
 
         mBinding.loadItem.setOnClickListener {
             mBinding.items = arrayListOf("one", "two", "three")
+        }
+        mBinding.dataBindingRadio.setOnCheckedChangeListener { _, _, newIndex, newItem ->
+            showToast("$newIndex : $newItem")
+            true
         }
         return mBinding.root
     }

@@ -346,6 +346,8 @@ public class GridRadioGroup extends ViewGroup {
         }
 
         initItemViews();
+        initChecked();
+
         requestLayout();
     }
 
@@ -359,11 +361,21 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     private void initItemViews() {
-        for (int i = 0; i < mViewHolders.size(); i++) {
-            ViewHolder viewHolder = mViewHolders.get(i);
-            viewHolder.setTitle(mItems.get(i));
+        for (int index = 0; index < mViewHolders.size(); index++) {
+            ViewHolder viewHolder = mViewHolders.get(index);
+            viewHolder.setTitle(mItems.get(index));
+            viewHolder.setChecked(false);
+        }
+    }
 
-            viewHolder.setChecked(mCheckedIndexes.contains(i));
+    private void initChecked() {
+        mLastCheckedIndex = NONE_CHECKED_INDEX;
+        for (Integer checkedIndex : mCheckedIndexes) {
+            check(checkedIndex);
+        }
+
+        if (!mAttrAllowEmptyChoice && mCheckedIndexes.size() == 0) {
+            check(0);
         }
     }
 
@@ -390,48 +402,78 @@ public class GridRadioGroup extends ViewGroup {
             return;
         }
 
+        if (index >= mItems.size()) {
+            return;
+        }
+
         mCheckedIndexes.clear();
         mCheckedIndexes.add(index);
 
-        mViewHolders.get(mLastCheckedIndex).setChecked(false);
-        mViewHolders.get(index).setChecked(true);
+        boolean canChangeCheck;
+        CharSequence lastItem = mLastCheckedIndex == NONE_CHECKED_INDEX
+                ? null
+                : mItems.get(mLastCheckedIndex);
+        CharSequence newItem = mItems.get(index);
 
-        mLastCheckedIndex = index;
-    }
-
-    private void doMultipleCheck(int index) {
-        if (mCheckedIndexes.contains(index)) {
-            mCheckedIndexes.remove(index);
-            mViewHolders.get(index).setChecked(false);
+        if (mOnCheckedChangeListener == null) {
+            canChangeCheck = true;
         } else {
-            mCheckedIndexes.add(index);
-            mViewHolders.get(index).setChecked(true);
+            canChangeCheck = mOnCheckedChangeListener.onCheckedChange(
+                    mLastCheckedIndex, lastItem, index, newItem);
+        }
+
+        if (canChangeCheck) {
+            singleChangeCheck(index);
         }
     }
 
-    /**
-     * the checked will be clear
-     */
+    private void doMultipleCheck(int index) {
+        if (index >= mItems.size()) {
+            return;
+        }
+
+        if (mCheckedIndexes.contains(index)) {
+            mCheckedIndexes.remove(index);
+        } else {
+            mCheckedIndexes.add(index);
+        }
+
+        boolean canChangeCheck;
+        if (mOnCheckedChangeListener == null) {
+            canChangeCheck = true;
+        } else {
+            canChangeCheck = mOnCheckedChangeListener.onCheckedChange(
+                    NONE_CHECKED_INDEX, null, index, mItems.get(index));
+        }
+
+        if (canChangeCheck) {
+            multipleChangeCheck(index);
+        }
+    }
+
+    private void singleChangeCheck(int index) {
+        if (mLastCheckedIndex < mItems.size() && mLastCheckedIndex != NONE_CHECKED_INDEX) {
+            mViewHolders.get(mLastCheckedIndex).setChecked(false);
+        }
+        if (index < mItems.size()) {
+            mViewHolders.get(index).setChecked(true);
+        }
+        mLastCheckedIndex = index;
+    }
+
+    private void multipleChangeCheck(int index) {
+        if (index < mItems.size() && index != NONE_CHECKED_INDEX) {
+            mViewHolders.get(index).setChecked(mCheckedIndexes.contains(index));
+        }
+    }
+
     public void setItem(@Nullable Collection<? extends CharSequence> item) {
         mItems.clear();
         if (item != null) {
             mItems.addAll(item);
         }
 
-        mCheckedIndexes.clear();
-        processEmptyChoice();
-
         setupItemView();
-    }
-
-    /** Only in single choice mode, */
-    private void processEmptyChoice() {
-        if (mAttrAllowEmptyChoice) {
-            mLastCheckedIndex = -1;
-        } else if (!mAttrMultipleChoice && mItems.size() > 0) {
-            mLastCheckedIndex = 0;
-            mCheckedIndexes.add(0);
-        }
     }
 
     @Nullable
@@ -446,12 +488,10 @@ public class GridRadioGroup extends ViewGroup {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SaveState saveState = (SaveState) state;
-        mItems.clear();
-        mItems.addAll(saveState.mItems);
         mCheckedIndexes.clear();
         mCheckedIndexes.addAll(saveState.mSelectIndexes);
 
-        setupItemView();
+        setItem(saveState.mItems);
         super.onRestoreInstanceState(saveState.getSuperState());
     }
 
@@ -575,25 +615,25 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     public void onClickItem(int index) {
-        if (mOnCheckedChangeListener != null) {
-            if (mAttrMultipleChoice) {
-                if (mOnCheckedChangeListener.onCheckedChange(
-                        NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
-                    check(index);
-                }
-            } else {
-                CharSequence lastItem =
-                        mLastCheckedIndex == NONE_CHECKED_INDEX
-                                ? null
-                                : mItems.get(mLastCheckedIndex);
-                if (mOnCheckedChangeListener.onCheckedChange(
-                        mLastCheckedIndex, lastItem, index, mItems.get(index))) {
-                    check(index);
-                }
-            }
-        } else {
+//        if (mOnCheckedChangeListener != null) {
+//            if (mAttrMultipleChoice) {
+//                if (mOnCheckedChangeListener.onCheckedChange(
+//                        NONE_CHECKED_INDEX, null, index, mItems.get(index))) {
+//                    check(index);
+//                }
+//            } else {
+//                CharSequence lastItem =
+//                        mLastCheckedIndex == NONE_CHECKED_INDEX
+//                                ? null
+//                                : mItems.get(mLastCheckedIndex);
+//                if (mOnCheckedChangeListener.onCheckedChange(
+//                        mLastCheckedIndex, lastItem, index, mItems.get(index))) {
+//                    check(index);
+//                }
+//            }
+//        } else {
             check(index);
-        }
+//        }
     }
 
     class ViewHolder {
@@ -661,5 +701,12 @@ public class GridRadioGroup extends ViewGroup {
             GridRadioGroup gridRadioGroup,
             @Nullable Collection<? extends CharSequence> collections) {
         gridRadioGroup.setItem(collections);
+    }
+
+    @BindingAdapter("gridRadioGroupCheckedIndex")
+    public static void setCheckedIndex(
+            GridRadioGroup gridRadioGroup,
+            int index) {
+        gridRadioGroup.check(index);
     }
 }
