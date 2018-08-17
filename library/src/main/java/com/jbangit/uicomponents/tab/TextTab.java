@@ -151,12 +151,11 @@ public class TextTab extends ViewTab {
                         title.setTextColor(mAttrUnselectedTextColor);
                         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
                         title.setGravity(mAttrTextGravity);
+                        title.setPadding(
+                                mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
+                        title.setText(mTitle.get(position));
 
                         layout.setBackgroundColor(mAttrUnselectedColor);
-                        layout.setPadding(
-                                mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
-
-                        title.setText(mTitle.get(position));
 
                         return layout;
                     }
