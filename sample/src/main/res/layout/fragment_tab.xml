@@ -49,6 +49,7 @@
             android:layout_width="100dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
+            app:viewTabSelectable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/longVerticalTab"
             app:layout_constraintTop_toBottomOf="@+id/textTab"

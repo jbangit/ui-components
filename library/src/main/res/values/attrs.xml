@@ -117,6 +117,7 @@
         <attr name="viewTabIdcVPadding" format="dimension" />
         <attr name="viewTabIdcSize" format="dimension" />
         <attr name="viewTabIdcScale" format="fraction" />
+        <attr name="viewTabSelectable" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="TextTab">

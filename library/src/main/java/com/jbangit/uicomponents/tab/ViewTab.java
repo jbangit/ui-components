@@ -68,6 +68,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     private int mAttrLayoutStyle = LAYOUT_STYLE_FILL;
 
+    private boolean mAttrSelectable = true;
+
     private OnTabChangeListener mOnTabChangeListener = null;
 
     private LayoutHelper mLayoutHelper;
@@ -122,6 +124,8 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                 typedArray.getFraction(R.styleable.ViewTab_viewTabIdcScale, 1, 1, mAttrIdcScale);
         mAttrLayoutStyle =
                 typedArray.getInt(R.styleable.ViewTab_viewTabLayoutStyle, mAttrLayoutStyle);
+        mAttrSelectable =
+                typedArray.getBoolean(R.styleable.ViewTab_viewTabSelectable, mAttrSelectable);
         mPaint.setColor(mAttrIdcColor);
         mPaint.setStrokeWidth(mAttrIdcSize);
 
@@ -422,13 +426,19 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     }
 
     private void initViewItem(View tabItem, final int position) {
-        tabItem.setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onClickTabItem(position);
-                    }
-                });
+        if (mAttrSelectable) {
+            tabItem.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onClickTabItem(position);
+                        }
+                    });
+        } else {
+            tabItem.setOnClickListener(null);
+            tabItem.setClickable(false);
+            tabItem.setFocusable(false);
+        }
     }
 
     private void onClickTabItem(int position) {
