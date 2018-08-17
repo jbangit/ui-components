@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Parcel;
@@ -642,5 +643,10 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         void onSelected(@NonNull View item, int position, boolean selected);
 
         int getCount();
+    }
+
+    @BindingAdapter("viewTabCurrentItemNoAnimate")
+    public static void setCurrentItemNoAnimate(ViewTab viewTab, int currentItem) {
+        viewTab.setCurrentItem(currentItem, false);
     }
 }
