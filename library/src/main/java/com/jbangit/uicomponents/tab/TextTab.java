@@ -44,9 +44,9 @@ public class TextTab extends ViewTab {
     @ColorInt
     private int mAttrUnselectedColor;
 
-    private int mAttrVPadding;
+    private int mAttrVPadding = DensityUtils.getPxFromDp(getContext(), 12);
 
-    private int mAttrHPadding;
+    private int mAttrHPadding = DensityUtils.getPxFromDp(getContext(), 12);
 
     private int mAttrTextSize = DensityUtils.getPxFromSp(getContext(), 16);
 
