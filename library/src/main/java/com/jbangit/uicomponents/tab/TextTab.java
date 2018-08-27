@@ -2,6 +2,7 @@ package com.jbangit.uicomponents.tab;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -51,6 +52,8 @@ public class TextTab extends ViewTab {
     private int mAttrTextSize = DensityUtils.getPxFromSp(getContext(), 16);
 
     private int mAttrTextGravity = Gravity.CENTER;
+
+    private boolean mAttrIsTextBold = false;
 
     private List<CharSequence> mTitle = new ArrayList<>();
 
@@ -120,6 +123,10 @@ public class TextTab extends ViewTab {
         mAttrTextGravity =
                 typedArray.getInt(
                         R.styleable.TextTab_textTabTextGravity, mAttrTextGravity);
+
+        mAttrIsTextBold =
+                typedArray.getBoolean(
+                        R.styleable.TextTab_textTabTextBold, mAttrIsTextBold);
         typedArray.recycle();
     }
 
@@ -154,6 +161,9 @@ public class TextTab extends ViewTab {
                         title.setPadding(
                                 mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
                         title.setText(mTitle.get(position));
+                        if (mAttrIsTextBold) {
+                            title.setTypeface(null, Typeface.BOLD);
+                        }
 
                         layout.setBackgroundColor(mAttrUnselectedColor);
 
