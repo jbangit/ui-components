@@ -164,7 +164,6 @@ public class JButton extends ViewGroup {
         mAttrInsetPadding =
                 typedArray.getDimensionPixelOffset(
                         R.styleable.JButton_jButtonInsetPadding, mAttrInsetPadding);
-        mAttrInsetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
         mAttrTextColor = typedArray.getColor(R.styleable.JButton_jButtonTextColor, mAttrTextColor);
         mAttrTextSize =
                 typedArray.getDimensionPixelOffset(
@@ -255,6 +254,8 @@ public class JButton extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int insetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
+
         mTitle.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         mIcon.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 
@@ -266,7 +267,7 @@ public class JButton extends ViewGroup {
             case ICON_GRAVITY_RIGHT:
                 expectedWidth =
                         mTitle.getMeasuredWidth()
-                                + mAttrInsetPadding
+                                + insetPadding
                                 + mIcon.getMeasuredWidth()
                                 + getPaddingLeft()
                                 + getPaddingRight();
@@ -283,7 +284,7 @@ public class JButton extends ViewGroup {
                                 + getPaddingRight();
                 expectedHeight =
                         mTitle.getMeasuredHeight()
-                                + mAttrInsetPadding
+                                + insetPadding
                                 + mIcon.getMeasuredHeight()
                                 + getPaddingTop()
                                 + getPaddingBottom();
@@ -325,6 +326,7 @@ public class JButton extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int insetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
         switch (mAttrIconGravity) {
             case ICON_GRAVITY_LEFT:
             case ICON_GRAVITY_RIGHT:
@@ -332,7 +334,7 @@ public class JButton extends ViewGroup {
                         (getMeasuredWidth()
                                 - mIcon.getMeasuredWidth()
                                 - mTitle.getMeasuredWidth()
-                                - mAttrInsetPadding)
+                                - insetPadding)
                                 / 2;
                 int iconTop = (getMeasuredHeight() - mIcon.getMeasuredHeight()) / 2;
                 int titleTop = (getMeasuredHeight() - mTitle.getMeasuredHeight()) / 2;
@@ -343,7 +345,7 @@ public class JButton extends ViewGroup {
                             iconTop,
                             left + mIcon.getMeasuredWidth(),
                             iconTop + mIcon.getMeasuredHeight());
-                    left += mIcon.getMeasuredWidth() + mAttrInsetPadding;
+                    left += mIcon.getMeasuredWidth() + insetPadding;
 
                     mTitle.layout(
                             left,
@@ -357,7 +359,7 @@ public class JButton extends ViewGroup {
                             left + mTitle.getMeasuredWidth(),
                             titleTop + mTitle.getMeasuredHeight());
 
-                    left += mTitle.getMeasuredWidth() + mAttrInsetPadding;
+                    left += mTitle.getMeasuredWidth() + insetPadding;
 
                     mIcon.layout(
                             left,
@@ -372,7 +374,7 @@ public class JButton extends ViewGroup {
                         (getMeasuredHeight()
                                 - mIcon.getMeasuredHeight()
                                 - mTitle.getMeasuredHeight()
-                                - mAttrInsetPadding)
+                                - insetPadding)
                                 / 2;
                 int iconLeft = (getMeasuredWidth() - mIcon.getMeasuredWidth()) / 2;
                 int titleLeft = (getMeasuredWidth() - mTitle.getMeasuredWidth()) / 2;
@@ -383,7 +385,7 @@ public class JButton extends ViewGroup {
                             top,
                             iconLeft + mIcon.getMeasuredWidth(),
                             top + mIcon.getMeasuredHeight());
-                    top += mIcon.getMeasuredWidth() + mAttrInsetPadding;
+                    top += mIcon.getMeasuredWidth() + insetPadding;
 
                     mTitle.layout(
                             titleLeft,
@@ -397,7 +399,7 @@ public class JButton extends ViewGroup {
                             titleLeft + mTitle.getMeasuredWidth(),
                             top + mTitle.getMeasuredHeight());
 
-                    top += mTitle.getMeasuredHeight() + mAttrInsetPadding;
+                    top += mTitle.getMeasuredHeight() + insetPadding;
 
                     mIcon.layout(
                             iconLeft,
