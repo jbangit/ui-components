@@ -254,7 +254,7 @@ public class JButton extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int insetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
+        int insetPadding = (mIcon.getDrawable() == null || mTitle.getText().length() == 0) ? 0 : mAttrInsetPadding;
 
         mTitle.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         mIcon.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -326,7 +326,7 @@ public class JButton extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int insetPadding = (mAttrIcon == null || mAttrTitle == null) ? 0 : mAttrInsetPadding;
+        int insetPadding = (mIcon.getDrawable() == null || mTitle.getText().length() == 0) ? 0 : mAttrInsetPadding;
         switch (mAttrIconGravity) {
             case ICON_GRAVITY_LEFT:
             case ICON_GRAVITY_RIGHT:
