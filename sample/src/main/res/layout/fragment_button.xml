@@ -61,6 +61,7 @@
             app:jButtonRadius="32dp"
             app:jButtonStyle="fill"
             app:jButtonTitle="Button Radius"
+            app:jButtonTextSize="30sp"
             app:layout_constraintBottom_toTopOf="@+id/little"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

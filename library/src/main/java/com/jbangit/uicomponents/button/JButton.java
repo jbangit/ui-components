@@ -205,6 +205,7 @@ public class JButton extends ViewGroup {
 
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                 mTitle, 1, mAttrTextSize, 1, TypedValue.COMPLEX_UNIT_PX);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
         mTitle.setTextColor(mAttrTextColor);
 
         setPadding(mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
