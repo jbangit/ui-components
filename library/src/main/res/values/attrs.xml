@@ -96,6 +96,7 @@
             <enum name="little" value="1" />
             <enum name="chip" value="2" />
         </attr>
+        <attr name="jButtonBold" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="ViewTab">

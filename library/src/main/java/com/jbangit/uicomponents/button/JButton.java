@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -83,6 +84,8 @@ public class JButton extends ViewGroup {
     private int mAttrIconGravity = ICON_GRAVITY_LEFT;
 
     private int mAttrShape = SHAPE_RECT;
+
+    private boolean mAttrBold = false;
 
     public JButton(Context context) {
         super(context);
@@ -173,6 +176,7 @@ public class JButton extends ViewGroup {
         mAttrRadius =
                 typedArray.getDimensionPixelOffset(R.styleable.JButton_jButtonRadius, mAttrRadius);
         mAttrShape = typedArray.getInt(R.styleable.JButton_jButtonShape, mAttrShape);
+        mAttrBold = typedArray.getBoolean(R.styleable.JButton_jButtonBold, mAttrBold);
 
         typedArray.recycle();
     }
@@ -207,6 +211,9 @@ public class JButton extends ViewGroup {
                 mTitle, 1, mAttrTextSize, 1, TypedValue.COMPLEX_UNIT_PX);
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
         mTitle.setTextColor(mAttrTextColor);
+        if (mAttrBold) {
+            mTitle.setTypeface(null, Typeface.BOLD);
+        }
 
         setPadding(mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
         setBackground(
