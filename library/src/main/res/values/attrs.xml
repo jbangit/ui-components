@@ -97,6 +97,7 @@
             <enum name="chip" value="2" />
         </attr>
         <attr name="jButtonBold" format="boolean" />
+        <attr name="jButtonStrokeColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ViewTab">

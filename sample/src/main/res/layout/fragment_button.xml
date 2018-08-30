@@ -78,6 +78,7 @@
             app:jButtonSize="little"
             app:jButtonStyle="stroke"
             app:jButtonTitle="little"
+            app:jButtonStrokeColor="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/special"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

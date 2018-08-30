@@ -138,8 +138,8 @@ public class JButton extends ViewGroup {
         attrSize = typedArray.getInt(R.styleable.JButton_jButtonSize, attrSize);
         switch (attrSize) {
             case SIZE_NORMAL:
-                mAttrHPadding = DensityUtils.getPxFromDp(context, 16);
-                mAttrVPadding = DensityUtils.getPxFromDp(context, 16);
+                mAttrHPadding = DensityUtils.getPxFromDp(context, 12);
+                mAttrVPadding = DensityUtils.getPxFromDp(context, 12);
                 mAttrTextSize = DensityUtils.getPxFromSp(context, 16);
                 break;
 
@@ -177,6 +177,7 @@ public class JButton extends ViewGroup {
                 typedArray.getDimensionPixelOffset(R.styleable.JButton_jButtonRadius, mAttrRadius);
         mAttrShape = typedArray.getInt(R.styleable.JButton_jButtonShape, mAttrShape);
         mAttrBold = typedArray.getBoolean(R.styleable.JButton_jButtonBold, mAttrBold);
+        mStrokeColor = typedArray.getColor(R.styleable.JButton_jButtonStrokeColor, mStrokeColor);
 
         typedArray.recycle();
     }
