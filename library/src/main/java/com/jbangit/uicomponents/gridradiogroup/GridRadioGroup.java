@@ -565,6 +565,14 @@ public class GridRadioGroup extends ViewGroup {
         return items;
     }
 
+    public CharSequence getCheckedItem() {
+        if (mCheckedIndexes.iterator().hasNext()) {
+            return mItems.get(mCheckedIndexes.iterator().next());
+        } else {
+            return null;
+        }
+    }
+
     public int getCheckedIndex() {
         if (mCheckedIndexes.iterator().hasNext()) {
             return mCheckedIndexes.iterator().next();
