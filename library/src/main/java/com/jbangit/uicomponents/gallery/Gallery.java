@@ -329,10 +329,12 @@ public class Gallery extends ViewGroup {
 
     public void setPictures(@Nullable List<String> pictures) {
         mPictures.clear();
-        if (pictures != null && pictures.size() > mPictureMax) {
-            mPictures.addAll(pictures.subList(0, mPictureMax));
-        } else {
-            mPictures.addAll(pictures);
+        if (pictures != null) {
+            if (pictures.size() > mPictureMax) {
+                mPictures.addAll(pictures.subList(0, mPictureMax));
+            } else {
+                mPictures.addAll(pictures);
+            }
         }
         setupView();
     }
