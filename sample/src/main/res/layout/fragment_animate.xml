@@ -125,6 +125,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:waveViewHorizon="50%"
-            app:waveViewTop="70%" />
+            app:waveViewTop="20%"
+            app:waveViewDuration="800" />
+
+        <com.jbangit.uicomponents.animate.WaveView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="2:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:waveViewHorizon="50%"
+            app:waveViewTop="20%"
+            app:waveViewPhase="50%"
+            app:waveViewDuration="1000" />
     </android.support.constraint.ConstraintLayout>
 </layout>

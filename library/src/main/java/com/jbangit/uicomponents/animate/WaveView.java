@@ -38,6 +38,10 @@ public class WaveView extends View {
 
     private float mAttrTop;
 
+    private float mAttrPhase;
+
+    private int mAttrDuration;
+
     {
         int color = Globals.getPrimaryColor(getContext());
         mPaint.setColor(ColorUtils.setAlphaComponent(color, 0x88));
@@ -63,6 +67,8 @@ public class WaveView extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaveView);
         mAttrHorizon = typedArray.getFraction(R.styleable.WaveView_waveViewHorizon, 1, 1, .5f);
         mAttrTop = typedArray.getFraction(R.styleable.WaveView_waveViewTop, 1, 1, .1f);
+        mAttrPhase = typedArray.getFraction(R.styleable.WaveView_waveViewPhase, 1, 1, 0f);
+        mAttrDuration = typedArray.getInteger(R.styleable.WaveView_waveViewDuration, 1000);
         typedArray.recycle();
     }
 
@@ -71,10 +77,10 @@ public class WaveView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int height = getMeasuredHeight();
 
-        mStartX = 0;
-        mStartY = height * (1 - mAttrHorizon);
         mWidth = getMeasuredWidth();
         mHeight = height * mAttrTop;
+        mStartX = -(1 - mAttrPhase) * mWidth;
+        mStartY = height * (1 - mAttrHorizon);
     }
 
     @Override
@@ -85,14 +91,14 @@ public class WaveView extends View {
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        mStartX = ((float) animation.getAnimatedValue()) * -mWidth;
+                        mStartX = (((float) animation.getAnimatedValue() + mAttrPhase) % 1f * -mWidth);
                         invalidate();
                     }
                 });
         mWaveAnimator.setInterpolator(new LinearInterpolator());
         mWaveAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mWaveAnimator.setRepeatMode(ValueAnimator.RESTART);
-        mWaveAnimator.setDuration(1000);
+        mWaveAnimator.setDuration(mAttrDuration);
         mWaveAnimator.start();
     }
 

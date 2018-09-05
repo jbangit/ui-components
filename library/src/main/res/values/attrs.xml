@@ -158,6 +158,8 @@
     <declare-styleable name="WaveView">
         <attr name="waveViewHorizon" format="fraction" />
         <attr name="waveViewTop" format="fraction" />
+        <attr name="waveViewPhase" format="fraction" />
+        <attr name="waveViewDuration" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="Gallery">
