@@ -94,7 +94,9 @@ public class DatePickerDialog extends BottomDialogFragment {
         TextView cancel = layoutView.findViewById(R.id.cancel);
 
         ok.setTextColor(primaryColor);
+        ok.setText(Globals.getDialogButtonOk(layoutView.getContext()));
         cancel.setTextColor(primaryColor);
+        cancel.setText(Globals.getDialogButtonCancel(layoutView.getContext()));
 
         ok.setOnClickListener(
                 new View.OnClickListener() {
