@@ -20,6 +20,26 @@ public class Globals {
         return color;
     }
 
+    public static CharSequence getDialogButtonOk(Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.jDialogButtonOk});
+        CharSequence ok = typedArray.getText(0);
+        if (ok == null) {
+            ok = context.getText(android.R.string.ok);
+        }
+        typedArray.recycle();
+        return ok;
+    }
+
+    public static CharSequence getDialogButtonCancel(Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.jDialogButtonCancel});
+        CharSequence ok = typedArray.getText(0);
+        if (ok == null) {
+            ok = context.getText(android.R.string.cancel);
+        }
+        typedArray.recycle();
+        return ok;
+    }
+
     // TODO: 2018/6/27 refactor all ripple drawable
     public static Drawable addRipple(Context context, Drawable background) {
         return addRipple(context, background, background);

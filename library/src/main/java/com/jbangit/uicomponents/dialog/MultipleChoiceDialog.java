@@ -66,7 +66,9 @@ public class MultipleChoiceDialog extends BottomDialogFragment {
         TextView cancel = layout.findViewById(R.id.cancel);
 
         ok.setTextColor(primaryColor);
+        ok.setText(Globals.getDialogButtonOk(layout.getContext()));
         cancel.setTextColor(primaryColor);
+        cancel.setText(Globals.getDialogButtonCancel(layout.getContext()));
 
         ok.setOnClickListener(
                 new View.OnClickListener() {
