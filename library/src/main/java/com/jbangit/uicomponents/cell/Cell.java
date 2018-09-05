@@ -31,6 +31,8 @@ public class Cell extends FrameLayout {
 
     private boolean mAttrFitIcon = false;
 
+    private boolean mAttrShowAction = true;
+
     public Cell(Context context) {
         super(context);
     }
@@ -47,6 +49,7 @@ public class Cell extends FrameLayout {
         mAttrSubject = typedArray.getString(R.styleable.Cell_cellSubject);
         mAttrFitIcon = typedArray.getBoolean(R.styleable.Cell_cellFitIcon, false);
         mAttrIcon = typedArray.getDrawable(R.styleable.Cell_cellIcon);
+        mAttrShowAction = typedArray.getBoolean(R.styleable.Cell_cellShowAction, mAttrShowAction);
 
         typedArray.recycle();
     }
@@ -115,7 +118,7 @@ public class Cell extends FrameLayout {
     @Override
     public void setOnClickListener(OnClickListener listener) {
         super.setOnClickListener(listener);
-        if (listener == null) {
+        if (listener == null || !mAttrShowAction) {
             mIcAction.setVisibility(View.GONE);
         } else {
             mIcAction.setVisibility(View.VISIBLE);
