@@ -3,6 +3,7 @@ package com.jbangit.uicomponents.tabbar;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -30,6 +31,11 @@ public class TabBarItem extends FrameLayout implements Checkable {
     private Drawable mAttrIcon;
 
     private Drawable mAttrSelectedIcon;
+
+    @ColorInt
+    private int mAttrCheckedTextColor = getContext().getResources().getColor(R.color.colorTextDark);
+
+    private int mAttrUncheckedTextColor = getContext().getResources().getColor(R.color.colorTextGray);
 
     private TextView mTitle;
 
@@ -122,8 +128,10 @@ public class TabBarItem extends FrameLayout implements Checkable {
     private void showChecked() {
         if (mChecked) {
             mIcon.setImageDrawable(mAttrSelectedIcon);
+            mTitle.setTextColor(mAttrCheckedTextColor);
         } else {
             mIcon.setImageDrawable(mAttrIcon);
+            mTitle.setTextColor(mAttrUncheckedTextColor);
         }
     }
 
