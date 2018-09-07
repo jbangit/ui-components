@@ -369,7 +369,6 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     private void initChecked() {
-        mLastCheckedIndex = NONE_CHECKED_INDEX;
         for (Integer checkedIndex : mCheckedIndexes) {
             check(checkedIndex);
         }
@@ -402,18 +401,14 @@ public class GridRadioGroup extends ViewGroup {
             return;
         }
 
-        if (index >= mItems.size()) {
-            return;
-        }
-
         mCheckedIndexes.clear();
         mCheckedIndexes.add(index);
 
         boolean canChangeCheck;
         CharSequence lastItem =
-                mLastCheckedIndex == NONE_CHECKED_INDEX ? null : mItems.get(mLastCheckedIndex);
+                (mLastCheckedIndex == NONE_CHECKED_INDEX || mLastCheckedIndex >= mItems.size()) ? null : mItems.get(mLastCheckedIndex);
         CharSequence newItem =
-                index == NONE_CHECKED_INDEX ? null : mItems.get(index);
+                (index == NONE_CHECKED_INDEX || index >= mItems.size()) ? null : mItems.get(index);
 
         if (mOnCheckedChangeListener == null) {
             canChangeCheck = true;
@@ -429,10 +424,6 @@ public class GridRadioGroup extends ViewGroup {
     }
 
     private void doMultipleCheck(int index) {
-        if (index >= mItems.size()) {
-            return;
-        }
-
         if (mCheckedIndexes.contains(index)) {
             mCheckedIndexes.remove(index);
         } else {
@@ -443,9 +434,10 @@ public class GridRadioGroup extends ViewGroup {
         if (mOnCheckedChangeListener == null) {
             canChangeCheck = true;
         } else {
+            CharSequence checkedItem = (index == NONE_CHECKED_INDEX || index >= mItems.size()) ? null : mItems.get(index);
             canChangeCheck =
                     mOnCheckedChangeListener.onCheckedChange(
-                            NONE_CHECKED_INDEX, null, index, mItems.get(index));
+                            NONE_CHECKED_INDEX, null, index, checkedItem);
         }
 
         if (canChangeCheck) {
