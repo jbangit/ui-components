@@ -412,7 +412,8 @@ public class GridRadioGroup extends ViewGroup {
         boolean canChangeCheck;
         CharSequence lastItem =
                 mLastCheckedIndex == NONE_CHECKED_INDEX ? null : mItems.get(mLastCheckedIndex);
-        CharSequence newItem = mItems.get(index);
+        CharSequence newItem =
+                index == NONE_CHECKED_INDEX ? null : mItems.get(index);
 
         if (mOnCheckedChangeListener == null) {
             canChangeCheck = true;
@@ -456,7 +457,7 @@ public class GridRadioGroup extends ViewGroup {
         if (mLastCheckedIndex < mItems.size() && mLastCheckedIndex != NONE_CHECKED_INDEX) {
             mViewHolders.get(mLastCheckedIndex).setChecked(false);
         }
-        if (index < mItems.size()) {
+        if (index < mItems.size() && index != NONE_CHECKED_INDEX) {
             mViewHolders.get(index).setChecked(true);
         }
         mLastCheckedIndex = index;
