@@ -372,6 +372,10 @@ public class GridRadioGroup extends ViewGroup {
         if (!mAttrAllowEmptyChoice && mCheckedIndexes.size() == 0) {
             mCheckedIndexes.add(0);
             mLastCheckedIndex = 0;
+            if (mOnCheckedChangeListener != null) {
+                CharSequence newItem = 0 >= mItems.size() ? null : mItems.get(0);
+                mOnCheckedChangeListener.onCheckedChange(-1, null, 0, null);
+            }
         }
     }
 
