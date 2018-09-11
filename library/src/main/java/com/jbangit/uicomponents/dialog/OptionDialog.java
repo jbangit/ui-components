@@ -1,6 +1,7 @@
 package com.jbangit.uicomponents.dialog;
 
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -98,6 +99,7 @@ public class OptionDialog extends BottomDialogFragment {
     private void initOptionView(View layout) {
         WheelView option = layout.findViewById(R.id.option);
 
+        option.setTypeface(Typeface.DEFAULT);
         option.setAdapter(new ArrayWheelAdapter<>(mOptions));
         option.setCurrentItem(mIndex);
         option.setCyclic(false);
