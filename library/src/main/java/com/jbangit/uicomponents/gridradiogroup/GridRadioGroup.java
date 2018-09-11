@@ -485,6 +485,7 @@ public class GridRadioGroup extends ViewGroup {
         SaveState saveState = (SaveState) state;
         mCheckedIndexes.clear();
         mCheckedIndexes.addAll(saveState.mSelectIndexes);
+        mLastCheckedIndex = mCheckedIndexes.size() == 0 ? NONE_CHECKED_INDEX : mCheckedIndexes.iterator().next();
 
         setItem(saveState.mItems);
         super.onRestoreInstanceState(saveState.getSuperState());
