@@ -128,6 +128,8 @@ public class TextTab extends ViewTab {
                 typedArray.getBoolean(
                         R.styleable.TextTab_textTabTextBold, mAttrIsTextBold);
         typedArray.recycle();
+
+        setCurrentItem(0);
     }
 
     /**
@@ -140,10 +142,6 @@ public class TextTab extends ViewTab {
 
         mTitle.addAll(titles);
         setAdapter();
-
-        if (titles.size() != 0) {
-            setCurrentItem(0, false);
-        }
     }
 
     private void setAdapter() {

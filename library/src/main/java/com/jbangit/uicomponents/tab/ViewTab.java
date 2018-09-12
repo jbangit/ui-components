@@ -327,6 +327,10 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         changeTab(mCurrentItem, animated);
     }
 
+    public int getCurrentItem() {
+        return mCurrentItem;
+    }
+
     private int mSelectedPosition = -1;
 
     public void changeTab(int position, boolean animated) {
