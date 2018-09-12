@@ -253,7 +253,7 @@ public class Spinner extends FrameLayout {
         mNumberView.setText(String.valueOf(mNumber));
     }
 
-    private void setNumber(int number) {
+    public void setNumber(int number) {
         mNumber = number;
         showNumber();
 
