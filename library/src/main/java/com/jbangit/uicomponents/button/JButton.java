@@ -208,9 +208,10 @@ public class JButton extends ViewGroup {
             mIcon.setVisibility(View.GONE);
         }
 
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                 mTitle, 1, mAttrTextSize, 1, TypedValue.COMPLEX_UNIT_PX);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
+
         mTitle.setTextColor(mAttrTextColor);
         if (mAttrBold) {
             mTitle.setTypeface(null, Typeface.BOLD);
