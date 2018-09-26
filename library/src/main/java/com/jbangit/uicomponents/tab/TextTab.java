@@ -101,7 +101,7 @@ public class TextTab extends ViewTab {
                         R.styleable.TextTab_textTabSelectedTextColor, mAttrSelectedTextColor);
         mAttrUnselectedTextColor =
                 typedArray.getColor(
-                        R.styleable.TextTab_textTabSelectedTextColor, mAttrUnselectedTextColor);
+                        R.styleable.TextTab_textTabUnselectedTextColor, mAttrUnselectedTextColor);
 
         mAttrSelectedColor =
                 typedArray.getColor(R.styleable.TextTab_textTabSelectedColor, mAttrSelectedColor);
