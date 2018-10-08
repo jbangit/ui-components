@@ -69,14 +69,14 @@ public class OptionDialog extends BottomDialogFragment {
     }
 
     private void initHeaderLayout(View layout) {
-        int primaryColor = Globals.getPrimaryColor(layout.getContext());
         TextView ok = layout.findViewById(R.id.ok);
         TextView cancel = layout.findViewById(R.id.cancel);
 
-        ok.setTextColor(primaryColor);
         ok.setText(Globals.getDialogButtonOk(layout.getContext()));
-        cancel.setTextColor(primaryColor);
+        ok.setTextColor(Globals.getDialogButtonOkColor(layout.getContext()));
+
         cancel.setText(Globals.getDialogButtonCancel(layout.getContext()));
+        cancel.setTextColor(Globals.getDialogButtonCancelColor(layout.getContext()));
 
         ok.setOnClickListener(
                 new View.OnClickListener() {

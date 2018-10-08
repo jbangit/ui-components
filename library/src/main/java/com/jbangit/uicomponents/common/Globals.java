@@ -30,6 +30,14 @@ public class Globals {
         return ok;
     }
 
+    @ColorInt
+    public static int getDialogButtonOkColor(Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.jDialogButtonOkColor});
+        int color = typedArray.getColor(0, getPrimaryColor(context));
+        typedArray.recycle();
+        return color;
+    }
+
     public static CharSequence getDialogButtonCancel(Context context) {
         TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.jDialogButtonCancel});
         CharSequence ok = typedArray.getText(0);
@@ -38,6 +46,14 @@ public class Globals {
         }
         typedArray.recycle();
         return ok;
+    }
+
+    @ColorInt
+    public static int getDialogButtonCancelColor(Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.jDialogButtonCancelColor});
+        int color = typedArray.getColor(0, getPrimaryColor(context));
+        typedArray.recycle();
+        return color;
     }
 
     // TODO: 2018/6/27 refactor all ripple drawable

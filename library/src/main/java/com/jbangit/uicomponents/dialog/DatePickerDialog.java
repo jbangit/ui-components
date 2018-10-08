@@ -2,7 +2,6 @@ package com.jbangit.uicomponents.dialog;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -89,13 +88,12 @@ public class DatePickerDialog extends BottomDialogFragment {
     }
 
     private void initHeaderLayout(View layoutView) {
-        @ColorInt int primaryColor = Globals.getPrimaryColor(layoutView.getContext());
         TextView ok = layoutView.findViewById(R.id.ok);
         TextView cancel = layoutView.findViewById(R.id.cancel);
 
-        ok.setTextColor(primaryColor);
+        ok.setTextColor(Globals.getDialogButtonOkColor(layoutView.getContext()));
         ok.setText(Globals.getDialogButtonOk(layoutView.getContext()));
-        cancel.setTextColor(primaryColor);
+        cancel.setTextColor(Globals.getDialogButtonCancelColor(layoutView.getContext()));
         cancel.setText(Globals.getDialogButtonCancel(layoutView.getContext()));
 
         ok.setOnClickListener(

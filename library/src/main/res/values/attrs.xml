@@ -2,7 +2,9 @@
 <resources>
     <attr name="jColorPrimary" />
     <attr name="jDialogButtonOk" />
+    <attr name="jDialogButtonOkColor" />
     <attr name="jDialogButtonCancel" />
+    <attr name="jDialogButtonCancelColor" />
 
     <declare-styleable name="Cell">
         <attr name="cellTitle" format="string" />
