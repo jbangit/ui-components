@@ -135,7 +135,7 @@ public class TextTab extends ViewTab {
     /**
      * @param titles set empty list to clear all tab
      */
-    public void setTitles(Collection<CharSequence> titles) {
+    public void setTitles(Collection<? extends CharSequence> titles) {
         if (mTitle.size() != 0) {
             mTitle.clear();
         }
