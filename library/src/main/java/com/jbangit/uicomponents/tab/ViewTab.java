@@ -599,6 +599,19 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
         mOnTabChangeListener = onTabChangeListener;
     }
 
+    public void setOnTabChangeListener(final SimpleOnTabChangeListener onTabChangeListener) {
+        mOnTabChangeListener = new OnTabChangeListener() {
+            @Override
+            public boolean onTabChange(View oldItem,
+                                       int oldPosition,
+                                       View newItem,
+                                       int newPosition) {
+                onTabChangeListener.onTabChange(newPosition);
+                return true;
+            }
+        };
+    }
+
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
@@ -647,7 +660,15 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     public interface OnTabChangeListener {
 
+        /**
+         * @return can the tab change
+         */
         boolean onTabChange(View oldItem, int oldPosition, View newItem, int newPosition);
+    }
+
+    public interface SimpleOnTabChangeListener {
+
+        void onTabChange(int newPosition);
     }
 
     public interface ViewTabAdapter {
