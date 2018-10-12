@@ -103,7 +103,7 @@ public class FragmentUtils {
     public static void show(DialogFragment dialog, Fragment fragment, int requestCode) {
         dialog.setTargetFragment(fragment, requestCode);
         dialog.show(
-                Objects.requireNonNull(fragment.getFragmentManager()), dialog.getClass().getName());
+                Objects.requireNonNull(fragment.getChildFragmentManager()), dialog.getClass().getName());
         dialog.setArguments(new Bundle());
         saveState(dialog);
     }
