@@ -1,6 +1,7 @@
 package com.jbangit.uicomponents.button;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
@@ -57,6 +58,8 @@ public class JButton extends ViewGroup {
 
     private Drawable mAttrIcon;
 
+    private Drawable mAttrDisableIcon;
+
     private TextView mTitle;
 
     private ImageView mIcon;
@@ -69,10 +72,19 @@ public class JButton extends ViewGroup {
     private int mAttrTextColor;
 
     @ColorInt
+    private int mAttrDisableTextColor;
+
+    @ColorInt
     private int mSolidColor;
 
     @ColorInt
+    private int mDisableSolidColor;
+
+    @ColorInt
     private int mStrokeColor;
+
+    @ColorInt
+    private int mDisableStrokeColor;
 
     @ColorInt
     private int mDisableColor = getResources().getColor(R.color.colorTextLightGray);
@@ -112,24 +124,37 @@ public class JButton extends ViewGroup {
                 typedArray.getColor(
                         R.styleable.JButton_jButtonColor, Globals.getPrimaryColor(context));
 
+        int attrDisableColor =
+                typedArray.getColor(
+                        R.styleable.JButton_jButtonDisableColor, getResources().getColor(R.color.colorTextLightGray));
+
         int attrSize = SIZE_NORMAL;
 
         int attrStyle = typedArray.getInt(R.styleable.JButton_jButtonStyle, STYLE_FILL);
         switch (attrStyle) {
             case STYLE_FILL:
                 mAttrTextColor = getResources().getColor(R.color.colorForeground);
+                mAttrDisableTextColor = getResources().getColor(R.color.colorForeground);
                 mSolidColor = attrColor;
+                mDisableSolidColor = attrDisableColor;
                 mStrokeColor = attrColor;
+                mDisableStrokeColor = attrDisableColor;
                 break;
             case STYLE_STROKE:
                 mAttrTextColor = attrColor;
+                mAttrDisableTextColor = attrDisableColor;
                 mSolidColor = Color.TRANSPARENT;
+                mDisableSolidColor = Color.TRANSPARENT;
                 mStrokeColor = attrColor;
+                mDisableStrokeColor = attrDisableColor;
                 break;
             case STYLE_CHIP:
                 mAttrTextColor = getResources().getColor(R.color.colorTextDark);
+                mAttrDisableTextColor = attrDisableColor;
                 mSolidColor = Color.TRANSPARENT;
+                mDisableSolidColor = Color.TRANSPARENT;
                 mStrokeColor = getResources().getColor(R.color.colorLine);
+                mDisableStrokeColor = attrDisableColor;
                 mAttrRadius = DensityUtils.getPxFromDp(context, 15);
                 attrSize = STYLE_CHIP;
                 break;
@@ -158,6 +183,7 @@ public class JButton extends ViewGroup {
 
         mAttrTitle = typedArray.getString(R.styleable.JButton_jButtonTitle);
         mAttrIcon = typedArray.getDrawable(R.styleable.JButton_jButtonIcon);
+        mAttrDisableIcon = typedArray.getDrawable(R.styleable.JButton_jButtonDisableIcon);
         mAttrHPadding =
                 typedArray.getDimensionPixelOffset(
                         R.styleable.JButton_jButtonHPadding, mAttrHPadding);
@@ -168,6 +194,7 @@ public class JButton extends ViewGroup {
                 typedArray.getDimensionPixelOffset(
                         R.styleable.JButton_jButtonInsetPadding, mAttrInsetPadding);
         mAttrTextColor = typedArray.getColor(R.styleable.JButton_jButtonTextColor, mAttrTextColor);
+        mAttrDisableTextColor = typedArray.getColor(R.styleable.JButton_jButtonDisableTextColor, mAttrDisableTextColor);
         mAttrTextSize =
                 typedArray.getDimensionPixelOffset(
                         R.styleable.JButton_jButtonTextSize, mAttrTextSize);
@@ -178,6 +205,8 @@ public class JButton extends ViewGroup {
         mAttrShape = typedArray.getInt(R.styleable.JButton_jButtonShape, mAttrShape);
         mAttrBold = typedArray.getBoolean(R.styleable.JButton_jButtonBold, mAttrBold);
         mStrokeColor = typedArray.getColor(R.styleable.JButton_jButtonStrokeColor, mStrokeColor);
+        mDisableStrokeColor = typedArray.getColor(R.styleable.JButton_jButtonDisableStrokeColor, mDisableStrokeColor);
+        setEnabled(typedArray.getBoolean(R.styleable.JButton_jButtonEnable, true));
 
         typedArray.recycle();
     }
@@ -201,18 +230,35 @@ public class JButton extends ViewGroup {
 
     private void initViews() {
         mTitle.setText(mAttrTitle);
-        if (mAttrIcon != null) {
-            mIcon.setVisibility(View.VISIBLE);
-            mIcon.setImageDrawable(mAttrIcon);
+        mTitle.setEnabled(isEnabled());
+        if (isEnabled()) {
+            if (mAttrIcon != null) {
+                mIcon.setVisibility(View.VISIBLE);
+                mIcon.setImageDrawable(mAttrIcon);
+            } else {
+                mIcon.setVisibility(View.GONE);
+            }
         } else {
-            mIcon.setVisibility(View.GONE);
+            if (mAttrDisableIcon != null) {
+                mIcon.setVisibility(View.VISIBLE);
+                mIcon.setImageDrawable(mAttrDisableIcon);
+            } else {
+                mIcon.setVisibility(View.GONE);
+            }
         }
 
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrTextSize);
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
                 mTitle, 1, mAttrTextSize, 1, TypedValue.COMPLEX_UNIT_PX);
 
-        mTitle.setTextColor(mAttrTextColor);
+        mTitle.setTextColor(new ColorStateList(new int[][]{
+                new int[]{android.R.attr.state_enabled},
+                new int[]{},
+        }, new int[]{
+                mAttrTextColor,
+                mAttrDisableTextColor
+        }));
+
         if (mAttrBold) {
             mTitle.setTypeface(null, Typeface.BOLD);
         }
@@ -222,6 +268,7 @@ public class JButton extends ViewGroup {
                 Globals.addRipple(
                         getContext(), getBackgroundDrawable(), getBackgroundMaskDrawable()));
     }
+
 
     private Drawable getBackgroundDrawable() {
         StateListDrawable stateListDrawable = new StateListDrawable();
@@ -234,8 +281,8 @@ public class JButton extends ViewGroup {
                         .build());
         stateListDrawable.addState(new int[]{},
                 ShapeDrawableUtils.builder(getContext())
-                        .solid(mDisableColor)
-                        .stroke(DEFAULT_STROKE_WIDTH, mDisableColor)
+                        .solid(mDisableSolidColor)
+                        .stroke(DEFAULT_STROKE_WIDTH, mDisableStrokeColor)
                         .cornerPx(mAttrRadius)
                         .shape(getShape(mAttrShape))
                         .build());

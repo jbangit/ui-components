@@ -93,8 +93,10 @@
             android:layout_marginEnd="8dp"
             android:onClick="@{view::onClick}"
             app:jButtonColor="@color/colorTextDark"
+            app:jButtonDisableColor="@color/colorWarning"
+            app:jButtonEnable="false"
             app:jButtonRadius="8dp"
-            app:jButtonStyle="stroke"
+            app:jButtonStyle="fill"
             app:jButtonTitle="Special"
             app:layout_constraintBottom_toTopOf="@+id/chip"
             app:layout_constraintEnd_toEndOf="parent"
@@ -123,7 +125,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{view::onClick}"
             app:jButtonTitle='@{"Disable Button"}'
-            app:jButtonEnable="@{false}" />
+            app:jButtonEnable="false" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

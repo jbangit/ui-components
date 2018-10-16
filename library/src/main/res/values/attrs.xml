@@ -73,11 +73,15 @@
 
     <declare-styleable name="JButton">
         <attr name="jButtonTitle" format="string" />
+        <attr name="jButtonDisableTitle" format="string" />
         <attr name="jButtonIcon" format="reference" />
+        <attr name="jButtonDisableIcon" format="reference" />
         <attr name="jButtonRadius" format="dimension" />
         <attr name="jButtonTextSize" format="dimension" />
         <attr name="jButtonColor" format="color" />
+        <attr name="jButtonDisableColor" format="color" />
         <attr name="jButtonTextColor" format="color" />
+        <attr name="jButtonDisableTextColor" format="color" />
         <attr name="jButtonVPadding" format="dimension" />
         <attr name="jButtonHPadding" format="dimension" />
         <attr name="jButtonInsetPadding" format="dimension" />
@@ -103,6 +107,8 @@
         </attr>
         <attr name="jButtonBold" format="boolean" />
         <attr name="jButtonStrokeColor" format="color" />
+        <attr name="jButtonDisableStrokeColor" format="color" />
+        <attr name="jButtonEnable" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="ViewTab">
