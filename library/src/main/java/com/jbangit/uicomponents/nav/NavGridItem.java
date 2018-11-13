@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jbangit.uicomponents.R;
+import com.jbangit.uicomponents.common.DensityUtils;
 
 public class NavGridItem extends FrameLayout {
 
@@ -22,6 +24,7 @@ public class NavGridItem extends FrameLayout {
     private String mAttrTitle;
 
     private Drawable mAttrIcon;
+    private int mAttrTextSize;
 
     public NavGridItem(Context context) {
         super(context);
@@ -37,6 +40,7 @@ public class NavGridItem extends FrameLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NavGridItem);
         mAttrTitle = typedArray.getString(R.styleable.NavGridItem_navGridItemTitle);
         mAttrIcon = typedArray.getDrawable(R.styleable.NavGridItem_navGridItemIcon);
+        mAttrTextSize = typedArray.getDimensionPixelOffset(R.styleable.NavGridItem_navGridItemTextSize, DensityUtils.getPxFromSp(context, 14));
         typedArray.recycle();
     }
 
@@ -61,6 +65,10 @@ public class NavGridItem extends FrameLayout {
         mIcon.setImageDrawable(icon);
     }
 
+    private void setTextSize(int textSize) {
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -77,5 +85,6 @@ public class NavGridItem extends FrameLayout {
     private void initViews() {
         setTitle(mAttrTitle);
         setIcon(mAttrIcon);
+        setTextSize(mAttrTextSize);
     }
 }
