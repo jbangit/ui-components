@@ -17,6 +17,12 @@ public class ShapeDrawableUtils {
         return Math.round((float) dp * density);
     }
 
+    private static int dpToPx(Context context, float dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+
     private static Orientation getOrientation(int angle) {
         angle %= 360;
 
@@ -69,12 +75,23 @@ public class ShapeDrawableUtils {
             return this;
         }
 
+        public Builder stroke(float dpWidth, int color) {
+            strokePx(dpToPx(mContext, dpWidth), color);
+            return this;
+        }
+
         public Builder strokePx(int pxWidth, int color) {
             mDrawable.setStroke(pxWidth, color);
             return this;
         }
 
         public Builder corner(int dpRadius) {
+            mDrawable.setCornerRadius(dpToPx(mContext, dpRadius));
+            mDrawable.setGradientRadius(dpToPx(mContext, dpRadius));
+            return this;
+        }
+
+        public Builder corner(float dpRadius) {
             mDrawable.setCornerRadius(dpToPx(mContext, dpRadius));
             mDrawable.setGradientRadius(dpToPx(mContext, dpRadius));
             return this;
