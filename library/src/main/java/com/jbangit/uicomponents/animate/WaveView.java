@@ -42,9 +42,11 @@ public class WaveView extends View {
 
     private int mAttrDuration;
 
+    private float mAttrAlpha;
+
+    private int mAttrColor;
+
     {
-        int color = Globals.getPrimaryColor(getContext());
-        mPaint.setColor(ColorUtils.setAlphaComponent(color, 0x88));
         mPaint.setStrokeWidth(DensityUtils.getPxFromDp(getContext(), 3));
         mPaint.setStyle(Paint.Style.FILL);
     }
@@ -69,7 +71,11 @@ public class WaveView extends View {
         mAttrTop = typedArray.getFraction(R.styleable.WaveView_waveViewTop, 1, 1, .1f);
         mAttrPhase = typedArray.getFraction(R.styleable.WaveView_waveViewPhase, 1, 1, 0f);
         mAttrDuration = typedArray.getInteger(R.styleable.WaveView_waveViewDuration, 1000);
+        mAttrAlpha = typedArray.getFraction(R.styleable.WaveView_waveViewAlpha, 1, 1, .5f);
+        mAttrColor = typedArray.getColor(R.styleable.WaveView_waveViewColor, Globals.getPrimaryColor(getContext()));
         typedArray.recycle();
+
+        mPaint.setColor(ColorUtils.setAlphaComponent(mAttrColor, (int) (0xFF * mAttrAlpha)));
     }
 
     @Override

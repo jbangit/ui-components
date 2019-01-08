@@ -172,6 +172,8 @@
         <attr name="waveViewTop" format="fraction" />
         <attr name="waveViewPhase" format="fraction" />
         <attr name="waveViewDuration" format="integer" />
+        <attr name="waveViewColor" format="color" />
+        <attr name="waveViewAlpha" format="fraction" />
     </declare-styleable>
 
     <declare-styleable name="Gallery">
