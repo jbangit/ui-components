@@ -1,6 +1,7 @@
 package com.jbangit.uicomponents.tabbar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Parcel;
@@ -9,10 +10,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jbangit.uicomponents.R;
+import com.jbangit.uicomponents.common.DensityUtils;
 
 import java.util.ArrayList;
 
@@ -37,23 +41,38 @@ public class TabBar extends ViewGroup {
 
     private int mSelectedTabPosition;
 
-    public TabBar(Context context) {
-        super(context);
-        defaultInit();
-    }
+    private int mAttrItemTitleSize;
 
-    private void defaultInit() {
-        setWillNotDraw(false);
+    private int mAttrItemIconSize;
+
+    public TabBar(Context context) {
+        this(context, null, 0);
     }
 
     public TabBar(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        defaultInit();
+        this(context, attrs, 0);
     }
 
     public TabBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        defaultInit();
+        defaultInit(context);
+        initAttrs(context, attrs);
+    }
+
+    private void defaultInit(Context context) {
+        mAttrItemTitleSize = DensityUtils.getPxFromSp(context, 9);
+        mAttrItemIconSize = LayoutParams.WRAP_CONTENT;
+
+        setWillNotDraw(false);
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TabBar);
+
+        mAttrItemTitleSize = typedArray.getDimensionPixelSize(R.styleable.TabBar_tabBarItemTitleTextSize, mAttrItemTitleSize);
+        mAttrItemIconSize = typedArray.getDimensionPixelSize(R.styleable.TabBar_tabBarItemIconSize, mAttrItemIconSize);
+
+        typedArray.recycle();
     }
 
     @Override
@@ -180,7 +199,9 @@ public class TabBar extends ViewGroup {
 
     private void initTab() {
         for (int i = 0; i < mItems.size(); i++) {
-            mItems.get(i).setChecked(i == mSelectedTabPosition);
+            TabBarItem tabBarItem = mItems.get(i);
+            tabBarItem.setChecked(i == mSelectedTabPosition);
+            initTabItem(tabBarItem);
         }
 
         if (mViewPager != null) {
@@ -188,6 +209,14 @@ public class TabBar extends ViewGroup {
                 mViewPager.setCurrentItem(mSelectedTabPosition, false);
             }
         }
+    }
+
+    private void initTabItem(TabBarItem tabBarItem) {
+        ((TextView)tabBarItem.findViewById(R.id.title)).setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrItemTitleSize);
+        LayoutParams layoutParams = tabBarItem.findViewById(R.id.icon).getLayoutParams();
+        layoutParams.height = mAttrItemIconSize;
+        layoutParams.width = mAttrItemIconSize;
+        tabBarItem.setLayoutParams(layoutParams);
     }
 
     public void select(int position) {

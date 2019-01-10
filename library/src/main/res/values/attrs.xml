@@ -37,6 +37,10 @@
         <attr name="navGridItemTextSize" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="TabBar">
+        <attr name="tabBarItemTitleTextSize" format="dimension"/>
+        <attr name="tabBarItemIconSize" format="dimension"/>
+    </declare-styleable>
     <declare-styleable name="TabBarItem">
         <attr name="tabBarItemTitle" format="string" />
         <attr name="tabBarItemIcon" format="reference" />
