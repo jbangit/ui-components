@@ -8,39 +8,43 @@
 
         <com.jbangit.uicomponents.tabbar.TabBar
             android:id="@+id/tabBar"
-            app:tabBarItemTitleTextSize="12sp"
-            app:tabBarItemIconSize="33dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tabBarItemIconSize="33dp"
+            app:tabBarItemTitleTextSize="12sp">
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
                 android:id="@+id/home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tabBarItemIcon="@drawable/ic_tab_home"
-                app:tabBarItemTitle="主页" />
+                app:tabBarItemTitle="主页"
+                app:tabBarItemTitleSelectedTextColor="@color/jColorPrimary" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
                 android:id="@+id/near"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tabBarItemIcon="@drawable/ic_tab_near"
-                app:tabBarItemTitle="附近" />
+                app:tabBarItemTitle="附近"
+                app:tabBarItemTitleSelectedTextColor="@color/jColorPrimary" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
                 android:id="@+id/sms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tabBarItemIcon="@drawable/ic_tab_sms"
-                app:tabBarItemTitle="消息" />
+                app:tabBarItemTitle="消息"
+                app:tabBarItemTitleSelectedTextColor="@color/jColorPrimary" />
 
             <com.jbangit.uicomponents.tabbar.TabBarItem
                 android:id="@+id/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tabBarItemIcon="@drawable/ic_tab_user"
-                app:tabBarItemTitle="我的" />
+                app:tabBarItemTitle="我的"
+                app:tabBarItemTitleSelectedTextColor="@color/jColorPrimary" />
 
         </com.jbangit.uicomponents.tabbar.TabBar>
 

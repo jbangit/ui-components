@@ -33,9 +33,9 @@ public class TabBarItem extends FrameLayout implements Checkable {
     private Drawable mAttrSelectedIcon;
 
     @ColorInt
-    private int mAttrCheckedTextColor = getContext().getResources().getColor(R.color.colorTextDark);
+    private int mAttrSelectedTextColor = getContext().getResources().getColor(R.color.colorTextDark);
 
-    private int mAttrUncheckedTextColor = getContext().getResources().getColor(R.color.colorTextGray);
+    private int mAttrUnselectedTextColor = getContext().getResources().getColor(R.color.colorTextGray);
 
     private TextView mTitle;
 
@@ -61,6 +61,8 @@ public class TabBarItem extends FrameLayout implements Checkable {
         mAttrTitle = typedArray.getString(R.styleable.TabBarItem_tabBarItemTitle);
         mAttrIcon = typedArray.getDrawable(R.styleable.TabBarItem_tabBarItemIcon);
         mAttrSelectedIcon = typedArray.getDrawable(R.styleable.TabBarItem_tabBarItemSelectedIcon);
+        mAttrSelectedTextColor = typedArray.getColor(R.styleable.TabBarItem_tabBarItemTitleSelectedTextColor, mAttrSelectedTextColor);
+        mAttrUnselectedTextColor = typedArray.getColor(R.styleable.TabBarItem_tabBarItemTitleUnselectedTextColor, mAttrUnselectedTextColor);
 
         if (mAttrSelectedIcon == null) {
             mAttrIcon.mutate();
@@ -128,10 +130,10 @@ public class TabBarItem extends FrameLayout implements Checkable {
     private void showChecked() {
         if (mChecked) {
             mIcon.setImageDrawable(mAttrSelectedIcon);
-            mTitle.setTextColor(mAttrCheckedTextColor);
+            mTitle.setTextColor(mAttrSelectedTextColor);
         } else {
             mIcon.setImageDrawable(mAttrIcon);
-            mTitle.setTextColor(mAttrUncheckedTextColor);
+            mTitle.setTextColor(mAttrUnselectedTextColor);
         }
     }
 
