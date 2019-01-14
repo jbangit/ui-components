@@ -50,8 +50,6 @@ public class JButton extends ViewGroup {
 
     private static final int SHAPE_OVAL = 1;
 
-    private static final int DEFAULT_STROKE_WIDTH = 1;
-
     private String mAttrTitle = null;
 
     private int mAttrRadius;
@@ -86,9 +84,6 @@ public class JButton extends ViewGroup {
     @ColorInt
     private int mDisableStrokeColor;
 
-    @ColorInt
-    private int mDisableColor = getResources().getColor(R.color.colorTextLightGray);
-
     private int mAttrTextSize = DensityUtils.getPxFromSp(getContext(), 16);
 
     private int mAttrInsetPadding = DensityUtils.getPxFromDp(getContext(), 4);
@@ -98,6 +93,8 @@ public class JButton extends ViewGroup {
     private int mAttrShape = SHAPE_RECT;
 
     private boolean mAttrBold = false;
+
+    private int mAttrStrokeWidth;
 
     public JButton(Context context) {
         super(context);
@@ -206,6 +203,8 @@ public class JButton extends ViewGroup {
         mAttrBold = typedArray.getBoolean(R.styleable.JButton_jButtonBold, mAttrBold);
         mStrokeColor = typedArray.getColor(R.styleable.JButton_jButtonStrokeColor, mStrokeColor);
         mDisableStrokeColor = typedArray.getColor(R.styleable.JButton_jButtonDisableStrokeColor, mDisableStrokeColor);
+        mAttrStrokeWidth = DensityUtils.getPxFromDp(context, 1);
+        mAttrStrokeWidth = typedArray.getDimensionPixelOffset(R.styleable.JButton_jButtonStrokeWidth, mAttrStrokeWidth);
         setEnabled(typedArray.getBoolean(R.styleable.JButton_jButtonEnable, true));
 
         typedArray.recycle();
@@ -275,14 +274,14 @@ public class JButton extends ViewGroup {
         stateListDrawable.addState(new int[]{android.R.attr.state_enabled},
                 ShapeDrawableUtils.builder(getContext())
                         .solid(mSolidColor)
-                        .stroke(DEFAULT_STROKE_WIDTH, mStrokeColor)
+                        .strokePx(mAttrStrokeWidth, mStrokeColor)
                         .cornerPx(mAttrRadius)
                         .shape(getShape(mAttrShape))
                         .build());
         stateListDrawable.addState(new int[]{},
                 ShapeDrawableUtils.builder(getContext())
                         .solid(mDisableSolidColor)
-                        .stroke(DEFAULT_STROKE_WIDTH, mDisableStrokeColor)
+                        .strokePx(mAttrStrokeWidth, mDisableStrokeColor)
                         .cornerPx(mAttrRadius)
                         .shape(getShape(mAttrShape))
                         .build());
@@ -292,7 +291,7 @@ public class JButton extends ViewGroup {
     private Drawable getBackgroundMaskDrawable() {
         return ShapeDrawableUtils.builder(getContext())
                 .solid(Color.BLACK)
-                .stroke(DEFAULT_STROKE_WIDTH, Color.BLACK)
+                .strokePx(mAttrStrokeWidth, Color.BLACK)
                 .cornerPx(Math.round(mAttrRadius))
                 .shape(getShape(mAttrShape))
                 .build();

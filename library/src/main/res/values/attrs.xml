@@ -114,6 +114,7 @@
         </attr>
         <attr name="jButtonBold" format="boolean" />
         <attr name="jButtonStrokeColor" format="color" />
+        <attr name="jButtonStrokeWidth" format="dimension" />
         <attr name="jButtonDisableStrokeColor" format="color" />
         <attr name="jButtonEnable" format="boolean" />
     </declare-styleable>
