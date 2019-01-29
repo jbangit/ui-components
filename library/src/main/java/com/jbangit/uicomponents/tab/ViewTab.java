@@ -622,9 +622,15 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SaveState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
         SaveState saveState = ((SaveState) state);
+        super.onRestoreInstanceState(saveState.getSuperState());
+
         setCurrentItem(saveState.mCurrentItem, false);
-        super.onRestoreInstanceState(state);
     }
 
     private static class SaveState extends BaseSavedState {
