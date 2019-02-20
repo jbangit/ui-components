@@ -182,6 +182,12 @@ public class TabBar extends ViewGroup {
         setMeasuredDimension(width, height);
     }
 
+    public void deleteTab(View tabView) {
+        removeView(tabView);
+        getTabItem();
+        initViews();
+    }
+
     private void getTabItem() {
         mItems = new ArrayList<>();
         int childCount = getChildCount();
