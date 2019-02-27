@@ -172,6 +172,7 @@
             <flag name="top" value="48" />
         </attr>
         <attr name="textTabTextBold" format="boolean" />
+        <attr name="textTabSelectedTextSizeScale" format="float"/>
     </declare-styleable>
 
     <declare-styleable name="WaveView">
