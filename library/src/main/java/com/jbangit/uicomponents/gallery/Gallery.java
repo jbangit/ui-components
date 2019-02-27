@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -446,7 +447,7 @@ public class Gallery extends ViewGroup {
     }
 
     private void highlightInEditMode(PictureViewHolder pictureViewHolder) {
-        pictureViewHolder.mPicture.setBackground(
+        ViewCompat.setBackground(pictureViewHolder.mPicture,
                 new ColorDrawable(ColorUtils.setAlphaComponent(Globals.getPrimaryColor(getContext()), 0x10)));
     }
 

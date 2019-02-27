@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -263,7 +264,7 @@ public class JButton extends ViewGroup {
         }
 
         setPadding(mAttrHPadding, mAttrVPadding, mAttrHPadding, mAttrVPadding);
-        setBackground(
+        ViewCompat.setBackground(this,
                 Globals.addRipple(
                         getContext(), getBackgroundDrawable(), getBackgroundMaskDrawable()));
     }

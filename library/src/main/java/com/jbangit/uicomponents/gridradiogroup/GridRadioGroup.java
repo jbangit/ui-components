@@ -13,6 +13,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -686,14 +687,14 @@ public class GridRadioGroup extends ViewGroup {
 
         void setChecked(boolean checked) {
             if (checked) {
-                mButton.setBackground(mCheckedBackground);
+                ViewCompat.setBackground(mButton, mCheckedBackground);
                 mButton.setTextColor(mAttrCheckedTextColor);
             } else {
                 if (mAttrCheckable) {
-                    mButton.setBackground(mUncheckedBackground);
+                    ViewCompat.setBackground(mButton, mUncheckedBackground);
                     mButton.setTextColor(mAttrUncheckedTextColor);
                 } else {
-                    mButton.setBackground(mUncheckableBackground);
+                    ViewCompat.setBackground(mButton, mUncheckableBackground);
                     mButton.setTextColor(mAttrUncheckableTextColor);
                 }
             }
