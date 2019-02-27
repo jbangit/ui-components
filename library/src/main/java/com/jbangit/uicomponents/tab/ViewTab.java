@@ -7,10 +7,12 @@ import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -488,7 +490,7 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
             item = mViewItems.get(position);
         }
 
-        if (!isLayoutRequested() && isLaidOut()) {
+        if (!isLayoutRequested() && ViewCompat.isLaidOut(this)) {
             if (animated) {
                 moveIndicatorWithAnimate(item);
             } else {
@@ -500,7 +502,11 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
                             new ViewTreeObserver.OnGlobalLayoutListener() {
                                 @Override
                                 public void onGlobalLayout() {
-                                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                    } else {
+                                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                                    }
                                     if (animated) {
                                         moveIndicatorWithAnimate(item);
                                     } else {
