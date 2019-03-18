@@ -184,11 +184,6 @@ public class TextTab extends ViewTab {
                                         selected
                                                 ? mAttrSelectedTextColor
                                                 : mAttrUnselectedTextColor);
-                        ((TextView) item.findViewById(R.id.title))
-                                .setTextSize(
-                                        selected
-                                                ? mAttrTextSize * mAttrSelectedTextSizeScale
-                                                : mAttrTextSize);
                     }
 
                     @Override
