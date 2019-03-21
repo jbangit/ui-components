@@ -59,6 +59,8 @@ public class TextTab extends ViewTab {
 
     private List<CharSequence> mTitle = new ArrayList<>();
 
+    private boolean mAttrSelectedTextBold = false;
+
     public TextTab(Context context) {
         super(context);
     }
@@ -134,6 +136,12 @@ public class TextTab extends ViewTab {
                 typedArray.getFloat(
                         R.styleable.TextTab_textTabSelectedTextSizeScale, mAttrSelectedTextSizeScale
                 );
+
+        mAttrSelectedTextBold =
+                typedArray.getBoolean(
+                        R.styleable.TextTab_textTabSelectedTextBold, mAttrSelectedTextBold
+                );
+
         typedArray.recycle();
 
         setCurrentItem(0);
@@ -184,6 +192,12 @@ public class TextTab extends ViewTab {
                                         selected
                                                 ? mAttrSelectedTextColor
                                                 : mAttrUnselectedTextColor);
+                        ((TextView) item.findViewById(R.id.title))
+                                .setTypeface( selected ?
+                                        (mAttrSelectedTextBold ? Typeface.defaultFromStyle(Typeface.BOLD) : Typeface.defaultFromStyle(Typeface.NORMAL))
+                                        : (mAttrIsTextBold ? Typeface.defaultFromStyle(Typeface.BOLD) : Typeface.defaultFromStyle(Typeface.NORMAL))
+                                );
+
                     }
 
                     @Override
