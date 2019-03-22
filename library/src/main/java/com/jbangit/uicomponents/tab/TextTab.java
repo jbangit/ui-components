@@ -193,7 +193,7 @@ public class TextTab extends ViewTab {
                                                 ? mAttrSelectedTextColor
                                                 : mAttrUnselectedTextColor);
                         ((TextView) item.findViewById(R.id.title))
-                                .setTypeface( selected ?
+                                .setTypeface(selected ?
                                         (mAttrSelectedTextBold ? Typeface.defaultFromStyle(Typeface.BOLD) : Typeface.defaultFromStyle(Typeface.NORMAL))
                                         : (mAttrIsTextBold ? Typeface.defaultFromStyle(Typeface.BOLD) : Typeface.defaultFromStyle(Typeface.NORMAL))
                                 );
