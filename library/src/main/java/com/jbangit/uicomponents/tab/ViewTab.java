@@ -571,12 +571,12 @@ public class ViewTab extends ViewGroup implements ValueAnimator.AnimatorUpdateLi
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        drawIndicator(canvas);
     }
 
     @Override
     public void onDrawForeground(Canvas canvas) {
         super.onDrawForeground(canvas);
-        drawIndicator(canvas);
     }
 
     private void drawIndicator(Canvas canvas) {
